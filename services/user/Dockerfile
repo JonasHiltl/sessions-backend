@@ -1,16 +1,13 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:1.17-alpine as builder
 
-WORKDIR /work
+WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
+RUN go get github.com/cosmtrek/air
 
 COPY . ./
-RUN  CGO_ENABLED=0 GOOS=linux go build -o usr/bin/user ./services/user
-FROM alpine
 
-EXPOSE 8081
-WORKDIR /root/
+EXPOSE 8080
 
-COPY --from=builder work/usr/bin/user /usr/bin/user
-CMD ["/usr/bin/user"]
+CMD ["air"]

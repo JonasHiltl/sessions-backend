@@ -1,0 +1,71 @@
+admin:
+  access_log_path: /tmp/envoy.log
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8001
+
+static_resources:
+  listeners:
+    - name: listener_0
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8000
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                route_config:
+                  name: all
+                  virtual_hosts:
+                    - name: backend
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/user/"
+                          route:
+                            # host_rewrite: www.google.com
+                            prefix_rewrite: "/"
+                            cluster: user
+                http_filters:
+                  - name: envoy.filters.http.jwt_authn
+                    typed_config:
+                      "@type": "type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication"
+                      providers:
+                        main_auth:
+                          forward_payload_header: "jwt_payload"
+                          pad_forward_payload_header: true
+                          issuer: sessions.com
+                          local_jwks:
+                            inline_string: '{"keys":[{"typ": "JWT", "kty":"oct","alg":"HS256","kid":"df","k":"NWM5YmY1ZGFkZDI1MWVkMjNmYzlmOTIxYzdlZjQyNjMyNGVjYmM4ODU3YzlmODU2YTZjMTM3NmQ5NzEyNTQzMDljZWEyYzRlNzhjY2MwM2MzMmRlZTJiOGNlNjJjMzgz"}]}'
+                      # the k property needs to be base64 encoded in the auth service to use as the secret
+                      rules:
+                        - match:
+                            prefix: /user/docs/index.html
+                        - match:
+                            prefix: /user/login
+                        - match:
+                            prefix: /user/register
+                        - match:
+                            prefix: /user
+                          requires:
+                            provider_name: main_auth
+                  - name: envoy.filters.http.router
+
+  clusters:
+    - name: user
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: user
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: user
+                      port_value: 8080
