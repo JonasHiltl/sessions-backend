@@ -1,0 +1,279 @@
+basePath: /
+definitions:
+  datastruct.AuthRes:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+    type: object
+  datastruct.LoginBody:
+    properties:
+      password:
+        type: string
+      usernameOrEmail:
+        type: string
+    required:
+    - password
+    - usernameOrEmail
+    type: object
+  datastruct.PublicUser:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      phoneNumber:
+        type: string
+      picture:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - firstName
+    - username
+    type: object
+  datastruct.User:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      password:
+        minLength: 10
+        type: string
+      phoneNumber:
+        type: string
+      picture:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - firstName
+    - password
+    - username
+    type: object
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This Microservice manages user entities
+  title: User Microservice
+  version: "1.0"
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Saves a user in our MongoDB
+      parameters:
+      - description: The body to create a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/datastruct.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Create a user
+      tags:
+      - CRUD
+  /{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a user from our MongoDB
+      parameters:
+      - description: User Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Delete a user
+      tags:
+      - CRUD
+    get:
+      consumes:
+      - application/json
+      description: Gets the user information by id user
+      parameters:
+      - description: User Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get user
+      tags:
+      - CRUD
+    patch:
+      consumes:
+      - application/json
+      description: Updates user with provided values
+      parameters:
+      - description: The body to create a thing
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/datastruct.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Update a user
+      tags:
+      - CRUD
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with credentials
+      parameters:
+      - description: The required credentials
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/datastruct.LoginBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.AuthRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Login
+      tags:
+      - auth
+  /me:
+    get:
+      consumes:
+      - application/json
+      description: Gets the user information of currently logged in user
+      parameters:
+      - description: Base64 encoded JWT Payload
+        in: header
+        name: jwt_payload
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get current user
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Saves a new User in the Database and returns auth token
+      parameters:
+      - description: The body to create a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/datastruct.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.AuthRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Register a new User
+      tags:
+      - auth
+  /username-exists/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Check if username is already taken
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Check Username availability
+swagger: "2.0"
