@@ -2,4 +2,4 @@ run-user:
 	cd services/user; air
 
 swagger-user:
-	cd services/user; swag init -g services/user/main.go --parseDependency --parseDepth 1
+	cd services/user; swag init --parseDependency --parseDepth 1

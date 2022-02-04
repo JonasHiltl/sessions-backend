@@ -11,7 +11,7 @@
     "paths": {
         "/": {
             "post": {
-                "description": "Saves a user in our MongoDB",
+                "description": "Saves a user in our DB",
                 "consumes": [
                     "application/json"
                 ],
@@ -29,7 +29,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/datastruct.User"
+                            "$ref": "#/definitions/datastruct.RequestUser"
                         }
                     }
                 ],
@@ -144,7 +144,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/datastruct.User"
+                            "$ref": "#/definitions/datastruct.RequestUser"
                         }
                     }
                 ],
@@ -237,7 +237,7 @@
                 }
             },
             "delete": {
-                "description": "Deletes a user from our MongoDB",
+                "description": "Deletes a user from our DB",
                 "consumes": [
                     "application/json"
                 ],
@@ -291,7 +291,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/datastruct.User"
+                            "$ref": "#/definitions/datastruct.RequestUser"
                         }
                     }
                 ],
@@ -359,9 +359,6 @@
                 "lastName": {
                     "type": "string"
                 },
-                "phoneNumber": {
-                    "type": "string"
-                },
                 "picture": {
                     "type": "string"
                 },
@@ -373,11 +370,11 @@
                 }
             }
         },
-        "datastruct.User": {
+        "datastruct.RequestUser": {
             "type": "object",
             "required": [
                 "email",
-                "firstName",
+                "firstame",
                 "password",
                 "username"
             ],
@@ -385,26 +382,17 @@
                 "email": {
                     "type": "string"
                 },
-                "firstName": {
+                "firstame": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "lastName": {
+                "lastname": {
                     "type": "string"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 10
-                },
-                "phoneNumber": {
-                    "type": "string"
+                    "minLength": 8
                 },
                 "picture": {
-                    "type": "string"
-                },
-                "role": {
                     "type": "string"
                 },
                 "username": {

@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/user/ent"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
@@ -14,12 +13,12 @@ import (
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param Body body datastruct.User true "The body to create a user"
+// @Param Body body datastruct.RequestUser true "The body to create a user"
 // @Success 201 {object} datastruct.AuthRes
 // @Failure 400 {object} echo.HTTPError
 // @Router /register [post]
 func (a *httpApp) Register(c echo.Context) error {
-	var reqBody ent.User
+	var reqBody datastruct.RequestUser
 	if err := c.Bind(&reqBody); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
 	}

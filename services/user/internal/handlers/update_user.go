@@ -16,7 +16,7 @@ import (
 // @Tags CRUD
 // @Accept json
 // @Produce json
-// @Param Body body datastruct.User true "The body to create a thing"
+// @Param Body body datastruct.RequestUser true "The body to create a thing"
 // @Success 201 {object} datastruct.PublicUser
 // @Failure 400 {object} echo.HTTPError
 // @Router /{id} [patch]

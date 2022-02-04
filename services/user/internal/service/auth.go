@@ -11,7 +11,7 @@ import (
 )
 
 type AuthService interface {
-	Register(ctx context.Context, u ent.User) (string, error)
+	Register(ctx context.Context, u datastruct.RequestUser) (string, error)
 	Login(ctx context.Context, l datastruct.LoginBody) (string, error)
 }
 
@@ -24,8 +24,8 @@ func NewAuthService(client *ent.UserClient, tokenManager TokenManager) AuthServi
 	return &authService{client: client, tokenManager: tokenManager}
 }
 
-func (as *authService) Register(ctx context.Context, u ent.User) (string, error) {
-	_, err := as.client.
+func (as *authService) Register(ctx context.Context, u datastruct.RequestUser) (string, error) {
+	res, err := as.client.
 		Create().
 		SetUsername(u.Username).
 		SetFirstName(u.FirstName).
@@ -37,7 +37,7 @@ func (as *authService) Register(ctx context.Context, u ent.User) (string, error)
 		return "", err
 	}
 
-	token, err := as.tokenManager.NewJWT(u)
+	token, err := as.tokenManager.NewJWT(*res)
 	if err != nil {
 		return "", err
 	}

@@ -27,8 +27,6 @@ definitions:
         type: string
       lastName:
         type: string
-      phoneNumber:
-        type: string
       picture:
         type: string
       role:
@@ -40,30 +38,24 @@ definitions:
     - firstName
     - username
     type: object
-  datastruct.User:
+  datastruct.RequestUser:
     properties:
       email:
         type: string
-      firstName:
+      firstame:
         type: string
-      id:
-        type: string
-      lastName:
+      lastname:
         type: string
       password:
-        minLength: 10
-        type: string
-      phoneNumber:
+        minLength: 8
         type: string
       picture:
-        type: string
-      role:
         type: string
       username:
         type: string
     required:
     - email
-    - firstName
+    - firstame
     - password
     - username
     type: object
@@ -82,14 +74,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Saves a user in our MongoDB
+      description: Saves a user in our DB
       parameters:
       - description: The body to create a user
         in: body
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/datastruct.User'
+          $ref: '#/definitions/datastruct.RequestUser'
       produces:
       - application/json
       responses:
@@ -108,7 +100,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Deletes a user from our MongoDB
+      description: Deletes a user from our DB
       parameters:
       - description: User Id
         in: path
@@ -163,7 +155,7 @@ paths:
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/datastruct.User'
+          $ref: '#/definitions/datastruct.RequestUser'
       produces:
       - application/json
       responses:
@@ -238,7 +230,7 @@ paths:
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/datastruct.User'
+          $ref: '#/definitions/datastruct.RequestUser'
       produces:
       - application/json
       responses:
