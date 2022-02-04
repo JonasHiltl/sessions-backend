@@ -57,7 +57,7 @@ func main() {
 	e.POST("/login", httpApp.Login)
 	e.POST("/register", httpApp.Register)
 
-	if err := e.Start(":8081"); err != http.ErrServerClosed {
+	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)
 	}
 }

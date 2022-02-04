@@ -1,9 +1,11 @@
 package service
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/jonashiltl/sessions-backend/services/user/ent"
-	"github.com/spf13/viper"
 )
 
 type TokenManager interface {
@@ -15,7 +17,8 @@ type tokenManager struct {
 }
 
 func NewTokenManager() TokenManager {
-	secret := viper.GetString("jwt.secret")
+	secret := os.Getenv("TOKEN_SECRET")
+	fmt.Println(secret)
 	return &tokenManager{secret: secret}
 }
 

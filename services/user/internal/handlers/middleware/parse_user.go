@@ -9,20 +9,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ParseUser(c echo.Context) (*datastruct.JwtPayload, error) {
+func ParseUser(c echo.Context) (datastruct.JwtPayload, error) {
 	p := c.Request().Header.Get("jwt_payload")
 	if p == "" {
-		return nil, errors.New("not logged in")
+		return datastruct.JwtPayload{}, errors.New("not logged in")
 	}
 
 	stringBytes, err := base64.StdEncoding.DecodeString(p)
 	if err != nil {
-		return nil, err
+		return datastruct.JwtPayload{}, err
 	}
 
 	result := datastruct.JwtPayload{}
 	json.Unmarshal(stringBytes, &result)
 
-	return &result, nil
+	return result, nil
 
 }

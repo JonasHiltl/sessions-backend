@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -12,7 +13,7 @@ import (
 )
 
 func NewClient() (*ent.UserClient, error) {
-	drv, err := sql.Open("mysql", "root:rootPassword@tcp(localhost:3306)/sessions?parseTime=true")
+	drv, err := sql.Open("mysql", os.Getenv("MYSQL"))
 	if err != nil {
 		return nil, err
 	}
