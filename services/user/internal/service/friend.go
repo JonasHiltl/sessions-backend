@@ -9,6 +9,7 @@ import (
 )
 
 type FriendService interface {
+	Get(ctx context.Context, userId uuid.UUID, offset int, limit int) ([]*ent.User, error)
 	FriendRequest(ctx context.Context, fId uuid.UUID, meId uuid.UUID) error
 	Search(ctx context.Context, userId uuid.UUID, query string, accepted bool) ([]*ent.User, error)
 }
@@ -19,6 +20,19 @@ type friendSerivce struct {
 
 func NewFriendService(client *ent.UserClient) FriendService {
 	return &friendSerivce{client: client}
+}
+
+func (fs *friendSerivce) Get(ctx context.Context, userId uuid.UUID, offset int, limit int) ([]*ent.User, error) {
+	friends, err := fs.client.
+		Query().
+		Where(user.ID(userId)).
+		QueryFriends().
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPicture, user.FieldRole).
+		Offset(offset).
+		Limit(limit).
+		All(ctx)
+
+	return friends, err
 }
 
 func (fs *friendSerivce) FriendRequest(ctx context.Context, fId uuid.UUID, meId uuid.UUID) error {
@@ -46,7 +60,7 @@ func (fs *friendSerivce) Search(ctx context.Context, userId uuid.UUID, query str
 				user.LastNameHasPrefix(query),
 			),
 		).
-		Limit(5).
+		Limit(10).
 		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPicture, user.FieldRole).
 		All(ctx)
 

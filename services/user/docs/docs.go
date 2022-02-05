@@ -191,6 +191,57 @@ const docTemplate_swagger = `{
             }
         },
         "/friend/{id}": {
+            "get": {
+                "description": "Returns a list of friends of a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "friend"
+                ],
+                "summary": "Get all friends",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id of the user to get friends of",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset list of friends",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limits list of friends",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/datastruct.PublicUser"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Sends friend request to user with id from params",
                 "consumes": [

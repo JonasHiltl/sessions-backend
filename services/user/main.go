@@ -58,6 +58,7 @@ func main() {
 	e.POST("/auth/login", httpApp.Login)
 	e.POST("/auth/register", httpApp.Register)
 
+	e.GET("/friend/:id", httpApp.GetFriends)
 	e.PUT("/friend/:id", httpApp.FriendRequest)
 	e.GET("/friend/search/:id", httpApp.FriendSearch)
 
