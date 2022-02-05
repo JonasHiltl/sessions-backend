@@ -1,7 +1,5 @@
 package datastruct
 
-import "github.com/jonashiltl/sessions-backend/services/user/ent"
-
 type PublicUser struct {
 	ID          string `json:"id"`
 	Username    string `json:"username"              validate:"required"`
@@ -9,7 +7,7 @@ type PublicUser struct {
 	LastName    string `json:"lastname,omitempty"`
 	Picture     string `json:"picture,omitempty"`
 	Role        string `json:"role"`
-	FriendCount int    `json:"friendCount"`
+	FriendCount int    `json:"friendCount,omitempty"`
 }
 
 type RequestUser struct {
@@ -21,14 +19,14 @@ type RequestUser struct {
 	Picture   string `json:"picture,omitempty"`
 }
 
-func AddCount(u *ent.User, count int) PublicUser {
+func (pu PublicUser) AddCount(count int) PublicUser {
 	return PublicUser{
-		ID:          u.ID.String(),
-		Username:    u.Username,
-		FirstName:   u.FirstName,
-		LastName:    u.LastName,
-		Picture:     u.Picture,
-		Role:        string(u.Role),
+		ID:          pu.ID,
+		Username:    pu.Username,
+		FirstName:   pu.FirstName,
+		LastName:    pu.LastName,
+		Picture:     pu.Picture,
+		Role:        string(pu.Role),
 		FriendCount: count,
 	}
 }
