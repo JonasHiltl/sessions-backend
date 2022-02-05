@@ -15,6 +15,7 @@ type HttpApp interface {
 	Login(c echo.Context) error
 	Register(c echo.Context) error
 	FriendRequest(c echo.Context) error
+	FriendSearch(c echo.Context) error
 }
 
 type httpApp struct {

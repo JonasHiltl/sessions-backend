@@ -59,6 +59,7 @@ func main() {
 	e.POST("/auth/register", httpApp.Register)
 
 	e.PUT("/friend/:id", httpApp.FriendRequest)
+	e.GET("/friend/search/:id", httpApp.FriendSearch)
 
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)
