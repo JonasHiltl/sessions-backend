@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/golang-jwt/jwt"
@@ -18,7 +17,6 @@ type tokenManager struct {
 
 func NewTokenManager() TokenManager {
 	secret := os.Getenv("TOKEN_SECRET")
-	fmt.Println(secret)
 	return &tokenManager{secret: secret}
 }
 

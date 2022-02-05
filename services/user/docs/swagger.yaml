@@ -26,13 +26,13 @@ definitions:
     type: object
   datastruct.PublicUser:
     properties:
-      email:
+      firstame:
         type: string
-      firstName:
-        type: string
+      friendCount:
+        type: integer
       id:
         type: string
-      lastName:
+      lastname:
         type: string
       picture:
         type: string
@@ -41,8 +41,7 @@ definitions:
       username:
         type: string
     required:
-    - email
-    - firstName
+    - firstame
     - username
     type: object
   datastruct.RequestUser:
@@ -252,6 +251,42 @@ paths:
           schema:
             $ref: '#/definitions/echo.HTTPError'
       summary: Send friend request
+      tags:
+      - friend
+  /friend/search/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Search friends by username, first name or last name
+      parameters:
+      - description: Id of user which friends to search
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: If only accepted friends to search
+        in: query
+        name: accepted
+        type: boolean
+      - description: Query string
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/datastruct.PublicUser'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Search friends of user
       tags:
       - friend
   /me:

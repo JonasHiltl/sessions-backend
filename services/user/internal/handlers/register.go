@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Register goDoc
 // @Summary Register a new User
 // @Description Saves a new User in the Database and returns auth token
 // @Tags auth

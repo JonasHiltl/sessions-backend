@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// UsernameExists goDoc
 // @Summary Check Username availability
 // @Description Check if username is already taken
 // @Accept json
@@ -22,8 +21,6 @@ func (a *httpApp) UsernameExists(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
-	println(usernameExists)
 
 	return c.JSON(http.StatusOK, usernameExists)
 }

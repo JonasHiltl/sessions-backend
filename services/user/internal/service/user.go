@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/services/user/ent"
@@ -15,6 +17,7 @@ type UserService interface {
 	Update(ctx context.Context, id uuid.UUID, u datastruct.RequestUser) (*ent.User, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 	UsernameExists(ctx context.Context, username string) (bool, error)
+	CountFriends(ctx context.Context, id uuid.UUID) int
 }
 
 type userService struct {
@@ -35,11 +38,25 @@ func (us *userService) Create(ctx context.Context, u datastruct.RequestUser) (*e
 		SetPassword(u.Password).
 		Save(ctx)
 
+	if err != nil {
+		if strings.Contains(err.Error(), "for key 'users.email'") {
+			return &ent.User{}, errors.New("email already taken")
+		}
+		if strings.Contains(err.Error(), "for key 'users.username'") {
+			return &ent.User{}, errors.New("username already taken")
+		}
+	}
+
 	return res, err
 }
 
 func (us *userService) GetById(ctx context.Context, id uuid.UUID) (*ent.User, error) {
-	res, err := us.client.Get(ctx, id)
+	res, err := us.client.
+		Query().
+		Where(user.ID(id)).
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldPicture).
+		Only(ctx)
+
 	return res, err
 }
 
@@ -65,7 +82,9 @@ func (us *userService) Update(ctx context.Context, id uuid.UUID, u datastruct.Re
 		builder.SetPassword(u.Password)
 	}
 
-	res, err := builder.Save(ctx)
+	res, err := builder.
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldPicture).
+		Save(ctx)
 
 	return res, err
 }
@@ -79,4 +98,12 @@ func (us *userService) UsernameExists(ctx context.Context, username string) (boo
 		Query().
 		Where(user.UsernameEQ(username)).
 		Exist(ctx)
+}
+
+func (us *userService) CountFriends(ctx context.Context, id uuid.UUID) int {
+	count, err := us.client.Query().Where(user.ID(id)).QueryFriends().Count(ctx)
+	if err != nil {
+		return 0
+	}
+	return count
 }

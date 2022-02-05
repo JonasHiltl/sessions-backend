@@ -10,7 +10,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// CreateUser goDoc
 // @Summary Update a user
 // @Description Updates user with provided values
 // @Tags CRUD
@@ -47,5 +46,7 @@ func (a *httpApp) UpdateUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, u)
+	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
+
+	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
 }

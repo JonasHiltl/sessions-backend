@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// FriendRequest goDoc
 // @Summary Send friend request
 // @Description Sends friend request to user with id from params
 // @Tags friend

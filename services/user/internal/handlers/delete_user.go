@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// DeleteUser goDoc
 // @Summary Delete a user
 // @Description Deletes a user from our DB
 // @Tags CRUD

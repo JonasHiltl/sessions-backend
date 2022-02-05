@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Login goDoc
 // @Summary Login
 // @Description Login with credentials
 // @Tags auth

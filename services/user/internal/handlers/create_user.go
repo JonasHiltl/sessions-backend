@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// CreateUser goDoc
 // @Summary Create a user
 // @Description Saves a user in our DB
 // @Tags CRUD
@@ -31,5 +30,5 @@ func (a *httpApp) CreateUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, u)
+	return c.JSON(http.StatusCreated, &u)
 }

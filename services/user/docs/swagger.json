@@ -129,6 +129,60 @@
                 }
             }
         },
+        "/friend/search/{id}": {
+            "get": {
+                "description": "Search friends by username, first name or last name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "friend"
+                ],
+                "summary": "Search friends of user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id of user which friends to search",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "If only accepted friends to search",
+                        "name": "accepted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Query string",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/datastruct.PublicUser"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/friend/{id}": {
             "put": {
                 "description": "Sends friend request to user with id from params",
@@ -391,21 +445,20 @@
         "datastruct.PublicUser": {
             "type": "object",
             "required": [
-                "email",
-                "firstName",
+                "firstame",
                 "username"
             ],
             "properties": {
-                "email": {
+                "firstame": {
                     "type": "string"
                 },
-                "firstName": {
-                    "type": "string"
+                "friendCount": {
+                    "type": "integer"
                 },
                 "id": {
                     "type": "string"
                 },
-                "lastName": {
+                "lastname": {
                     "type": "string"
                 },
                 "picture": {

@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
 
-// GetMe goDoc
 // @Summary Get user
 // @Description Gets the user information by id user
 // @Tags CRUD
@@ -25,9 +25,12 @@ func (a *httpApp) GetUser(c echo.Context) error {
 	}
 
 	u, err := a.userService.GetById(c.Request().Context(), uuid)
+
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, u)
+	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
+
+	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
 }

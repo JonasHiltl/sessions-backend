@@ -3,11 +3,11 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers/middleware"
 	"github.com/labstack/echo/v4"
 )
 
-// GetMe goDoc
 // @Summary Get current user
 // @Description Gets the user information of currently logged in user
 // @Accept json
@@ -27,5 +27,7 @@ func (a *httpApp) GetMe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, u)
+	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
+
+	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
 }
