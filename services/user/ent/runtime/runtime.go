@@ -16,6 +16,7 @@ import (
 func init() {
 	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userHooks[0]
+	user.Hooks[1] = userHooks[1]
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.

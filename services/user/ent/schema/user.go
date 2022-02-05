@@ -3,6 +3,7 @@ package schema
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	gen "github.com/jonashiltl/sessions-backend/services/user/ent"
@@ -76,7 +77,7 @@ func (User) Hooks() []ent.Hook {
 				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
 					oldPassword, exists := m.Password()
 					if !exists {
-						return nil, fmt.Errorf("password is not set")
+						return next.Mutate(ctx, m)
 					}
 
 					pBytes, err := bcrypt.GenerateFromPassword([]byte(oldPassword), 10)
@@ -85,6 +86,21 @@ func (User) Hooks() []ent.Hook {
 					}
 
 					m.SetPassword(string(pBytes))
+
+					return next.Mutate(ctx, m)
+				})
+			},
+			ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne,
+		),
+		hook.On(
+			func(next ent.Mutator) ent.Mutator {
+				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
+					oldUsername, exists := m.Username()
+					if !exists {
+						return next.Mutate(ctx, m)
+					}
+
+					m.SetUsername(strings.ToLower(oldUsername))
 
 					return next.Mutate(ctx, m)
 				})

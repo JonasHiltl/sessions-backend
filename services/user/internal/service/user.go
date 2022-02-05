@@ -44,14 +44,29 @@ func (us *userService) GetById(ctx context.Context, id uuid.UUID) (*ent.User, er
 }
 
 func (us *userService) Update(ctx context.Context, id uuid.UUID, u datastruct.RequestUser) (*ent.User, error) {
-	res, err := us.client.
-		UpdateOneID(id).
-		SetUsername(u.Username).
-		SetFirstName(u.FirstName).
-		SetLastName(u.LastName).
-		SetEmail(u.Email).
-		SetPicture(u.Picture).
-		Save(ctx)
+	builder := us.client.UpdateOneID(id)
+
+	if u.Username != "" {
+		builder.SetUsername(u.Username)
+	}
+	if u.FirstName != "" {
+		builder.SetFirstName(u.FirstName)
+	}
+	if u.LastName != "" {
+		builder.SetLastName(u.LastName)
+	}
+	if u.Email != "" {
+		builder.SetEmail(u.Email)
+	}
+	if u.Picture != "" {
+		builder.SetPicture(u.Picture)
+	}
+	if u.Password != "" {
+		builder.SetPassword(u.Password)
+	}
+
+	res, err := builder.Save(ctx)
+
 	return res, err
 }
 
