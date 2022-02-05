@@ -51,9 +51,15 @@ func (as *authService) Login(ctx context.Context, l datastruct.LoginBody) (strin
 	var err error
 
 	if strings.Contains(l.UsernameOrEmail, "@") {
-		res, err = as.client.Query().Where(user.EmailEQ(l.UsernameOrEmail)).First(ctx)
+		res, err = as.client.
+			Query().
+			Where(user.EmailEQ(l.UsernameOrEmail)).
+			First(ctx)
 	} else {
-		res, err = as.client.Query().Where(user.UsernameEQ(l.UsernameOrEmail)).First(ctx)
+		res, err = as.client.
+			Query().
+			Where(user.UsernameEQ(l.UsernameOrEmail)).
+			First(ctx)
 	}
 	if err != nil {
 		return "", errors.New("invalid Username or Password")

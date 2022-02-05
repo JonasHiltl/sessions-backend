@@ -17,6 +17,13 @@ definitions:
     - password
     - usernameOrEmail
     type: object
+  datastruct.MessageRes:
+    properties:
+      message:
+        type: string
+    required:
+    - message
+    type: object
   datastruct.PublicUser:
     properties:
       email:
@@ -159,8 +166,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/datastruct.PublicUser'
         "400":
@@ -170,7 +177,7 @@ paths:
       summary: Update a user
       tags:
       - CRUD
-  /login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -196,30 +203,7 @@ paths:
       summary: Login
       tags:
       - auth
-  /me:
-    get:
-      consumes:
-      - application/json
-      description: Gets the user information of currently logged in user
-      parameters:
-      - description: Base64 encoded JWT Payload
-        in: header
-        name: jwt_payload
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/datastruct.PublicUser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/echo.HTTPError'
-      summary: Get current user
-  /register:
+  /auth/register:
     post:
       consumes:
       - application/json
@@ -245,6 +229,54 @@ paths:
       summary: Register a new User
       tags:
       - auth
+  /friend/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Sends friend request to user with id from params
+      parameters:
+      - description: Friend Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.MessageRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Send friend request
+      tags:
+      - friend
+  /me:
+    get:
+      consumes:
+      - application/json
+      description: Gets the user information of currently logged in user
+      parameters:
+      - description: Base64 encoded JWT Payload
+        in: header
+        name: jwt_payload
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.PublicUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get current user
   /username-exists/{username}:
     get:
       consumes:

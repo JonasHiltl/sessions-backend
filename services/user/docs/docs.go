@@ -56,7 +56,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "/login": {
+        "/auth/login": {
             "post": {
                 "description": "Login with credentials",
                 "consumes": [
@@ -96,42 +96,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "/me": {
-            "get": {
-                "description": "Gets the user information of currently logged in user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get current user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Base64 encoded JWT Payload",
-                        "name": "jwt_payload",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/datastruct.PublicUser"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/echo.HTTPError"
-                        }
-                    }
-                }
-            }
-        },
-        "/register": {
+        "/auth/register": {
             "post": {
                 "description": "Saves a new User in the Database and returns auth token",
                 "consumes": [
@@ -160,6 +125,79 @@ const docTemplate_swagger = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/datastruct.AuthRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/friend/{id}": {
+            "put": {
+                "description": "Sends friend request to user with id from params",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "friend"
+                ],
+                "summary": "Send friend request",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Friend Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/datastruct.MessageRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "description": "Gets the user information of currently logged in user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get current user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Base64 encoded JWT Payload",
+                        "name": "jwt_payload",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/datastruct.PublicUser"
                         }
                     },
                     "400": {
@@ -303,8 +341,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/datastruct.PublicUser"
                         }
@@ -342,6 +380,17 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "usernameOrEmail": {
+                    "type": "string"
+                }
+            }
+        },
+        "datastruct.MessageRes": {
+            "type": "object",
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }

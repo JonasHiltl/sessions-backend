@@ -17,12 +17,12 @@ import (
 // @Failure 400 {object} echo.HTTPError
 // @Router /me [get]
 func (a *httpApp) GetMe(c echo.Context) error {
-	userId, err := middleware.ParseUser(c)
+	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	u, err := a.userService.GetById(c.Request().Context(), userId.Sub)
+	u, err := a.userService.GetById(c.Request().Context(), me.Sub)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

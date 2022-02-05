@@ -32,6 +32,7 @@ func main() {
 
 	userService := service.NewUserService(client)
 	authService := service.NewAuthService(client, tokenManager)
+	friendService := service.NewFriendService(client)
 
 	e := echo.New()
 	e.Validator = &utils.CustomValidator{Validator: validator.New()}
@@ -42,7 +43,7 @@ func main() {
 		Output:           e.Logger.Output(),
 	}))
 
-	httpApp := handlers.NewHttpApp(userService, authService)
+	httpApp := handlers.NewHttpApp(userService, authService, friendService)
 
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 
@@ -54,8 +55,10 @@ func main() {
 	e.GET("/me", httpApp.GetMe)
 	e.GET("/username-exists/:username", httpApp.UsernameExists)
 
-	e.POST("/login", httpApp.Login)
-	e.POST("/register", httpApp.Register)
+	e.POST("/auth/login", httpApp.Login)
+	e.POST("/auth/register", httpApp.Register)
+
+	e.PUT("/friend/:id", httpApp.FriendRequest)
 
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)

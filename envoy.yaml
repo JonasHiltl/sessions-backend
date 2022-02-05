@@ -46,9 +46,9 @@ static_resources:
                         - match:
                             prefix: /user/docs/index.html
                         - match:
-                            prefix: /user/login
+                            prefix: /user/auth/login
                         - match:
-                            prefix: /user/register
+                            prefix: /user/auth/register
                         - match:
                             prefix: /user
                           requires:

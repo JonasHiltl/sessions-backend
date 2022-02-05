@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -22,9 +21,7 @@ func (a *httpApp) GetUser(c echo.Context) error {
 	userId := c.Param("id")
 	uuid, err := uuid.Parse(userId)
 	if err != nil {
-		fmt.Println(userId)
-
-		return echo.NewHTTPError(http.StatusBadRequest, err)
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	u, err := a.userService.GetById(c.Request().Context(), uuid)

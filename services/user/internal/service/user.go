@@ -75,5 +75,8 @@ func (us *userService) Delete(ctx context.Context, id uuid.UUID) error {
 }
 
 func (us *userService) UsernameExists(ctx context.Context, username string) (bool, error) {
-	return us.client.Query().Where(user.UsernameEQ(username)).Exist(ctx)
+	return us.client.
+		Query().
+		Where(user.UsernameEQ(username)).
+		Exist(ctx)
 }

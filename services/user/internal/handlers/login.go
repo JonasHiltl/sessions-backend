@@ -16,7 +16,7 @@ import (
 // @Param Body body datastruct.LoginBody true "The required credentials"
 // @Success 200 {object} datastruct.AuthRes
 // @Failure 400 {object} echo.HTTPError
-// @Router /login [post]
+// @Router /auth/login [post]
 func (a *httpApp) Login(c echo.Context) error {
 	var reqBody datastruct.LoginBody
 	if err := c.Bind(&reqBody); err != nil {

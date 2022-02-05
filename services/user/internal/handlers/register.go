@@ -16,7 +16,7 @@ import (
 // @Param Body body datastruct.RequestUser true "The body to create a user"
 // @Success 201 {object} datastruct.AuthRes
 // @Failure 400 {object} echo.HTTPError
-// @Router /register [post]
+// @Router /auth/register [post]
 func (a *httpApp) Register(c echo.Context) error {
 	var reqBody datastruct.RequestUser
 	if err := c.Bind(&reqBody); err != nil {

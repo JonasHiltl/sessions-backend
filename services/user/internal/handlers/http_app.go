@@ -14,16 +14,19 @@ type HttpApp interface {
 	UsernameExists(c echo.Context) error
 	Login(c echo.Context) error
 	Register(c echo.Context) error
+	FriendRequest(c echo.Context) error
 }
 
 type httpApp struct {
-	userService service.UserService
-	authService service.AuthService
+	userService   service.UserService
+	authService   service.AuthService
+	friendService service.FriendService
 }
 
-func NewHttpApp(userService service.UserService, authService service.AuthService) HttpApp {
+func NewHttpApp(userService service.UserService, authService service.AuthService, friendService service.FriendService) HttpApp {
 	return &httpApp{
-		authService: authService,
-		userService: userService,
+		authService:   authService,
+		userService:   userService,
+		friendService: friendService,
 	}
 }
