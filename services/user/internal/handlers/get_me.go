@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers/middleware"
 	"github.com/labstack/echo/v4"
 )
@@ -29,5 +28,5 @@ func (a *httpApp) GetMe(c echo.Context) error {
 
 	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
 
-	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
+	return c.JSON(http.StatusOK, u.ToPublicProfile().AddCount(friendCount))
 }

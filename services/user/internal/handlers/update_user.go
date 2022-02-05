@@ -48,5 +48,5 @@ func (a *httpApp) UpdateUser(c echo.Context) error {
 
 	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
 
-	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
+	return c.JSON(http.StatusOK, u.ToPublicProfile().AddCount(friendCount))
 }

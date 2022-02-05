@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
 
@@ -39,5 +40,11 @@ func (a *httpApp) FriendSearch(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, friends)
+	var publicFriends []datastruct.PublicUser
+
+	for _, user := range friends {
+		publicFriends = append(publicFriends, user.ToPublicProfile())
+	}
+
+	return c.JSON(http.StatusOK, publicFriends)
 }

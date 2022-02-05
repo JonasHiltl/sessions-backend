@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
 
@@ -32,5 +31,5 @@ func (a *httpApp) GetUser(c echo.Context) error {
 
 	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
 
-	return c.JSON(http.StatusOK, datastruct.AddCount(u, friendCount))
+	return c.JSON(http.StatusOK, u.ToPublicProfile().AddCount(friendCount))
 }
