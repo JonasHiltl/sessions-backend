@@ -21,9 +21,9 @@ import (
 // @Failure 400 {object} echo.HTTPError
 // @Router /friend/{id} [get]
 func (a *httpApp) GetFriends(c echo.Context) error {
-	userId := c.Param("id")
+	uId := c.Param("id")
 
-	uuid, err := uuid.Parse(userId)
+	uUUID, err := uuid.Parse(uId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
@@ -34,9 +34,9 @@ func (a *httpApp) GetFriends(c echo.Context) error {
 	offsetNum, _ := strconv.Atoi(offset)
 	limitNum, _ := strconv.Atoi(limit)
 
-	friends, err := a.friendService.Get(c.Request().Context(), uuid, offsetNum, limitNum)
+	friends, err := a.friendService.Get(c.Request().Context(), uUUID, offsetNum, limitNum)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var publicFriends []datastruct.PublicUser

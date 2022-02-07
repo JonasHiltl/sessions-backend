@@ -20,18 +20,18 @@ import (
 // @Failure 400 {object} echo.HTTPError
 // @Router /{id} [patch]
 func (a *httpApp) UpdateUser(c echo.Context) error {
-	user, err := middleware.ParseUser(c)
+	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	uuid, err := uuid.Parse(c.Param("id"))
+	uUUID, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		fmt.Println(uuid)
+		fmt.Println(uUUID)
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	if uuid != user.Sub {
+	if uUUID != me.Sub {
 		return echo.NewHTTPError(http.StatusBadRequest, "You can only update your own information")
 	}
 
@@ -40,7 +40,7 @@ func (a *httpApp) UpdateUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
 	}
 
-	u, err := a.userService.Update(c.Request().Context(), user.Sub, reqBody)
+	u, err := a.userService.Update(c.Request().Context(), me.Sub, reqBody)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())

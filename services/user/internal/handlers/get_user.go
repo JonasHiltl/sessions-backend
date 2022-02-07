@@ -17,14 +17,13 @@ import (
 // @Failure 400 {object} echo.HTTPError
 // @Router /{id} [get]
 func (a *httpApp) GetUser(c echo.Context) error {
-	userId := c.Param("id")
-	uuid, err := uuid.Parse(userId)
+	uId := c.Param("id")
+	uUUID, err := uuid.Parse(uId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	u, err := a.userService.GetById(c.Request().Context(), uuid)
-
+	u, err := a.userService.GetById(c.Request().Context(), uUUID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

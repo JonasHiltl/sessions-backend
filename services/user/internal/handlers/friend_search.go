@@ -23,21 +23,21 @@ import (
 func (a *httpApp) FriendSearch(c echo.Context) error {
 	query := c.QueryParam("query")
 	accepted := c.QueryParam("accepted")
-	acceptedBool, err := strconv.ParseBool(accepted)
+	acceptedB, err := strconv.ParseBool(accepted)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid accepted parameter")
 	}
 
-	userId := c.Param("id")
+	uId := c.Param("id")
 
-	uuid, err := uuid.Parse(userId)
+	uUUID, err := uuid.Parse(uId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	friends, err := a.friendService.Search(c.Request().Context(), uuid, query, acceptedBool)
+	friends, err := a.friendService.Search(c.Request().Context(), uUUID, query, acceptedB)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	var publicFriends []datastruct.PublicUser

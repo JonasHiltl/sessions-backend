@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	_ "github.com/jonashiltl/sessions-backend/services/user/docs"
 	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers"
@@ -22,6 +23,11 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	client, err := repository.NewClient()
 	if err != nil {
 		log.Fatal(err)
