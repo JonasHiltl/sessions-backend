@@ -6,12 +6,12 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	_ "github.com/jonashiltl/sessions-backend/services/user/docs"
 	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -41,7 +41,7 @@ func main() {
 	friendService := service.NewFriendService(client)
 
 	e := echo.New()
-	e.Validator = &utils.CustomValidator{Validator: validator.New()}
+	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format:           "[${time_custom}] ${status} ${method} ${path} ${latency_human} ${error}\n",
