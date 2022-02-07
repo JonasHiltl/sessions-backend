@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
@@ -49,4 +50,8 @@ func main() {
 	e.POST("/", httpApp.CreateParty)
 	e.DELETE("/:id", httpApp.DeleteParty)
 	e.PATCH("/:id", httpApp.UpdateParty)
+
+	if err := e.Start(":8080"); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 }
