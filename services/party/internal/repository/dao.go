@@ -52,11 +52,17 @@ func NewDB() (*mongo.Collection, error) {
 	db := client.Database("sessions")
 	partyCol := db.Collection(datastruct.PartyCollectionName)
 
-	partyCol.Indexes().CreateOne(
+	partyCol.Indexes().CreateMany(
 		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{Key: "title", Value: bsonx.String("text")}},
-			Options: options.Index(),
+		[]mongo.IndexModel{
+			{
+				Keys:    bson.D{{Key: "title", Value: bsonx.String("text")}},
+				Options: options.Index(),
+			},
+			{
+				Keys:    bson.D{{Key: "location", Value: bsonx.String("2dsphere")}},
+				Options: options.Index(),
+			},
 		},
 	)
 

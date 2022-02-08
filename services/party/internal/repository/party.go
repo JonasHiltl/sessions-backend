@@ -100,8 +100,26 @@ func (pq *partyQuery) Search(ctx context.Context, q string, page int) ([]datastr
 		page = 1
 	}
 
-	filter := bson.D{{"$text", bson.D{{"$search", q}}}}
-	sort := bson.D{{"score", bson.D{{"$meta", "textScore"}}}}
+	filter := bson.D{
+		{
+			Key: "$text",
+			Value: bson.D{{
+				Key:   "$search",
+				Value: q,
+			}},
+		},
+		{
+			Key:   "isGlobal",
+			Value: true,
+		},
+	}
+	sort := bson.D{{
+		Key: "score",
+		Value: bson.D{{
+			Key:   "$meta",
+			Value: "textScore",
+		}},
+	}}
 	options := options.Find().SetSort(sort)
 	options.SetSkip((int64(page) - 1) * perPage)
 	options.SetLimit(perPage)
@@ -121,6 +139,11 @@ func (pq *partyQuery) Search(ctx context.Context, q string, page int) ([]datastr
 		cursor.Decode(&party)
 
 		matches = append(matches, party)
+	}
+
+	// return empty array instead of null when parsing json
+	if len(matches) == 0 {
+		matches = make([]datastruct.Party, 0)
 	}
 
 	return matches, nil
