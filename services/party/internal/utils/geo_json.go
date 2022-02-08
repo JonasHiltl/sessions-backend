@@ -1,8 +1,8 @@
 package utils
 
 type GeoJson struct {
-	Type        string    `json:"-"           bson:"type"`
-	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
+	Type        string    `json:"-"           bson:"type,omitempty"`
+	Coordinates []float64 `json:"coordinates,omitempty" bson:"coordinates,omitempty"`
 }
 
 func NewPoint(long, lat float64) GeoJson {

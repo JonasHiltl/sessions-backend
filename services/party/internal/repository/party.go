@@ -53,7 +53,7 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) (datastruc
 	if p.Title != "" {
 		value["title"] = p.Title
 	}
-	if len(p.Location.Coordinates) >= 0 {
+	if p.Location.Coordinates[0] != 0 && p.Location.Coordinates[1] != 0 {
 		value["location"] = p.Location
 	}
 	if p.CreatorId != "" {

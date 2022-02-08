@@ -8,9 +8,11 @@ import (
 	"time"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 )
 
 type Dao interface {
@@ -49,6 +51,14 @@ func NewDB() (*mongo.Collection, error) {
 
 	db := client.Database("sessions")
 	partyCol := db.Collection(datastruct.PartyCollectionName)
+
+	partyCol.Indexes().CreateOne(
+		ctx,
+		mongo.IndexModel{
+			Keys:    bson.D{{Key: "title", Value: bsonx.String("text")}},
+			Options: options.Index(),
+		},
+	)
 
 	return partyCol, nil
 }

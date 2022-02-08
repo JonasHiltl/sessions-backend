@@ -10,20 +10,22 @@ import (
 )
 
 func (a *httpApp) UpdateParty(c echo.Context) error {
-	var reqBody datastruct.RequestPary
-
 	pId := c.Param("id")
 	_id, err := primitive.ObjectIDFromHex(pId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
+	var reqBody datastruct.RequestPary
+	if err := c.Bind(&reqBody); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
+	}
+
 	p := datastruct.Party{
 		ID:        _id,
 		Title:     reqBody.Title,
 		CreatorId: reqBody.CreatorId,
-		Location:  utils.NewPoint(reqBody.Long, reqBody.Lat),
-		IsGlobal:  reqBody.IsGlobal,
+		Location:  utils.NewPoint(reqBody.Location.Long, reqBody.Location.Lat),
 	}
 
 	p, err = a.partyService.Update(c.Request().Context(), p)

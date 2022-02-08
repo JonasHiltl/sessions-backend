@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/utils"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (a *httpApp) CreateParty(c echo.Context) error {
@@ -21,8 +23,9 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 	p := datastruct.Party{
 		Title:     reqBody.Title,
 		CreatorId: reqBody.CreatorId,
-		Location:  utils.NewPoint(reqBody.Long, reqBody.Lat),
+		Location:  utils.NewPoint(reqBody.Location.Long, reqBody.Location.Lat),
 		IsGlobal:  reqBody.IsGlobal,
+		CreatedAt: primitive.NewDateTimeFromTime(time.Now()),
 	}
 
 	p, err := a.partyService.Create(c.Request().Context(), p)
