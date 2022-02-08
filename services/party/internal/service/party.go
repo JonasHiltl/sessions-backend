@@ -10,8 +10,9 @@ import (
 type PartyService interface {
 	Create(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
 	Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
-	Delete(ctx context.Context, partyId string) error
-	GetById(ctx context.Context, partyId string) (datastruct.Party, error)
+	Delete(ctx context.Context, pId string) error
+	GetById(ctx context.Context, pId string) (datastruct.Party, error)
+	Search(ctx context.Context, q string, p int) ([]datastruct.Party, error)
 }
 
 type partyService struct {
@@ -36,4 +37,8 @@ func (ps *partyService) Delete(ctx context.Context, partyId string) error {
 
 func (ps *partyService) GetById(ctx context.Context, partyId string) (datastruct.Party, error) {
 	return ps.dao.NewPartyQuery().GetById(ctx, partyId)
+}
+
+func (ps *partyService) Search(ctx context.Context, q string, p int) ([]datastruct.Party, error) {
+	return ps.dao.NewPartyQuery().Search(ctx, q, p)
 }

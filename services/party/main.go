@@ -46,6 +46,7 @@ func main() {
 		Output:           e.Logger.Output(),
 	}))
 
+	e.GET("/search", httpApp.SearchParty)
 	e.GET("/:id", httpApp.GetParty)
 	e.POST("/", httpApp.CreateParty)
 	e.DELETE("/:id", httpApp.DeleteParty)

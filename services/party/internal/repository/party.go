@@ -15,6 +15,7 @@ type PartyQuery interface {
 	Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
 	Delete(ctx context.Context, pId string) error
 	GetById(ctx context.Context, pId string) (datastruct.Party, error)
+	Search(ctx context.Context, q string, page int) ([]datastruct.Party, error)
 }
 
 type partyQuery struct {
@@ -89,4 +90,38 @@ func (pq *partyQuery) Delete(ctx context.Context, pId string) error {
 		return err
 	}
 	return nil
+}
+
+func (pq *partyQuery) Search(ctx context.Context, q string, page int) ([]datastruct.Party, error) {
+	var matches []datastruct.Party
+	var perPage int64 = 10
+
+	if page <= 0 {
+		page = 1
+	}
+
+	filter := bson.D{{"$text", bson.D{{"$search", q}}}}
+	sort := bson.D{{"score", bson.D{{"$meta", "textScore"}}}}
+	options := options.Find().SetSort(sort)
+	options.SetSkip((int64(page) - 1) * perPage)
+	options.SetLimit(perPage)
+
+	cursor, err := pq.partyCol.Find(
+		ctx,
+		filter,
+		options,
+	)
+	if err != nil {
+		return []datastruct.Party{}, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var party datastruct.Party
+		cursor.Decode(&party)
+
+		matches = append(matches, party)
+	}
+
+	return matches, nil
 }
