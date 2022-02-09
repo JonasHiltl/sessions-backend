@@ -20,11 +20,24 @@ services:
 
   typesense:
     image: typesense/typesense:0.23.0.rc27
+    container_name: typesense
     entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
+    restart: on-failure
     ports:
       - "8108:8108"
     volumes:
       - ./data/typesense:/data
+
+  dynamodb-local:
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    ports:
+      - "7000:8000"
+    volumes:
+      - "./data/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
   mysql:
     image: mysql
     container_name: mysql
