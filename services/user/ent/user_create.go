@@ -73,6 +73,20 @@ func (uc *UserCreate) SetNillablePicture(s *string) *UserCreate {
 	return uc
 }
 
+// SetBlurhash sets the "blurhash" field.
+func (uc *UserCreate) SetBlurhash(s string) *UserCreate {
+	uc.mutation.SetBlurhash(s)
+	return uc
+}
+
+// SetNillableBlurhash sets the "blurhash" field if the given value is not nil.
+func (uc *UserCreate) SetNillableBlurhash(s *string) *UserCreate {
+	if s != nil {
+		uc.SetBlurhash(*s)
+	}
+	return uc
+}
+
 // SetRole sets the "role" field.
 func (uc *UserCreate) SetRole(u user.Role) *UserCreate {
 	uc.mutation.SetRole(u)
@@ -332,6 +346,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldPicture,
 		})
 		_node.Picture = value
+	}
+	if value, ok := uc.mutation.Blurhash(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldBlurhash,
+		})
+		_node.Blurhash = value
 	}
 	if value, ok := uc.mutation.Role(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

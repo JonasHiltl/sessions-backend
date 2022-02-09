@@ -136,6 +136,13 @@ func Picture(v string) predicate.User {
 	})
 }
 
+// Blurhash applies equality check predicate on the "blurhash" field. It's identical to BlurhashEQ.
+func Blurhash(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBlurhash), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -834,6 +841,131 @@ func PictureEqualFold(v string) predicate.User {
 func PictureContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPicture), v))
+	})
+}
+
+// BlurhashEQ applies the EQ predicate on the "blurhash" field.
+func BlurhashEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashNEQ applies the NEQ predicate on the "blurhash" field.
+func BlurhashNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashIn applies the In predicate on the "blurhash" field.
+func BlurhashIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldBlurhash), v...))
+	})
+}
+
+// BlurhashNotIn applies the NotIn predicate on the "blurhash" field.
+func BlurhashNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldBlurhash), v...))
+	})
+}
+
+// BlurhashGT applies the GT predicate on the "blurhash" field.
+func BlurhashGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashGTE applies the GTE predicate on the "blurhash" field.
+func BlurhashGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashLT applies the LT predicate on the "blurhash" field.
+func BlurhashLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashLTE applies the LTE predicate on the "blurhash" field.
+func BlurhashLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashContains applies the Contains predicate on the "blurhash" field.
+func BlurhashContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashHasPrefix applies the HasPrefix predicate on the "blurhash" field.
+func BlurhashHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashHasSuffix applies the HasSuffix predicate on the "blurhash" field.
+func BlurhashHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashIsNil applies the IsNil predicate on the "blurhash" field.
+func BlurhashIsNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldBlurhash)))
+	})
+}
+
+// BlurhashNotNil applies the NotNil predicate on the "blurhash" field.
+func BlurhashNotNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldBlurhash)))
+	})
+}
+
+// BlurhashEqualFold applies the EqualFold predicate on the "blurhash" field.
+func BlurhashEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldBlurhash), v))
+	})
+}
+
+// BlurhashContainsFold applies the ContainsFold predicate on the "blurhash" field.
+func BlurhashContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldBlurhash), v))
 	})
 }
 

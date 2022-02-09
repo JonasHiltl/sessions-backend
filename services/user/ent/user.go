@@ -29,6 +29,8 @@ type User struct {
 	Password string `json:"password,omitempty"`
 	// Picture holds the value of the "picture" field.
 	Picture string `json:"picture,omitempty"`
+	// Blurhash holds the value of the "blurhash" field.
+	Blurhash string `json:"blurhash,omitempty"`
 	// Role holds the value of the "role" field.
 	Role user.Role `json:"role,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -61,7 +63,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldEmail, user.FieldPassword, user.FieldPicture, user.FieldRole:
+		case user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldEmail, user.FieldPassword, user.FieldPicture, user.FieldBlurhash, user.FieldRole:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -124,6 +126,12 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.Picture = value.String
 			}
+		case user.FieldBlurhash:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field blurhash", values[i])
+			} else if value.Valid {
+				u.Blurhash = value.String
+			}
 		case user.FieldRole:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role", values[i])
@@ -181,6 +189,8 @@ func (u *User) String() string {
 	builder.WriteString(u.Password)
 	builder.WriteString(", picture=")
 	builder.WriteString(u.Picture)
+	builder.WriteString(", blurhash=")
+	builder.WriteString(u.Blurhash)
 	builder.WriteString(", role=")
 	builder.WriteString(fmt.Sprintf("%v", u.Role))
 	builder.WriteString(", created_at=")

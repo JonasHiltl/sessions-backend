@@ -40,6 +40,7 @@ type UserMutation struct {
 	email          *string
 	password       *string
 	picture        *string
+	blurhash       *string
 	role           *user.Role
 	created_at     *time.Time
 	clearedFields  map[string]struct{}
@@ -397,6 +398,55 @@ func (m *UserMutation) ResetPicture() {
 	delete(m.clearedFields, user.FieldPicture)
 }
 
+// SetBlurhash sets the "blurhash" field.
+func (m *UserMutation) SetBlurhash(s string) {
+	m.blurhash = &s
+}
+
+// Blurhash returns the value of the "blurhash" field in the mutation.
+func (m *UserMutation) Blurhash() (r string, exists bool) {
+	v := m.blurhash
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBlurhash returns the old "blurhash" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldBlurhash(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBlurhash is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBlurhash requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBlurhash: %w", err)
+	}
+	return oldValue.Blurhash, nil
+}
+
+// ClearBlurhash clears the value of the "blurhash" field.
+func (m *UserMutation) ClearBlurhash() {
+	m.blurhash = nil
+	m.clearedFields[user.FieldBlurhash] = struct{}{}
+}
+
+// BlurhashCleared returns if the "blurhash" field was cleared in this mutation.
+func (m *UserMutation) BlurhashCleared() bool {
+	_, ok := m.clearedFields[user.FieldBlurhash]
+	return ok
+}
+
+// ResetBlurhash resets all changes to the "blurhash" field.
+func (m *UserMutation) ResetBlurhash() {
+	m.blurhash = nil
+	delete(m.clearedFields, user.FieldBlurhash)
+}
+
 // SetRole sets the "role" field.
 func (m *UserMutation) SetRole(u user.Role) {
 	m.role = &u
@@ -542,7 +592,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
@@ -560,6 +610,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.picture != nil {
 		fields = append(fields, user.FieldPicture)
+	}
+	if m.blurhash != nil {
+		fields = append(fields, user.FieldBlurhash)
 	}
 	if m.role != nil {
 		fields = append(fields, user.FieldRole)
@@ -587,6 +640,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Password()
 	case user.FieldPicture:
 		return m.Picture()
+	case user.FieldBlurhash:
+		return m.Blurhash()
 	case user.FieldRole:
 		return m.Role()
 	case user.FieldCreatedAt:
@@ -612,6 +667,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPassword(ctx)
 	case user.FieldPicture:
 		return m.OldPicture(ctx)
+	case user.FieldBlurhash:
+		return m.OldBlurhash(ctx)
 	case user.FieldRole:
 		return m.OldRole(ctx)
 	case user.FieldCreatedAt:
@@ -667,6 +724,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPicture(v)
 		return nil
+	case user.FieldBlurhash:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBlurhash(v)
+		return nil
 	case user.FieldRole:
 		v, ok := value.(user.Role)
 		if !ok {
@@ -717,6 +781,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldPicture) {
 		fields = append(fields, user.FieldPicture)
 	}
+	if m.FieldCleared(user.FieldBlurhash) {
+		fields = append(fields, user.FieldBlurhash)
+	}
 	return fields
 }
 
@@ -736,6 +803,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldPicture:
 		m.ClearPicture()
+		return nil
+	case user.FieldBlurhash:
+		m.ClearBlurhash()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -762,6 +832,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldPicture:
 		m.ResetPicture()
+		return nil
+	case user.FieldBlurhash:
+		m.ResetBlurhash()
 		return nil
 	case user.FieldRole:
 		m.ResetRole()

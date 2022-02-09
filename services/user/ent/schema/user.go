@@ -46,6 +46,9 @@ func (User) Fields() []ent.Field {
 		field.String("picture").
 			Optional(),
 
+		field.String("blurhash").
+			Optional(),
+
 		field.Enum("role").
 			Values("ADMIN", "USER").
 			Default("USER"),

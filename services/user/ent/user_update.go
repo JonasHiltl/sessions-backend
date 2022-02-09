@@ -93,6 +93,26 @@ func (uu *UserUpdate) ClearPicture() *UserUpdate {
 	return uu
 }
 
+// SetBlurhash sets the "blurhash" field.
+func (uu *UserUpdate) SetBlurhash(s string) *UserUpdate {
+	uu.mutation.SetBlurhash(s)
+	return uu
+}
+
+// SetNillableBlurhash sets the "blurhash" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableBlurhash(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetBlurhash(*s)
+	}
+	return uu
+}
+
+// ClearBlurhash clears the value of the "blurhash" field.
+func (uu *UserUpdate) ClearBlurhash() *UserUpdate {
+	uu.mutation.ClearBlurhash()
+	return uu
+}
+
 // SetRole sets the "role" field.
 func (uu *UserUpdate) SetRole(u user.Role) *UserUpdate {
 	uu.mutation.SetRole(u)
@@ -304,6 +324,19 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldPicture,
 		})
 	}
+	if value, ok := uu.mutation.Blurhash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldBlurhash,
+		})
+	}
+	if uu.mutation.BlurhashCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldBlurhash,
+		})
+	}
 	if value, ok := uu.mutation.Role(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeEnum,
@@ -452,6 +485,26 @@ func (uuo *UserUpdateOne) SetNillablePicture(s *string) *UserUpdateOne {
 // ClearPicture clears the value of the "picture" field.
 func (uuo *UserUpdateOne) ClearPicture() *UserUpdateOne {
 	uuo.mutation.ClearPicture()
+	return uuo
+}
+
+// SetBlurhash sets the "blurhash" field.
+func (uuo *UserUpdateOne) SetBlurhash(s string) *UserUpdateOne {
+	uuo.mutation.SetBlurhash(s)
+	return uuo
+}
+
+// SetNillableBlurhash sets the "blurhash" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableBlurhash(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetBlurhash(*s)
+	}
+	return uuo
+}
+
+// ClearBlurhash clears the value of the "blurhash" field.
+func (uuo *UserUpdateOne) ClearBlurhash() *UserUpdateOne {
+	uuo.mutation.ClearBlurhash()
 	return uuo
 }
 
@@ -688,6 +741,19 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: user.FieldPicture,
+		})
+	}
+	if value, ok := uuo.mutation.Blurhash(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldBlurhash,
+		})
+	}
+	if uuo.mutation.BlurhashCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldBlurhash,
 		})
 	}
 	if value, ok := uuo.mutation.Role(); ok {
