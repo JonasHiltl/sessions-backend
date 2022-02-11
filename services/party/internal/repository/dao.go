@@ -1,18 +1,12 @@
 package repository
 
 import (
-	"context"
 	"fmt"
-	"log"
 	"os"
-	"time"
 
-	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"go.mongodb.org/mongo-driver/x/bsonx"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/guregu/dynamo"
 )
 
 type Dao interface {
@@ -20,59 +14,31 @@ type Dao interface {
 }
 
 type dao struct {
-	partyCol *mongo.Collection
+	db *dynamo.DB
 }
 
-func NewDB() (*mongo.Collection, error) {
-	host := os.Getenv("MONGO_HOST")
-	port := os.Getenv("MONGO_PORT")
+func NewDB() (*dynamo.DB, error) {
+	host := os.Getenv("DYNAMO_HOST")
+	port := os.Getenv("DYNAMO_PORT")
+	url := fmt.Sprintf("%v:%v", host, port)
 
-	url := fmt.Sprintf("mongodb://%v:%v", host, port)
+	sess, err := session.NewSession(&aws.Config{
+		Region:   aws.String("eu-central-1"),
+		Endpoint: aws.String(url)})
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(url))
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-
-	err = client.Connect(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	err = client.Ping(ctx, readpref.Primary())
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
+	db := dynamo.New(sess)
 
-	db := client.Database("sessions")
-	partyCol := db.Collection(datastruct.PartyCollectionName)
-
-	partyCol.Indexes().CreateMany(
-		ctx,
-		[]mongo.IndexModel{
-			{
-				Keys:    bson.D{{Key: "title", Value: bsonx.String("text")}},
-				Options: options.Index(),
-			},
-			{
-				Keys:    bson.D{{Key: "location", Value: bsonx.String("2dsphere")}},
-				Options: options.Index(),
-			},
-		},
-	)
-
-	return partyCol, nil
+	return db, nil
 }
 
-func NewDAO(partyCol *mongo.Collection) Dao {
-	return &dao{partyCol: partyCol}
+func NewDAO(db *dynamo.DB) Dao {
+	return &dao{db: db}
 }
 
 func (d *dao) NewPartyQuery() PartyQuery {
-	return &partyQuery{partyCol: d.partyCol}
+	return &partyQuery{db: d.db}
 }

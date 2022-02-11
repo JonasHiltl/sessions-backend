@@ -7,7 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/handlers"
+	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
@@ -34,7 +34,7 @@ func main() {
 
 	partyService := service.NewPartyServie(dao)
 
-	httpApp := handlers.NewHttpApp(partyService)
+	httpApp := handler.NewHttpApp(partyService)
 
 	e := echo.New()
 
@@ -46,11 +46,10 @@ func main() {
 		Output:           e.Logger.Output(),
 	}))
 
-	e.GET("/search", httpApp.SearchParty)
-	e.GET("/:id", httpApp.GetParty)
+	e.GET("/:cId/:pId", httpApp.GetParty)
 	e.POST("/", httpApp.CreateParty)
-	e.DELETE("/:id", httpApp.DeleteParty)
-	e.PATCH("/:id", httpApp.UpdateParty)
+	e.DELETE("/:cId/:pId", httpApp.DeleteParty)
+	e.PATCH("/:cId/:pId", httpApp.UpdateParty)
 
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)

@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -7,9 +7,10 @@ import (
 )
 
 func (a *httpApp) GetParty(c echo.Context) error {
-	pId := c.Param("id")
+	cId := c.Param("cId")
+	pId := c.Param("pId")
 
-	p, err := a.partyService.GetById(c.Request().Context(), pId)
+	p, err := a.partyService.Get(c.Request().Context(), cId, pId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

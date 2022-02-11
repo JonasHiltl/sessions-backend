@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
@@ -10,7 +10,6 @@ type HttpApp interface {
 	DeleteParty(c echo.Context) error
 	UpdateParty(c echo.Context) error
 	GetParty(c echo.Context) error
-	SearchParty(c echo.Context) error
 }
 
 type httpApp struct {
