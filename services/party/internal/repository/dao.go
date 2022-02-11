@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/guregu/dynamo"
 )
@@ -22,15 +23,85 @@ func NewDB() (*dynamo.DB, error) {
 	port := os.Getenv("DYNAMO_PORT")
 	url := fmt.Sprintf("%v:%v", host, port)
 
-	sess, err := session.NewSession(&aws.Config{
+	sess := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String("eu-central-1"),
-		Endpoint: aws.String(url)})
-
-	if err != nil {
-		return nil, err
-	}
+		Endpoint: aws.String(url),
+		Credentials: credentials.NewCredentials(&credentials.StaticProvider{
+			Value: credentials.Value{
+				AccessKeyID:     "dummy",
+				SecretAccessKey: "dummy",
+				SessionToken:    "dummy",
+				ProviderName:    "Hard-coded credentials; values are irrelevant for local DynamoDB",
+			},
+		}),
+	}))
 
 	db := dynamo.New(sess)
+
+	/* input := &dynamodb.CreateTableInput{
+		TableName: aws.String(TABLE_NAME),
+		AttributeDefinitions: []*dynamodb.AttributeDefinition{
+			{
+				AttributeName: aws.String("pk"),
+				AttributeType: aws.String("S"),
+			},
+			{
+				AttributeName: aws.String("sk"),
+				AttributeType: aws.String("S"),
+			},
+			{
+				AttributeName: aws.String("gsi_sk_geohash"),
+				AttributeType: aws.String("S"),
+			},
+			{
+				AttributeName: aws.String("gsi_pk_isGlobal"),
+				AttributeType: aws.String("S"),
+			},
+		},
+		KeySchema: []*dynamodb.KeySchemaElement{
+			{
+				AttributeName: aws.String("pk"),
+				KeyType:       aws.String("HASH"),
+			},
+			{
+				AttributeName: aws.String("sk"),
+				KeyType:       aws.String("RANGE"),
+			},
+		},
+		GlobalSecondaryIndexes: []*dynamodb.GlobalSecondaryIndex{
+			{
+				IndexName: aws.String("PartyGeoSearch"),
+				KeySchema: []*dynamodb.KeySchemaElement{
+					{
+						AttributeName: aws.String("gsi_pk_isGlobal"),
+						KeyType:       aws.String("HASH"),
+					},
+					{
+						AttributeName: aws.String("gsi_sk_geohash"),
+						KeyType:       aws.String("RANGE"),
+					},
+				},
+				Projection: &dynamodb.Projection{
+					ProjectionType:   aws.String("INCLUDE"),
+					NonKeyAttributes: aws.StringSlice([]string{"pk", "sk", "title", "stories", "expiresAt"}),
+				},
+				ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+					ReadCapacityUnits:  aws.Int64(1),
+					WriteCapacityUnits: aws.Int64(1),
+				},
+			},
+		},
+		BillingMode: aws.String("PROVISIONED"),
+		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(1),
+			WriteCapacityUnits: aws.Int64(1),
+		},
+	}
+
+	_, err := db.Client().CreateTable(input)
+	if err != nil {
+		return nil, err
+	} */
 
 	return db, nil
 }

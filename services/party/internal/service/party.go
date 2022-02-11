@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
@@ -32,9 +34,22 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	sb.WriteString("PARTY#")
 	sb.WriteString(p.KSUID.String())
 
+	var sb2 strings.Builder
+	sb2.WriteString("IS_GLOBAL#")
+	sb2.WriteString(strconv.FormatBool(p.IsGlobal))
+
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
-	dp := datastruct.Party{CId: p.CId, KSUID: sb.String(), Title: p.Title, Ttl: p.Ttl, GHash: gHash}
+	t := time.Now()
+
+	dp := datastruct.Party{
+		CId:       p.CId,
+		KSUID:     sb.String(),
+		Title:     p.Title,
+		ExpiresAt: t.Add(time.Hour * 24),
+		GHash:     gHash,
+		IsGlobal:  sb2.String(),
+	}
 	return ps.dao.NewPartyQuery().Create(ctx, dp)
 }
 

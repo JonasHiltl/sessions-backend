@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/guregu/dynamo"
@@ -50,9 +51,10 @@ func (pq *partyQuery) Get(ctx context.Context, cId string, pId string) (datastru
 
 	err := table.Get("pk", cId).
 		Range("sk", dynamo.Equal, sb.String()).
+		Filter("'expiresAt' >= ?", time.Now().Unix()).
 		OneWithContext(ctx, result)
 	if err != nil {
-		return datastruct.Party{}, nil
+		return datastruct.Party{}, err
 	}
 
 	return result, nil

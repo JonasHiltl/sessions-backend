@@ -44,5 +44,5 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, p)
+	return c.JSON(http.StatusCreated, p.ToPublicParty())
 }
