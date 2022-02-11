@@ -12,4 +12,6 @@ EXPOSE 8080
 
 WORKDIR /app/services/user
 
-CMD ["air"]
+RUN go build -o /user-service
+
+CMD [ "/user-service" ]
