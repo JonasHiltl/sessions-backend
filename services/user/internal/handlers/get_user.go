@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,12 +17,8 @@ import (
 // @Router /{id} [get]
 func (a *httpApp) GetUser(c echo.Context) error {
 	uId := c.Param("id")
-	uUUID, err := uuid.Parse(uId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
 
-	u, err := a.userService.GetById(c.Request().Context(), uUUID)
+	u, err := a.userService.GetById(c.Request().Context(), uId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

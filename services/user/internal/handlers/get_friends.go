@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
@@ -23,18 +22,13 @@ import (
 func (a *httpApp) GetFriends(c echo.Context) error {
 	uId := c.Param("id")
 
-	uUUID, err := uuid.Parse(uId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
 	offset := c.QueryParam("offset")
 	limit := c.QueryParam("limit")
 
 	offsetNum, _ := strconv.Atoi(offset)
 	limitNum, _ := strconv.Atoi(limit)
 
-	friends, err := a.friendService.Get(c.Request().Context(), uUUID, offsetNum, limitNum)
+	friends, err := a.friendService.Get(c.Request().Context(), uId, offsetNum, limitNum)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

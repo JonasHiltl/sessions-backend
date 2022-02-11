@@ -22,7 +22,7 @@ func NewTokenManager() TokenManager {
 
 func (t *tokenManager) NewJWT(u ent.User) (string, error) {
 	claims := jwt.MapClaims{
-		"sub":  u.ID.String(),
+		"sub":  u.ID,
 		"iss":  "sessions.com",
 		"role": u.Role.String(),
 	}

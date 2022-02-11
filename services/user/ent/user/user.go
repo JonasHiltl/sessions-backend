@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"entgo.io/ent"
-	"github.com/google/uuid"
 )
 
 const (
@@ -78,11 +77,9 @@ func ValidColumn(column string) bool {
 //	import _ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
 //
 var (
-	Hooks [2]ent.Hook
+	Hooks [3]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )
 
 // Role defines the type for the "role" enum field.

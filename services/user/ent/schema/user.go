@@ -8,13 +8,13 @@ import (
 
 	gen "github.com/jonashiltl/sessions-backend/services/user/ent"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/hook"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 	"golang.org/x/crypto/bcrypt"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/uuid"
 )
 
 // User holds the schema definition for the User entity.
@@ -26,8 +26,7 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("id", uuid.UUID{}).
-			Default(uuid.New).
+			String("id").
 			Immutable(),
 
 		field.String("username").
@@ -109,6 +108,21 @@ func (User) Hooks() []ent.Hook {
 				})
 			},
 			ent.OpCreate|ent.OpUpdate|ent.OpUpdateOne,
+		),
+		hook.On(
+			func(next ent.Mutator) ent.Mutator {
+				return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
+					id, err := gonanoid.New()
+					if err != nil {
+						return nil, fmt.Errorf("failed generate id in hook")
+					}
+
+					m.SetID(id)
+
+					return next.Mutate(ctx, m)
+				})
+			},
+			ent.OpCreate,
 		),
 	}
 }

@@ -5,7 +5,6 @@ package runtime
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/schema"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/user"
 )
@@ -17,16 +16,13 @@ func init() {
 	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userHooks[0]
 	user.Hooks[1] = userHooks[1]
+	user.Hooks[2] = userHooks[2]
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
 	userDescCreatedAt := userFields[9].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
-	// userDescID is the schema descriptor for id field.
-	userDescID := userFields[0].Descriptor()
-	// user.DefaultID holds the default value on creation for the id field.
-	user.DefaultID = userDescID.Default.(func() uuid.UUID)
 }
 
 const (

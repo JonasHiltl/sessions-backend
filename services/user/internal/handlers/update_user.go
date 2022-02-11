@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
+	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers/middleware"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,18 +18,13 @@ import (
 // @Failure 400 {object} echo.HTTPError
 // @Router /{id} [patch]
 func (a *httpApp) UpdateUser(c echo.Context) error {
+	uId := c.Param("id")
 	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	uUUID, err := uuid.Parse(c.Param("id"))
-	if err != nil {
-		fmt.Println(uUUID)
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if uUUID != me.Sub {
+	if uId != me.Sub {
 		return echo.NewHTTPError(http.StatusBadRequest, "You can only update your own information")
 	}
 

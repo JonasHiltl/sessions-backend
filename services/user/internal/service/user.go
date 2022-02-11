@@ -5,7 +5,6 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/services/user/ent"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/user"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
@@ -13,11 +12,11 @@ import (
 
 type UserService interface {
 	Create(ctx context.Context, u datastruct.RequestUser) (*ent.User, error)
-	GetById(ctx context.Context, id uuid.UUID) (*ent.User, error)
-	Update(ctx context.Context, id uuid.UUID, u datastruct.RequestUser) (*ent.User, error)
-	Delete(ctx context.Context, id uuid.UUID) error
-	UsernameExists(ctx context.Context, username string) (bool, error)
-	CountFriends(ctx context.Context, id uuid.UUID) int
+	GetById(ctx context.Context, id string) (*ent.User, error)
+	Update(ctx context.Context, id string, u datastruct.RequestUser) (*ent.User, error)
+	Delete(ctx context.Context, id string) error
+	UsernameExists(ctx context.Context, uName string) (bool, error)
+	CountFriends(ctx context.Context, id string) int
 }
 
 type userService struct {
@@ -50,7 +49,7 @@ func (us *userService) Create(ctx context.Context, u datastruct.RequestUser) (*e
 	return res, err
 }
 
-func (us *userService) GetById(ctx context.Context, id uuid.UUID) (*ent.User, error) {
+func (us *userService) GetById(ctx context.Context, id string) (*ent.User, error) {
 	res, err := us.client.
 		Query().
 		Where(user.ID(id)).
@@ -60,7 +59,7 @@ func (us *userService) GetById(ctx context.Context, id uuid.UUID) (*ent.User, er
 	return res, err
 }
 
-func (us *userService) Update(ctx context.Context, id uuid.UUID, u datastruct.RequestUser) (*ent.User, error) {
+func (us *userService) Update(ctx context.Context, id string, u datastruct.RequestUser) (*ent.User, error) {
 	builder := us.client.UpdateOneID(id)
 
 	if u.Username != "" {
@@ -89,18 +88,18 @@ func (us *userService) Update(ctx context.Context, id uuid.UUID, u datastruct.Re
 	return res, err
 }
 
-func (us *userService) Delete(ctx context.Context, id uuid.UUID) error {
+func (us *userService) Delete(ctx context.Context, id string) error {
 	return us.client.DeleteOneID(id).Exec(ctx)
 }
 
-func (us *userService) UsernameExists(ctx context.Context, username string) (bool, error) {
+func (us *userService) UsernameExists(ctx context.Context, uName string) (bool, error) {
 	return us.client.
 		Query().
-		Where(user.UsernameEQ(username)).
+		Where(user.UsernameEQ(uName)).
 		Exist(ctx)
 }
 
-func (us *userService) CountFriends(ctx context.Context, id uuid.UUID) int {
+func (us *userService) CountFriends(ctx context.Context, id string) int {
 	count, err := us.client.Query().Where(user.ID(id)).QueryFriends().Count(ctx)
 	if err != nil {
 		return 0

@@ -3,9 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/packages/comtypes"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers/middleware"
+	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	"github.com/labstack/echo/v4"
 )
 
@@ -25,16 +24,11 @@ func (a *httpApp) DeleteUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	uUUID, err := uuid.Parse(uId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	if uUUID != me.Sub {
+	if uId != me.Sub {
 		return echo.NewHTTPError(http.StatusBadRequest, "You can only delete your own account")
 	}
 
-	err = a.userService.Delete(c.Request().Context(), uUUID)
+	err = a.userService.Delete(c.Request().Context(), me.Sub)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

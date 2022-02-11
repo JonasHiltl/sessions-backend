@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"github.com/labstack/echo/v4"
 )
@@ -30,12 +29,7 @@ func (a *httpApp) FriendSearch(c echo.Context) error {
 
 	uId := c.Param("id")
 
-	uUUID, err := uuid.Parse(uId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	friends, err := a.friendService.Search(c.Request().Context(), uUUID, query, acceptedB)
+	friends, err := a.friendService.Search(c.Request().Context(), uId, query, acceptedB)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

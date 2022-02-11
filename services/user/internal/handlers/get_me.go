@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers/middleware"
+	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	"github.com/labstack/echo/v4"
 )
 
