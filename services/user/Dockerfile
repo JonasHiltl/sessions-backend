@@ -10,4 +10,6 @@ COPY . ./
 
 EXPOSE 8080
 
+WORKDIR /app/services/user
+
 CMD ["air"]
