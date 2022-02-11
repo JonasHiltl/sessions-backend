@@ -30,6 +30,12 @@ static_resources:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
                             cluster: user
+                        - match:
+                            prefix: "/party/"
+                          route:
+                            # host_rewrite: www.google.com
+                            prefix_rewrite: "/"
+                            cluster: party
                 http_filters:
                   - name: envoy.filters.http.jwt_authn
                     typed_config:
@@ -53,6 +59,10 @@ static_resources:
                             prefix: /user
                           requires:
                             provider_name: main_auth
+                        - match:
+                            prefix: /party
+                          requires:
+                            provider_name: main_auth
                   - name: envoy.filters.http.router
 
   clusters:
@@ -68,4 +78,17 @@ static_resources:
                   address:
                     socket_address:
                       address: user
+                      port_value: 8080
+    - name: party
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: party
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: party
                       port_value: 8080
