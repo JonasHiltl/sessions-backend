@@ -54,7 +54,7 @@ func NewDB() (*dynamo.DB, error) {
 				AttributeType: aws.String("S"),
 			},
 			{
-				AttributeName: aws.String("gsi_pk_isGlobal"),
+				AttributeName: aws.String("gsi_pk_isPublic"),
 				AttributeType: aws.String("S"),
 			},
 		},
@@ -73,7 +73,7 @@ func NewDB() (*dynamo.DB, error) {
 				IndexName: aws.String("PartyGeoSearch"),
 				KeySchema: []*dynamodb.KeySchemaElement{
 					{
-						AttributeName: aws.String("gsi_pk_isGlobal"),
+						AttributeName: aws.String("gsi_pk_isPublic"),
 						KeyType:       aws.String("HASH"),
 					},
 					{

@@ -12,7 +12,7 @@ import (
 type Party struct {
 	CId       string    `json:"creatorId"    dynamo:"pk,hash"             validate:"required,len=21"` // PARTY#CreatorId
 	KSUID     string    `json:"id,omitempty" dynamo:"sk,range"            validate:"required"`
-	IsGlobal  string    `json:"isGlobal"     dynamo:"gsi_pk_isGlobal"                         index:",hash"`
+	IsPublic  string    `json:"isPublic"     dynamo:"gsi_pk_isPublic"                         index:",hash"`
 	GHash     string    `json:"geohash"      dynamo:"gsi_sk_geohash"      validate:"required" index:",range"`
 	Title     string    `json:"title"        dynamo:"title,string"        validate:"required"`
 	ExpiresAt time.Time `json:"-"            dynamo:"expiresAt,unixtime"  validate:"required"`
@@ -25,7 +25,7 @@ type Party struct {
 type PublicParty struct {
 	CId       string    `json:"creatorId"` // PARTY#CreatorId
 	KSUID     string    `json:"id,omitempty"`
-	IsGlobal  bool      `json:"isGlobal"`
+	IsPublic  bool      `json:"isPublic"`
 	Lat       float64   `json:"lat"`
 	Long      float64   `json:"long"`
 	Title     string    `json:"title"`
@@ -37,7 +37,7 @@ type PublicParty struct {
 }
 
 func (p Party) ToPublicParty() PublicParty {
-	isG, err := strconv.ParseBool(strings.TrimPrefix(p.IsGlobal, "IS_GLOBAL#"))
+	isP, err := strconv.ParseBool(strings.TrimPrefix(p.IsPublic, "IS_GLOBAL#"))
 	if err != nil {
 		return PublicParty{}
 	}
@@ -47,7 +47,7 @@ func (p Party) ToPublicParty() PublicParty {
 	return PublicParty{
 		CId:       p.CId,
 		KSUID:     strings.TrimPrefix(p.KSUID, "PARTY#"),
-		IsGlobal:  isG,
+		IsPublic:  isP,
 		Lat:       lat,
 		Long:      lng,
 		Title:     p.Title,

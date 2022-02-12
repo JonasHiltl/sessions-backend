@@ -12,7 +12,7 @@ func (a *httpApp) UpdateParty(c echo.Context) error {
 		Title    string  `json:"title"     validate:"required"`
 		Lat      float64 `json:"lat"       validate:"required,latitude"`
 		Long     float64 `json:"long"      validate:"required,longitude"`
-		IsGlobal bool    `json:"isGlobal"`
+		IsPublic bool    `json:"isPublic"`
 	}
 	var reqBody body
 	if err := c.Bind(&reqBody); err != nil {

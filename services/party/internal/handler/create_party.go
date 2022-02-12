@@ -14,7 +14,7 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 		Title    string  `json:"title"     validate:"required"`
 		Lat      float64 `json:"lat"       validate:"required,latitude"`
 		Long     float64 `json:"long"      validate:"required,longitude"`
-		IsGlobal bool    `json:"isGlobal"`
+		IsPublic bool    `json:"isGlobal"`
 	}
 	var reqBody body
 
@@ -36,7 +36,7 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 		KSUID:    ksuid.New(),
 		Lat:      reqBody.Lat,
 		Long:     reqBody.Long,
-		IsGlobal: reqBody.IsGlobal,
+		IsPublic: reqBody.IsPublic,
 	}
 
 	p, err := a.partyService.Create(c.Request().Context(), d)

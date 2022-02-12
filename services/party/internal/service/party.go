@@ -36,7 +36,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 
 	var sb2 strings.Builder
 	sb2.WriteString("IS_GLOBAL#")
-	sb2.WriteString(strconv.FormatBool(p.IsGlobal))
+	sb2.WriteString(strconv.FormatBool(p.IsPublic))
 
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
@@ -48,7 +48,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		Title:     p.Title,
 		ExpiresAt: t.Add(time.Hour * 24),
 		GHash:     gHash,
-		IsGlobal:  sb2.String(),
+		IsPublic:  sb2.String(),
 	}
 	return ps.dao.NewPartyQuery().Create(ctx, dp)
 }
