@@ -120,7 +120,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Gets a Party by it's id
+      description: Get a Party by it's id
       parameters:
       - description: Party Id
         in: path
@@ -166,4 +166,39 @@ paths:
       summary: Update a Party
       tags:
       - CRUD
+  /near:
+    get:
+      description: Get a list of parties near a location
+      parameters:
+      - description: Latitude
+        in: query
+        name: lat
+        required: true
+        type: number
+      - description: Longitude
+        in: query
+        name: long
+        required: true
+        type: number
+      - description: Geohash precision
+        in: query
+        name: precision
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/datastruct.PublicParty'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Search by location
+      tags:
+      - GEO
 swagger: "2.0"

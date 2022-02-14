@@ -18,7 +18,7 @@ type PartyQuery interface {
 	Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
 	Delete(ctx context.Context, cId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
-	//GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
+	GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
 }
 
 type partyQuery struct {
@@ -118,15 +118,25 @@ func (pq *partyQuery) Delete(ctx context.Context, cId, pId string) error {
 	return nil
 }
 
-/* func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error) {
+func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error) {
 	table := pq.db.Table(TABLE_NAME)
+	var result []datastruct.Party
 
-	for i, h := range nHashes {
-		var result datastruct.Party
+	for _, h := range nHashes {
+		var partialResult []datastruct.Party
 
-		err := table.Get("pk", cId).Index()
-		Range("sk", dynamo.Equal, sb.String()).
-			Filter("'expiresAt' >= ?", time.Now().Unix()).
-			AllWithContext(ctx, result)
+		err := table.
+			Get("pk", "false").
+			Range("sk", dynamo.Equal, h).
+			Index("PartyGeoSearch").
+			Filter("'ttl' >= ?", time.Now().Unix()).
+			AllWithContext(ctx, &partialResult)
+		if err != nil {
+			return []datastruct.Party{}, nil
+		}
+
+		result = append(result, partialResult...)
 	}
-} */
+
+	return result, nil
+}

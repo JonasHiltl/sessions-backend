@@ -49,9 +49,61 @@
                 }
             }
         },
+        "/near": {
+            "get": {
+                "description": "Get a list of parties near a location",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GEO"
+                ],
+                "summary": "Search by location",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "Latitude",
+                        "name": "lat",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Longitude",
+                        "name": "long",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Geohash precision",
+                        "name": "precision",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/datastruct.PublicParty"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/{pId}": {
             "get": {
-                "description": "Gets a Party by it's id",
+                "description": "Get a Party by it's id",
                 "consumes": [
                     "application/json"
                 ],

@@ -55,6 +55,8 @@ func main() {
 	e.DELETE("/:pId", httpApp.DeleteParty)
 	e.PATCH("/:pId", httpApp.UpdateParty)
 
+	e.PATCH("/near", httpApp.GeoSearch)
+
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)
 	}
