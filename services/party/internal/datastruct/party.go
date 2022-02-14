@@ -9,7 +9,7 @@ import (
 )
 
 type Party struct {
-	Id        string    `json:"id"        dynamo:"pk,hash"          validate:"required,len=21"`
+	Id        string    `json:"id"        dynamo:"pk,hash"          validate:"required"`
 	SK        string    `json:"-"         dynamo:"sk,range"         validate:"required"`
 	CreatorId string    `json:"creatorId" dynamo:"gsi1_pk_userId"   validate:"required"`
 	Title     string    `json:"title"     dynamo:"title"            validate:"required"`

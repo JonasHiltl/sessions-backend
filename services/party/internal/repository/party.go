@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -51,10 +52,10 @@ func (pq *partyQuery) Get(ctx context.Context, pId string) (datastruct.Party, er
 	sb.WriteString(pId)
 
 	err := table.
-		Get("pk", pId).
+		Get("pk", sb.String()).
 		Range("sk", dynamo.Equal, "party").
 		Filter("'ttl' >= ?", time.Now().Unix()).
-		OneWithContext(ctx, result)
+		OneWithContext(ctx, &result)
 	if err != nil {
 		return datastruct.Party{}, err
 	}
@@ -104,11 +105,14 @@ func (pq *partyQuery) Delete(ctx context.Context, cId, pId string) error {
 	sb.WriteString(pId)
 
 	err := table.
-		Delete("pk", pId).
+		Delete("pk", sb.String()).
 		Range("sk", "party").
-		If("'gsi1_pk_userId' <> ?", cId).
+		If("gsi1_pk_userId = ?", cId).
 		RunWithContext(ctx)
 	if err != nil {
+		if strings.Contains(err.Error(), "ConditionalCheckFailedException") {
+			return errors.New("you can only Delete your own Parties")
+		}
 		return err
 	}
 	return nil

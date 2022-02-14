@@ -7,7 +7,7 @@ import (
 )
 
 // @Summary Get party
-// @Description Gets a Party by it's id
+// @Description Get a Party by it's id
 // @Tags CRUD
 // @Accept json
 // @Produce json
