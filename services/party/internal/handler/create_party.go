@@ -6,17 +6,26 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
 	"github.com/labstack/echo/v4"
-	"github.com/segmentio/ksuid"
 )
 
+type CreatePartyBody struct {
+	Title    string  `json:"title"     validate:"required"`
+	Lat      float64 `json:"lat"       validate:"required,latitude"`
+	Long     float64 `json:"long"      validate:"required,longitude"`
+	IsPublic bool    `json:"isPublic"`
+}
+
+// @Summary Create a party
+// @Description Create a new Party in DB
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param Body body CreatePartyBody true "The body to create a party"
+// @Success 201 {object} datastruct.PublicParty
+// @Failure 400 {object} echo.HTTPError
+// @Router / [post]
 func (a *httpApp) CreateParty(c echo.Context) error {
-	type body struct {
-		Title    string  `json:"title"     validate:"required"`
-		Lat      float64 `json:"lat"       validate:"required,latitude"`
-		Long     float64 `json:"long"      validate:"required,longitude"`
-		IsPublic bool    `json:"isGlobal"`
-	}
-	var reqBody body
+	var reqBody CreatePartyBody
 
 	if err := c.Bind(&reqBody); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
@@ -31,12 +40,11 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 	}
 
 	d := dto.Party{
-		Title:    reqBody.Title,
-		CId:      me.Sub,
-		KSUID:    ksuid.New(),
-		Lat:      reqBody.Lat,
-		Long:     reqBody.Long,
-		IsPublic: reqBody.IsPublic,
+		Title:     reqBody.Title,
+		CreatorId: me.Sub,
+		Lat:       reqBody.Lat,
+		Long:      reqBody.Long,
+		IsPublic:  reqBody.IsPublic,
 	}
 
 	p, err := a.partyService.Create(c.Request().Context(), d)

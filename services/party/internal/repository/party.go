@@ -14,9 +14,10 @@ var TABLE_NAME string = "sessions"
 
 type PartyQuery interface {
 	Create(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
-	Update(ctx context.Context, cId, pId, title string) (datastruct.Party, error)
+	Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
 	Delete(ctx context.Context, cId, pId string) error
-	Get(ctx context.Context, cId, pId string) (datastruct.Party, error)
+	Get(ctx context.Context, pId string) (datastruct.Party, error)
+	//GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
 }
 
 type partyQuery struct {
@@ -40,18 +41,19 @@ func (pq *partyQuery) Create(ctx context.Context, p datastruct.Party) (datastruc
 	return p, nil
 }
 
-func (pq *partyQuery) Get(ctx context.Context, cId string, pId string) (datastruct.Party, error) {
+func (pq *partyQuery) Get(ctx context.Context, pId string) (datastruct.Party, error) {
 	var result datastruct.Party
 
 	table := pq.db.Table(TABLE_NAME)
 
 	var sb strings.Builder
-	sb.WriteString("PARTY#")
+	sb.WriteString("P#")
 	sb.WriteString(pId)
 
-	err := table.Get("pk", cId).
-		Range("sk", dynamo.Equal, sb.String()).
-		Filter("'expiresAt' >= ?", time.Now().Unix()).
+	err := table.
+		Get("pk", pId).
+		Range("sk", dynamo.Equal, "party").
+		Filter("'ttl' >= ?", time.Now().Unix()).
 		OneWithContext(ctx, result)
 	if err != nil {
 		return datastruct.Party{}, err
@@ -60,21 +62,33 @@ func (pq *partyQuery) Get(ctx context.Context, cId string, pId string) (datastru
 	return result, nil
 }
 
-func (pq *partyQuery) Update(ctx context.Context, cId string, pId string, title string) (datastruct.Party, error) {
+func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error) {
 	table := pq.db.Table(TABLE_NAME)
 
-	var sb strings.Builder
-	sb.WriteString("PARTY#")
-	sb.WriteString(pId)
+	var pId strings.Builder
+	pId.WriteString("P#")
+	pId.WriteString(p.Id)
 
 	var result datastruct.Party
-	update := table.Update("pk", cId).Range("sk", sb.String())
+	update := table.
+		Update("pk", pId).
+		Range("sk", "party")
 
-	if title != "" {
-		update.Set("title", title)
+	if p.Title != "" {
+		update.Set("title", p.Title)
 	}
 
-	err := update.RunWithContext(ctx)
+	if p.IsPublic != "" {
+		update.Set("gsi2_pk_isPublic", p.IsPublic)
+	}
+
+	if p.GHash != "" {
+		update.Set("gsi2_sk_geohash", p.GHash)
+	}
+
+	err := update.
+		If("'gsi1_pk_userId' <> ?", p.CreatorId).
+		RunWithContext(ctx)
 	if err != nil {
 		return datastruct.Party{}, err
 	}
@@ -82,17 +96,33 @@ func (pq *partyQuery) Update(ctx context.Context, cId string, pId string, title 
 	return result, nil
 }
 
-func (pq *partyQuery) Delete(ctx context.Context, cId string, pId string) error {
+func (pq *partyQuery) Delete(ctx context.Context, cId, pId string) error {
 	table := pq.db.Table(TABLE_NAME)
 
 	var sb strings.Builder
-	sb.WriteString("PARTY#")
+	sb.WriteString("P#")
 	sb.WriteString(pId)
 
-	err := table.Delete("pk", cId).
-		Range("sk", sb.String()).RunWithContext(ctx)
+	err := table.
+		Delete("pk", pId).
+		Range("sk", "party").
+		If("'gsi1_pk_userId' <> ?", cId).
+		RunWithContext(ctx)
 	if err != nil {
 		return err
 	}
 	return nil
 }
+
+/* func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error) {
+	table := pq.db.Table(TABLE_NAME)
+
+	for i, h := range nHashes {
+		var result datastruct.Party
+
+		err := table.Get("pk", cId).Index()
+		Range("sk", dynamo.Equal, sb.String()).
+			Filter("'expiresAt' >= ?", time.Now().Unix()).
+			AllWithContext(ctx, result)
+	}
+} */

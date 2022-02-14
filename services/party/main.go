@@ -7,17 +7,19 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	_ "github.com/jonashiltl/sessions-backend/services/party/docs"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title User Microservice
-// @description This Microservice manages user entities
+// @title Party Microservice
+// @description This Microservice manages Party entities
 // @version 1.0
-// @host localhost:8080
+// @host localhost:8082
 // @BasePath /
 func main() {
 	err := godotenv.Load()
@@ -46,10 +48,12 @@ func main() {
 		Output:           e.Logger.Output(),
 	}))
 
-	e.GET("/:cId/:pId", httpApp.GetParty)
+	e.GET("/docs/*", echoSwagger.WrapHandler)
+
+	e.GET("/:pId", httpApp.GetParty)
 	e.POST("/", httpApp.CreateParty)
-	e.DELETE("/:cId/:pId", httpApp.DeleteParty)
-	e.PATCH("/:cId/:pId", httpApp.UpdateParty)
+	e.DELETE("/:pId", httpApp.DeleteParty)
+	e.PATCH("/:pId", httpApp.UpdateParty)
 
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)

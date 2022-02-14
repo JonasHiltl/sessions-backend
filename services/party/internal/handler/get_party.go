@@ -6,11 +6,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Get party
+// @Description Gets a Party by it's id
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param pId path string true "Party Id"
+// @Success 200 {object} datastruct.PublicParty
+// @Failure 400 {object} echo.HTTPError
+// @Router /{pId} [get]
 func (a *httpApp) GetParty(c echo.Context) error {
-	cId := c.Param("cId")
 	pId := c.Param("pId")
 
-	p, err := a.partyService.Get(c.Request().Context(), cId, pId)
+	p, err := a.partyService.Get(c.Request().Context(), pId)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

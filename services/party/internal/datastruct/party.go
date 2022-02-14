@@ -6,38 +6,30 @@ import (
 	"time"
 
 	"github.com/mmcloughlin/geohash"
-	"github.com/segmentio/ksuid"
 )
 
 type Party struct {
-	CId       string    `json:"creatorId"    dynamo:"pk,hash"             validate:"required,len=21"` // PARTY#CreatorId
-	KSUID     string    `json:"id,omitempty" dynamo:"sk,range"            validate:"required"`
-	IsPublic  string    `json:"isPublic"     dynamo:"gsi_pk_isPublic"                         index:",hash"`
-	GHash     string    `json:"geohash"      dynamo:"gsi_sk_geohash"      validate:"required" index:",range"`
-	Title     string    `json:"title"        dynamo:"title,string"        validate:"required"`
-	ExpiresAt time.Time `json:"-"            dynamo:"expiresAt,unixtime"  validate:"required"`
-	Stories   map[string]struct {
-		creatorId string
-		ksuid     ksuid.KSUID
-	} `json:"stories,omitempty"              dynamo:"stories,set"`
+	Id        string    `json:"id"        dynamo:"pk,hash"          validate:"required,len=21"`
+	SK        string    `json:"-"         dynamo:"sk,range"         validate:"required"`
+	CreatorId string    `json:"creatorId" dynamo:"gsi1_pk_userId"   validate:"required"`
+	Title     string    `json:"title"     dynamo:"title"            validate:"required"`
+	IsPublic  string    `json:"isPublic"  dynamo:"gsi2_pk_isPublic" validate:"required"`
+	GHash     string    `json:"geohash"   dynamo:"gsi2_sk_geohash"  validate:"required"`
+	Ttl       time.Time `json:"ttl"       dynamo:"ttl,unixtime"     validate:"required"`
 }
 
 type PublicParty struct {
-	CId       string    `json:"creatorId"` // PARTY#CreatorId
-	KSUID     string    `json:"id,omitempty"`
+	Id        string    `json:"id"` // PARTY#CreatorId
+	CreatorId string    `json:"creatorId"`
 	IsPublic  bool      `json:"isPublic"`
 	Lat       float64   `json:"lat"`
 	Long      float64   `json:"long"`
 	Title     string    `json:"title"`
-	ExpiresAt time.Time `json:"expiresAt"`
-	Stories   map[string]struct {
-		creatorId string
-		ksuid     ksuid.KSUID
-	} `json:"stories,omitempty"`
+	Ttl       time.Time `json:"ttl"`
 }
 
 func (p Party) ToPublicParty() PublicParty {
-	isP, err := strconv.ParseBool(strings.TrimPrefix(p.IsPublic, "IS_GLOBAL#"))
+	isP, err := strconv.ParseBool(strings.TrimPrefix(p.IsPublic, "IS_PUBLIC#"))
 	if err != nil {
 		return PublicParty{}
 	}
@@ -45,13 +37,12 @@ func (p Party) ToPublicParty() PublicParty {
 	lat, lng := geohash.DecodeCenter(p.GHash)
 
 	return PublicParty{
-		CId:       p.CId,
-		KSUID:     strings.TrimPrefix(p.KSUID, "PARTY#"),
+		Id:        p.Id,
+		CreatorId: strings.TrimPrefix(p.CreatorId, "U#"),
 		IsPublic:  isP,
 		Lat:       lat,
 		Long:      lng,
 		Title:     p.Title,
-		ExpiresAt: p.ExpiresAt,
-		Stories:   p.Stories,
+		Ttl:       p.Ttl,
 	}
 }

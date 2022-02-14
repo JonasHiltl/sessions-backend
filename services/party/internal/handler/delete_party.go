@@ -8,16 +8,21 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Delete a party
+// @Description Deletes a party from our db
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param pId path string true "Party Id"
+// @Success 200 {object} comtypes.MessageRes
+// @Failure 400 {object} echo.HTTPError
+// @Router /{pId} [delete]
 func (a *httpApp) DeleteParty(c echo.Context) error {
-	cId := c.Param("cId")
 	pId := c.Param("pId")
 
 	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	if cId != me.Sub {
-		return echo.NewHTTPError(http.StatusBadRequest, "You can only delete your own parties")
 	}
 
 	err = a.partyService.Delete(c.Request().Context(), me.Sub, pId)

@@ -20,7 +20,7 @@ import (
 // @title User Microservice
 // @description This Microservice manages user entities
 // @version 1.0
-// @host localhost:8080
+// @host localhost:8081
 // @BasePath /
 func main() {
 	err := godotenv.Load()
