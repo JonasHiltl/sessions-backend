@@ -9,10 +9,9 @@ import (
 )
 
 type UpdatePartyBody struct {
-	Title    string  `json:"title"     validate:"required"`
-	Lat      float64 `json:"lat"       validate:"required,latitude"`
-	Long     float64 `json:"long"      validate:"required,longitude"`
-	IsPublic bool    `json:"isPublic"`
+	Title string  `json:"title"     validate:"required"`
+	Lat   float64 `json:"lat"       validate:"required,latitude"`
+	Long  float64 `json:"long"      validate:"required,longitude"`
 }
 
 // @Summary Update a Party
@@ -37,14 +36,14 @@ func (a *httpApp) UpdateParty(c echo.Context) error {
 	}
 
 	d := dto.Party{
-		CreatorId: me.Sub,
-		Title:     reqBody.Title,
-		Lat:       reqBody.Lat,
-		Long:      reqBody.Long,
-		IsPublic:  reqBody.IsPublic,
+		Id:    pId,
+		UId:   me.Sub,
+		Title: reqBody.Title,
+		Lat:   reqBody.Lat,
+		Long:  reqBody.Long,
 	}
 
-	p, err := a.partyService.Update(c.Request().Context(), pId, d)
+	p, err := a.partyService.Update(c.Request().Context(), d)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

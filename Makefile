@@ -6,3 +6,6 @@ swagger-user:
 
 swagger-party:
 	cd services/party; swag init --parseDependency --parseDepth 1
+
+migrate:
+	SCYLLA_HOSTS=localhost SCYLLA_KEYSPACE=sessions go run packages/scylla/migration/main.go

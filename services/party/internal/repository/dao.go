@@ -1,13 +1,12 @@
 package repository
 
 import (
-	"fmt"
+	"errors"
 	"os"
+	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/guregu/dynamo"
+	"github.com/jonashiltl/sessions-backend/packages/scylla"
+	"github.com/scylladb/gocqlx/v2"
 )
 
 type Dao interface {
@@ -15,126 +14,37 @@ type Dao interface {
 }
 
 type dao struct {
-	db *dynamo.DB
+	sess *gocqlx.Session
 }
 
-func NewDB() (*dynamo.DB, error) {
-	host := os.Getenv("DYNAMO_HOST")
-	port := os.Getenv("DYNAMO_PORT")
-	url := fmt.Sprintf("%v:%v", host, port)
+func NewDB() (gocqlx.Session, error) {
+	keyspace, exists := os.LookupEnv("SCYLLA_KEYSPACE")
+	if !exists {
+		return gocqlx.Session{}, errors.New("scylla keyspace not defined")
+	}
+	hosts, exists := os.LookupEnv("SCYLLA_HOSTS")
+	if !exists {
+		return gocqlx.Session{}, errors.New("scylla hosts not defined")
+	}
+	h := strings.Split(hosts, ",")
 
-	sess := session.Must(session.NewSession(&aws.Config{
-		Region:   aws.String("eu-central-1"),
-		Endpoint: aws.String(url),
-		Credentials: credentials.NewCredentials(&credentials.StaticProvider{
-			Value: credentials.Value{
-				AccessKeyID:     "dummy",
-				SecretAccessKey: "dummy",
-				SessionToken:    "dummy",
-				ProviderName:    "Hard-coded credentials; values are irrelevant for local DynamoDB",
-			},
-		}),
-	}))
+	manager := scylla.NewManager(keyspace, h)
 
-	db := dynamo.New(sess)
-
-	/* input := &dynamodb.CreateTableInput{
-		TableName: aws.String(TABLE_NAME),
-		AttributeDefinitions: []*dynamodb.AttributeDefinition{
-			{
-				AttributeName: aws.String("pk"),
-				AttributeType: aws.String("S"),
-			},
-			{
-				AttributeName: aws.String("sk"),
-				AttributeType: aws.String("S"),
-			},
-			{
-				AttributeName: aws.String("gsi1_pk_userId"),
-				AttributeType: aws.String("S"),
-			},
-			{
-				AttributeName: aws.String("gsi2_pk_isPublic"),
-				AttributeType: aws.String("S"),
-			},
-			{
-				AttributeName: aws.String("gsi2_sk_geohash"),
-				AttributeType: aws.String("S"),
-			},
-		},
-		KeySchema: []*dynamodb.KeySchemaElement{
-			{
-				AttributeName: aws.String("pk"),
-				KeyType:       aws.String("HASH"),
-			},
-			{
-				AttributeName: aws.String("sk"),
-				KeyType:       aws.String("RANGE"),
-			},
-		},
-		GlobalSecondaryIndexes: []*dynamodb.GlobalSecondaryIndex{
-			{
-				IndexName: aws.String("ByUserId"),
-				KeySchema: []*dynamodb.KeySchemaElement{
-					{
-						AttributeName: aws.String("gsi1_pk_userId"),
-						KeyType:       aws.String("HASH"),
-					},
-					{
-						AttributeName: aws.String("sk"),
-						KeyType:       aws.String("RANGE"),
-					},
-				},
-				Projection: &dynamodb.Projection{
-					ProjectionType:   aws.String("INCLUDE"),
-					NonKeyAttributes: aws.StringSlice([]string{"pk", "title", "gsi2_pk_isPublic", "geohash", "taggedFriends", "views", "content", "isViewed", "ttl"}),
-				},
-				ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
-					ReadCapacityUnits:  aws.Int64(1),
-					WriteCapacityUnits: aws.Int64(1),
-				},
-			},
-			{
-				IndexName: aws.String("PartyGeoSearch"),
-				KeySchema: []*dynamodb.KeySchemaElement{
-					{
-						AttributeName: aws.String("gsi2_pk_isPublic"),
-						KeyType:       aws.String("HASH"),
-					},
-					{
-						AttributeName: aws.String("gsi2_sk_geohash"),
-						KeyType:       aws.String("RANGE"),
-					},
-				},
-				Projection: &dynamodb.Projection{
-					ProjectionType:   aws.String("INCLUDE"),
-					NonKeyAttributes: aws.StringSlice([]string{"pk", "gsi1_pk_userId", "title", "ttl"}),
-				},
-				ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
-					ReadCapacityUnits:  aws.Int64(1),
-					WriteCapacityUnits: aws.Int64(1),
-				},
-			},
-		},
-		BillingMode: aws.String("PROVISIONED"),
-		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
-			ReadCapacityUnits:  aws.Int64(1),
-			WriteCapacityUnits: aws.Int64(1),
-		},
+	if err := manager.CreateKeyspace(keyspace); err != nil {
+		return gocqlx.Session{}, err
 	}
 
-	_, err := db.Client().CreateTable(input)
+	session, err := manager.Connect()
 	if err != nil {
-		return nil, err
-	} */
-
-	return db, nil
+		return gocqlx.Session{}, err
+	}
+	return session, nil
 }
 
-func NewDAO(db *dynamo.DB) Dao {
-	return &dao{db: db}
+func NewDAO(sess *gocqlx.Session) Dao {
+	return &dao{sess: sess}
 }
 
 func (d *dao) NewPartyQuery() PartyQuery {
-	return &partyQuery{db: d.db}
+	return &partyQuery{sess: d.sess}
 }

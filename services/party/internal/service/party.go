@@ -3,8 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
@@ -14,12 +12,12 @@ import (
 	"github.com/mmcloughlin/geohash"
 )
 
-var GEOHASH_PRECISION uint = 9
+const GEOHASH_PRECISION uint = 9
 
 type PartyService interface {
 	Create(ctx context.Context, p dto.Party) (datastruct.Party, error)
-	Update(ctx context.Context, pId string, p dto.Party) (datastruct.Party, error)
-	Delete(ctx context.Context, cId, pId string) error
+	Update(ctx context.Context, p dto.Party) (datastruct.Party, error)
+	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
 	GeoSearch(ctx context.Context, lat float64, long float64, precision uint) ([]datastruct.Party, error)
 }
@@ -38,46 +36,38 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		return datastruct.Party{}, errors.New("failed generate id in hook")
 	}
 
-	var id strings.Builder
-	id.WriteString("P#")
-	id.WriteString(nanoid)
-
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
-	t := time.Now()
-
 	dp := datastruct.Party{
-		Id:        id.String(),
-		SK:        "party",
-		CreatorId: p.CreatorId,
-		Title:     p.Title,
-		Ttl:       t.Add(time.Hour * 24),
-		GHash:     gHash,
-		IsPublic:  strconv.FormatBool(p.IsPublic),
+		Id:         nanoid,
+		UId:        p.UId,
+		Title:      p.Title,
+		GHash:      gHash,
+		IsPublic:   p.IsPublic,
+		Created_at: time.Now(),
 	}
-	return ps.dao.NewPartyQuery().Create(ctx, dp)
+	return ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
 }
 
-func (ps *partyService) Update(ctx context.Context, pId string, p dto.Party) (datastruct.Party, error) {
+func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Party, error) {
 	var gHash string
 	if p.Lat != 0 && p.Long != 0 {
 		gHash = geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 	}
 
 	dp := datastruct.Party{
-		Id:        pId,
-		SK:        "party",
-		CreatorId: p.CreatorId,
-		Title:     p.Title,
-		GHash:     gHash,
-		IsPublic:  strconv.FormatBool(p.IsPublic),
+		Id:       p.Id,
+		UId:      p.UId,
+		Title:    p.Title,
+		GHash:    gHash,
+		IsPublic: p.IsPublic,
 	}
 
 	return ps.dao.NewPartyQuery().Update(ctx, dp)
 }
 
-func (ps *partyService) Delete(ctx context.Context, cId, pId string) error {
-	return ps.dao.NewPartyQuery().Delete(ctx, cId, pId)
+func (ps *partyService) Delete(ctx context.Context, uId, pId string) error {
+	return ps.dao.NewPartyQuery().Delete(ctx, uId, pId)
 }
 
 func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {

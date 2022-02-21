@@ -40,11 +40,11 @@ func (a *httpApp) CreateParty(c echo.Context) error {
 	}
 
 	d := dto.Party{
-		Title:     reqBody.Title,
-		CreatorId: me.Sub,
-		Lat:       reqBody.Lat,
-		Long:      reqBody.Long,
-		IsPublic:  reqBody.IsPublic,
+		Title:    reqBody.Title,
+		UId:      me.Sub,
+		Lat:      reqBody.Lat,
+		Long:     reqBody.Long,
+		IsPublic: reqBody.IsPublic,
 	}
 
 	p, err := a.partyService.Create(c.Request().Context(), d)

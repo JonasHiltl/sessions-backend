@@ -28,34 +28,36 @@ services:
     container_name: party
     command: air
     depends_on:
-      - dynamodb-local
+      - scylla-node1
+      - scylla-node2
+      - scylla-node3
     ports:
       - "8082:8080"
     volumes:
       - "./services/party/:/app/services/party"
       - "./packages/:/app/packages"
     environment:
-      DYNAMO_HOST: http://dynamodb-local
-      DYNAMO_PORT: 8000
+      SCYLLA_KEYSPACE: sessions
+      SCYLLA_HOSTS: scylla-node1
 
-  typesense:
-    image: typesense/typesense:0.23.0.rc27
-    container_name: typesense
-    entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
+  #typesense:
+  #  container_name: typesense
+  #  entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
+  #  restart: on-failure
+  #  ports:
+  #    - "8108:8108"
+  #  volumes:
+  #    - ./data/typesense:/data
+
+  scylla-node1:
+    container_name: scylla-node1
+    image: scylladb/scylla:latest
     restart: on-failure
+    command: --smp 1 --api-address 0.0.0.0
     ports:
-      - "8108:8108"
+      - "9042:9042"
     volumes:
-      - ./data/typesense:/data
-
-  dynamodb-local:
-    image: amazon/dynamodb-local
-    container_name: dynamodb-local
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
-    volumes:
-      - ./data/dynamodata:/data
-    ports:
-      - "8042:8000"
+      - ./data/scylla1:/var/lib/scylla/data
 
   mysql:
     image: mysql
@@ -75,6 +77,9 @@ services:
     ports:
       - 8000:8000
       - 8001:8001
+    depends_on:
+      - user
+      - party
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     command:

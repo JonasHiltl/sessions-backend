@@ -27,12 +27,13 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	partyCol, err := repository.NewDB()
+	sess, err := repository.NewDB()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer sess.Close()
 
-	dao := repository.NewDAO(partyCol)
+	dao := repository.NewDAO(&sess)
 
 	partyService := service.NewPartyServie(dao)
 
