@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -29,6 +30,7 @@ type PartyQuery interface {
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
 	GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error)
 	GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
+	AddStory(ctx context.Context, sId, pId string) error
 }
 
 type partyQuery struct {
@@ -135,6 +137,25 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string) ([]datastruct.P
 	}
 
 	return result, nil
+}
+
+func (pq *partyQuery) AddStory(ctx context.Context, sId, pId string) error {
+	stmt, names := qb.
+		Update(TABLE_NAME).
+		Where(qb.Eq("id")).
+		SetFunc("stories", qb.Fn("stories", "stories")).
+		ToCql()
+
+	fmt.Println(stmt)
+
+	err := pq.sess.Query(stmt, names).
+		BindMap((qb.M{"id": pId, "stories": sId})).
+		ExecRelease()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error) {

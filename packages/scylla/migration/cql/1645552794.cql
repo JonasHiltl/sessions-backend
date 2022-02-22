@@ -1,0 +1,1 @@
+ALTER TABLE party ADD stories set<text>;
