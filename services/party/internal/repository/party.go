@@ -25,7 +25,7 @@ var partyTable = table.New(partyMetadata)
 
 type PartyQuery interface {
 	Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error)
-	Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
+	Update(ctx context.Context, p datastruct.Party) error
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
 	GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
@@ -72,8 +72,7 @@ func (pq *partyQuery) Get(ctx context.Context, pId string) (datastruct.Party, er
 	return result, nil
 }
 
-func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) (datastruct.Party, error) {
-	var result datastruct.Party
+func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 	b := qb.
 		Update(TABLE_NAME).
 		Where(qb.Eq("id"))
@@ -93,12 +92,12 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) (datastruc
 
 	err := pq.sess.Query(stmt, names).
 		BindMap((qb.M{"id": p.Id, "title": p.Title, "geohash": p.GHash, "user_id": p.UId})).
-		GetRelease(&result)
+		ExecRelease()
 	if err != nil {
-		return datastruct.Party{}, err
+		return err
 	}
 
-	return result, nil
+	return nil
 }
 
 func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {

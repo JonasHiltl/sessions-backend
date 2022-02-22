@@ -63,7 +63,23 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		IsPublic: p.IsPublic,
 	}
 
-	return ps.dao.NewPartyQuery().Update(ctx, dp)
+	err := ps.dao.NewPartyQuery().Update(ctx, dp)
+	if err != nil {
+		return datastruct.Party{}, err
+	}
+
+	newP, err := ps.dao.NewPartyQuery().Get(ctx, p.Id)
+	// make sure new value is getting returned
+
+	if p.Title != "" && p.Title != newP.Title {
+		newP.Title = p.Title
+	}
+
+	if gHash != "" && gHash != newP.GHash {
+		newP.GHash = gHash
+	}
+
+	return newP, err
 }
 
 func (ps *partyService) Delete(ctx context.Context, uId, pId string) error {
