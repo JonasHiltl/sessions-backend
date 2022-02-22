@@ -18,15 +18,3 @@ type RequestUser struct {
 	Password  string `json:"password,omitempty"    validate:"required,gte=8"`
 	Picture   string `json:"picture,omitempty"`
 }
-
-func (pu PublicUser) AddCount(count int) PublicUser {
-	return PublicUser{
-		ID:          pu.ID,
-		Username:    pu.Username,
-		FirstName:   pu.FirstName,
-		LastName:    pu.LastName,
-		Picture:     pu.Picture,
-		Role:        string(pu.Role),
-		FriendCount: count,
-	}
-}

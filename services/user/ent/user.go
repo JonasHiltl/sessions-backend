@@ -34,6 +34,8 @@ type User struct {
 	Role user.Role `json:"role,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
+	// FriendCount holds the value of the "friend_count" field.
+	FriendCount int `json:"friend_count,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges UserEdges `json:"edges"`
@@ -62,6 +64,8 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case user.FieldFriendCount:
+			values[i] = new(sql.NullInt64)
 		case user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldEmail, user.FieldPassword, user.FieldPicture, user.FieldBlurhash, user.FieldRole:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt:
@@ -141,6 +145,12 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.CreatedAt = value.Time
 			}
+		case user.FieldFriendCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field friend_count", values[i])
+			} else if value.Valid {
+				u.FriendCount = int(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -192,6 +202,8 @@ func (u *User) String() string {
 	builder.WriteString(fmt.Sprintf("%v", u.Role))
 	builder.WriteString(", created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", friend_count=")
+	builder.WriteString(fmt.Sprintf("%v", u.FriendCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

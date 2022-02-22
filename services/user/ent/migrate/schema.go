@@ -20,6 +20,7 @@ var (
 		{Name: "blurhash", Type: field.TypeString, Nullable: true},
 		{Name: "role", Type: field.TypeEnum, Enums: []string{"ADMIN", "USER"}, Default: "USER"},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "friend_count", Type: field.TypeInt, Default: 0},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

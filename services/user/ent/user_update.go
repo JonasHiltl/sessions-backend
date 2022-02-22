@@ -140,6 +140,27 @@ func (uu *UserUpdate) SetNillableCreatedAt(t *time.Time) *UserUpdate {
 	return uu
 }
 
+// SetFriendCount sets the "friend_count" field.
+func (uu *UserUpdate) SetFriendCount(i int) *UserUpdate {
+	uu.mutation.ResetFriendCount()
+	uu.mutation.SetFriendCount(i)
+	return uu
+}
+
+// SetNillableFriendCount sets the "friend_count" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableFriendCount(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetFriendCount(*i)
+	}
+	return uu
+}
+
+// AddFriendCount adds i to the "friend_count" field.
+func (uu *UserUpdate) AddFriendCount(i int) *UserUpdate {
+	uu.mutation.AddFriendCount(i)
+	return uu
+}
+
 // AddFriendIDs adds the "friends" edge to the User entity by IDs.
 func (uu *UserUpdate) AddFriendIDs(ids ...string) *UserUpdate {
 	uu.mutation.AddFriendIDs(ids...)
@@ -350,6 +371,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldCreatedAt,
 		})
 	}
+	if value, ok := uu.mutation.FriendCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldFriendCount,
+		})
+	}
+	if value, ok := uu.mutation.AddedFriendCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldFriendCount,
+		})
+	}
 	if uu.mutation.FriendsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -532,6 +567,27 @@ func (uuo *UserUpdateOne) SetNillableCreatedAt(t *time.Time) *UserUpdateOne {
 	if t != nil {
 		uuo.SetCreatedAt(*t)
 	}
+	return uuo
+}
+
+// SetFriendCount sets the "friend_count" field.
+func (uuo *UserUpdateOne) SetFriendCount(i int) *UserUpdateOne {
+	uuo.mutation.ResetFriendCount()
+	uuo.mutation.SetFriendCount(i)
+	return uuo
+}
+
+// SetNillableFriendCount sets the "friend_count" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableFriendCount(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetFriendCount(*i)
+	}
+	return uuo
+}
+
+// AddFriendCount adds i to the "friend_count" field.
+func (uuo *UserUpdateOne) AddFriendCount(i int) *UserUpdateOne {
+	uuo.mutation.AddFriendCount(i)
 	return uuo
 }
 
@@ -767,6 +823,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: user.FieldCreatedAt,
+		})
+	}
+	if value, ok := uuo.mutation.FriendCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldFriendCount,
+		})
+	}
+	if value, ok := uuo.mutation.AddedFriendCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldFriendCount,
 		})
 	}
 	if uuo.mutation.FriendsCleared() {

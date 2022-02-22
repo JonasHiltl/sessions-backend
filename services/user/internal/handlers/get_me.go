@@ -26,7 +26,5 @@ func (a *httpApp) GetMe(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	friendCount := a.userService.CountFriends(c.Request().Context(), u.ID)
-
-	return c.JSON(http.StatusOK, u.ToPublicProfile().AddCount(friendCount))
+	return c.JSON(http.StatusOK, u.ToPublicProfile())
 }

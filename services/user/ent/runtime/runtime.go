@@ -23,6 +23,10 @@ func init() {
 	userDescCreatedAt := userFields[9].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
+	// userDescFriendCount is the schema descriptor for friend_count field.
+	userDescFriendCount := userFields[10].Descriptor()
+	// user.DefaultFriendCount holds the default value on creation for the friend_count field.
+	user.DefaultFriendCount = userDescFriendCount.Default.(int)
 }
 
 const (

@@ -30,25 +30,27 @@ const (
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *string
-	username       *string
-	first_name     *string
-	last_name      *string
-	email          *string
-	password       *string
-	picture        *string
-	blurhash       *string
-	role           *user.Role
-	created_at     *time.Time
-	clearedFields  map[string]struct{}
-	friends        map[string]struct{}
-	removedfriends map[string]struct{}
-	clearedfriends bool
-	done           bool
-	oldValue       func(context.Context) (*User, error)
-	predicates     []predicate.User
+	op              Op
+	typ             string
+	id              *string
+	username        *string
+	first_name      *string
+	last_name       *string
+	email           *string
+	password        *string
+	picture         *string
+	blurhash        *string
+	role            *user.Role
+	created_at      *time.Time
+	friend_count    *int
+	addfriend_count *int
+	clearedFields   map[string]struct{}
+	friends         map[string]struct{}
+	removedfriends  map[string]struct{}
+	clearedfriends  bool
+	done            bool
+	oldValue        func(context.Context) (*User, error)
+	predicates      []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -518,6 +520,62 @@ func (m *UserMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
+// SetFriendCount sets the "friend_count" field.
+func (m *UserMutation) SetFriendCount(i int) {
+	m.friend_count = &i
+	m.addfriend_count = nil
+}
+
+// FriendCount returns the value of the "friend_count" field in the mutation.
+func (m *UserMutation) FriendCount() (r int, exists bool) {
+	v := m.friend_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFriendCount returns the old "friend_count" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldFriendCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFriendCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFriendCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFriendCount: %w", err)
+	}
+	return oldValue.FriendCount, nil
+}
+
+// AddFriendCount adds i to the "friend_count" field.
+func (m *UserMutation) AddFriendCount(i int) {
+	if m.addfriend_count != nil {
+		*m.addfriend_count += i
+	} else {
+		m.addfriend_count = &i
+	}
+}
+
+// AddedFriendCount returns the value that was added to the "friend_count" field in this mutation.
+func (m *UserMutation) AddedFriendCount() (r int, exists bool) {
+	v := m.addfriend_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetFriendCount resets all changes to the "friend_count" field.
+func (m *UserMutation) ResetFriendCount() {
+	m.friend_count = nil
+	m.addfriend_count = nil
+}
+
 // AddFriendIDs adds the "friends" edge to the User entity by ids.
 func (m *UserMutation) AddFriendIDs(ids ...string) {
 	if m.friends == nil {
@@ -591,7 +649,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.username != nil {
 		fields = append(fields, user.FieldUsername)
 	}
@@ -619,6 +677,9 @@ func (m *UserMutation) Fields() []string {
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
 	}
+	if m.friend_count != nil {
+		fields = append(fields, user.FieldFriendCount)
+	}
 	return fields
 }
 
@@ -645,6 +706,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Role()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
+	case user.FieldFriendCount:
+		return m.FriendCount()
 	}
 	return nil, false
 }
@@ -672,6 +735,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldRole(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
+	case user.FieldFriendCount:
+		return m.OldFriendCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -744,6 +809,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCreatedAt(v)
 		return nil
+	case user.FieldFriendCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFriendCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -751,13 +823,21 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addfriend_count != nil {
+		fields = append(fields, user.FieldFriendCount)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldFriendCount:
+		return m.AddedFriendCount()
+	}
 	return nil, false
 }
 
@@ -766,6 +846,13 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldFriendCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFriendCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -840,6 +927,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()
+		return nil
+	case user.FieldFriendCount:
+		m.ResetFriendCount()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

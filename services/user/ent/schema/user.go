@@ -54,6 +54,9 @@ func (User) Fields() []ent.Field {
 
 		field.Time("created_at").
 			Default(time.Now),
+
+		field.Int("friend_count").
+			Default(0),
 	}
 }
 

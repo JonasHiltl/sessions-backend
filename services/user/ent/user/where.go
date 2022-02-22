@@ -149,6 +149,13 @@ func CreatedAt(v time.Time) predicate.User {
 	})
 }
 
+// FriendCount applies equality check predicate on the "friend_count" field. It's identical to FriendCountEQ.
+func FriendCount(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFriendCount), v))
+	})
+}
+
 // UsernameEQ applies the EQ predicate on the "username" field.
 func UsernameEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -1089,6 +1096,82 @@ func CreatedAtLT(v time.Time) predicate.User {
 func CreatedAtLTE(v time.Time) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// FriendCountEQ applies the EQ predicate on the "friend_count" field.
+func FriendCountEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFriendCount), v))
+	})
+}
+
+// FriendCountNEQ applies the NEQ predicate on the "friend_count" field.
+func FriendCountNEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFriendCount), v))
+	})
+}
+
+// FriendCountIn applies the In predicate on the "friend_count" field.
+func FriendCountIn(vs ...int) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldFriendCount), v...))
+	})
+}
+
+// FriendCountNotIn applies the NotIn predicate on the "friend_count" field.
+func FriendCountNotIn(vs ...int) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldFriendCount), v...))
+	})
+}
+
+// FriendCountGT applies the GT predicate on the "friend_count" field.
+func FriendCountGT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFriendCount), v))
+	})
+}
+
+// FriendCountGTE applies the GTE predicate on the "friend_count" field.
+func FriendCountGTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFriendCount), v))
+	})
+}
+
+// FriendCountLT applies the LT predicate on the "friend_count" field.
+func FriendCountLT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFriendCount), v))
+	})
+}
+
+// FriendCountLTE applies the LTE predicate on the "friend_count" field.
+func FriendCountLTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFriendCount), v))
 	})
 }
 

@@ -114,6 +114,20 @@ func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
 	return uc
 }
 
+// SetFriendCount sets the "friend_count" field.
+func (uc *UserCreate) SetFriendCount(i int) *UserCreate {
+	uc.mutation.SetFriendCount(i)
+	return uc
+}
+
+// SetNillableFriendCount sets the "friend_count" field if the given value is not nil.
+func (uc *UserCreate) SetNillableFriendCount(i *int) *UserCreate {
+	if i != nil {
+		uc.SetFriendCount(*i)
+	}
+	return uc
+}
+
 // SetID sets the "id" field.
 func (uc *UserCreate) SetID(s string) *UserCreate {
 	uc.mutation.SetID(s)
@@ -219,6 +233,10 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultCreatedAt()
 		uc.mutation.SetCreatedAt(v)
 	}
+	if _, ok := uc.mutation.FriendCount(); !ok {
+		v := user.DefaultFriendCount
+		uc.mutation.SetFriendCount(v)
+	}
 	return nil
 }
 
@@ -246,6 +264,9 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
+	}
+	if _, ok := uc.mutation.FriendCount(); !ok {
+		return &ValidationError{Name: "friend_count", err: errors.New(`ent: missing required field "User.friend_count"`)}
 	}
 	return nil
 }
@@ -354,6 +375,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldCreatedAt,
 		})
 		_node.CreatedAt = value
+	}
+	if value, ok := uc.mutation.FriendCount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldFriendCount,
+		})
+		_node.FriendCount = value
 	}
 	if nodes := uc.mutation.FriendsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

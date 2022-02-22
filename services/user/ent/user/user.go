@@ -32,6 +32,8 @@ const (
 	FieldRole = "role"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
+	// FieldFriendCount holds the string denoting the friend_count field in the database.
+	FieldFriendCount = "friend_count"
 	// EdgeFriends holds the string denoting the friends edge name in mutations.
 	EdgeFriends = "friends"
 	// Table holds the table name of the user in the database.
@@ -52,6 +54,7 @@ var Columns = []string{
 	FieldBlurhash,
 	FieldRole,
 	FieldCreatedAt,
+	FieldFriendCount,
 }
 
 var (
@@ -80,6 +83,8 @@ var (
 	Hooks [3]ent.Hook
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
+	// DefaultFriendCount holds the default value on creation for the "friend_count" field.
+	DefaultFriendCount int
 )
 
 // Role defines the type for the "role" enum field.
