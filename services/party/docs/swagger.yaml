@@ -9,10 +9,7 @@ definitions:
     type: object
   datastruct.PublicParty:
     properties:
-      creatorId:
-        type: string
       id:
-        description: PARTY#CreatorId
         type: string
       isPublic:
         type: boolean
@@ -22,7 +19,7 @@ definitions:
         type: number
       title:
         type: string
-      ttl:
+      userId:
         type: string
     type: object
   echo.HTTPError:
@@ -46,8 +43,6 @@ definitions:
     type: object
   handler.UpdatePartyBody:
     properties:
-      isPublic:
-        type: boolean
       lat:
         type: number
       long:
@@ -201,4 +196,27 @@ paths:
       summary: Search by location
       tags:
       - GEO
+  /user/{uId}:
+    get:
+      description: Returns a list of parties of a user
+      parameters:
+      - description: User id
+        in: path
+        name: uId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/datastruct.PublicParty'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get parties of a user
 swagger: "2.0"

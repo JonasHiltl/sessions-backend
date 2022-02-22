@@ -108,6 +108,41 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/user/{uId}": {
+            "get": {
+                "description": "Returns a list of parties of a user",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get parties of a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "uId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/datastruct.PublicParty"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/{pId}": {
             "get": {
                 "description": "Get a Party by it's id",
@@ -236,11 +271,7 @@ const docTemplate_swagger = `{
         "datastruct.PublicParty": {
             "type": "object",
             "properties": {
-                "creatorId": {
-                    "type": "string"
-                },
                 "id": {
-                    "description": "PARTY#CreatorId",
                     "type": "string"
                 },
                 "isPublic": {
@@ -255,7 +286,7 @@ const docTemplate_swagger = `{
                 "title": {
                     "type": "string"
                 },
-                "ttl": {
+                "userId": {
                     "type": "string"
                 }
             }
@@ -296,9 +327,6 @@ const docTemplate_swagger = `{
                 "title"
             ],
             "properties": {
-                "isPublic": {
-                    "type": "boolean"
-                },
                 "lat": {
                     "type": "number"
                 },

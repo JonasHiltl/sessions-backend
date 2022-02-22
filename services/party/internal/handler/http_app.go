@@ -10,6 +10,7 @@ type HttpApp interface {
 	DeleteParty(c echo.Context) error
 	UpdateParty(c echo.Context) error
 	GetParty(c echo.Context) error
+	GetByUser(c echo.Context) error
 	GeoSearch(c echo.Context) error
 }
 

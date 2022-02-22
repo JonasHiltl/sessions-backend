@@ -27,6 +27,7 @@ type PartyQuery interface {
 	Update(ctx context.Context, p datastruct.Party) error
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
+	GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error)
 	GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error)
 }
 
@@ -115,6 +116,25 @@ func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
 		return err
 	}
 	return nil
+}
+
+func (pq *partyQuery) GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error) {
+	var result []datastruct.Party
+	stmt, names := qb.
+		Select(TABLE_NAME).
+		Where(qb.Eq("user_id")).
+		OrderBy("created_at", qb.DESC).
+		ToCql()
+
+	err := pq.sess.
+		Query(stmt, names).
+		BindMap((qb.M{"user_id": uId})).
+		GetRelease(&result)
+	if err != nil {
+		return []datastruct.Party{}, err
+	}
+
+	return result, nil
 }
 
 func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string) ([]datastruct.Party, error) {

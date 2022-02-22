@@ -19,6 +19,7 @@ type PartyService interface {
 	Update(ctx context.Context, p dto.Party) (datastruct.Party, error)
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
+	GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error)
 	GeoSearch(ctx context.Context, lat float64, long float64, precision uint) ([]datastruct.Party, error)
 }
 
@@ -88,6 +89,10 @@ func (ps *partyService) Delete(ctx context.Context, uId, pId string) error {
 
 func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {
 	return ps.dao.NewPartyQuery().Get(ctx, pId)
+}
+
+func (ps *partyService) GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error) {
+	return ps.dao.NewPartyQuery().GetByUser(ctx, uId)
 }
 
 func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint) ([]datastruct.Party, error) {
