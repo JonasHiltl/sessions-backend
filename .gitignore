@@ -25,6 +25,6 @@ go.work
 
 config/
 cmd
-data/
+_data/
 
 .env
