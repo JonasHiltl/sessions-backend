@@ -1,0 +1,17 @@
+FROM golang:1.17-alpine as builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+RUN go get github.com/cosmtrek/air
+
+COPY . ./
+
+EXPOSE 8080
+
+WORKDIR /app/services/story
+
+RUN go build -o /story-service
+
+CMD [ "/story-service" ]
