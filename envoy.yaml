@@ -36,6 +36,12 @@ static_resources:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
                             cluster: party
+                        - match:
+                            prefix: "/story/"
+                          route:
+                            # host_rewrite: www.google.com
+                            prefix_rewrite: "/"
+                            cluster: story
                 http_filters:
                   - name: envoy.filters.http.jwt_authn
                     typed_config:
@@ -54,6 +60,8 @@ static_resources:
                         - match:
                             prefix: /party/docs/index.html
                         - match:
+                            prefix: /party/story/index.html
+                        - match:
                             prefix: /user/auth/login
                         - match:
                             prefix: /user/auth/register
@@ -63,6 +71,10 @@ static_resources:
                             provider_name: main_auth
                         - match:
                             prefix: /party
+                          requires:
+                            provider_name: main_auth
+                        - match:
+                            prefix: /story
                           requires:
                             provider_name: main_auth
                   - name: envoy.filters.http.router
@@ -93,4 +105,17 @@ static_resources:
                   address:
                     socket_address:
                       address: party
+                      port_value: 8080
+    - name: story
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: story
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: story
                       port_value: 8080
