@@ -20,7 +20,7 @@ func (a *httpApp) GetParty(c echo.Context) error {
 
 	p, err := a.partyService.Get(c.Request().Context(), pId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, p.ToPublicParty())

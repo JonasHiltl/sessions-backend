@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	_ "github.com/jonashiltl/sessions-backend/services/user/docs"
 	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/handlers"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
 	"github.com/labstack/echo/v4"
@@ -49,7 +49,7 @@ func main() {
 		Output:           e.Logger.Output(),
 	}))
 
-	httpApp := handlers.NewHttpApp(userService, authService, friendService)
+	httpApp := handler.NewHttpApp(userService, authService, friendService)
 
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 

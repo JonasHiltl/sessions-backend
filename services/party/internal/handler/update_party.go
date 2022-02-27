@@ -45,7 +45,7 @@ func (a *httpApp) UpdateParty(c echo.Context) error {
 
 	p, err := a.partyService.Update(c.Request().Context(), d)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, p.ToPublicParty())

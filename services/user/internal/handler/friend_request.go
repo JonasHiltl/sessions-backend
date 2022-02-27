@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -30,7 +30,7 @@ func (a *httpApp) FriendRequest(c echo.Context) error {
 
 	err = a.friendService.FriendRequest(c.Request().Context(), fId, me.Sub)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusCreated, comtypes.MessageRes{Message: "Friend request send"})

@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -30,7 +30,7 @@ func (a *httpApp) DeleteUser(c echo.Context) error {
 
 	err = a.userService.Delete(c.Request().Context(), me.Sub)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, comtypes.MessageRes{Message: "User deleted"})

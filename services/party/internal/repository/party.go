@@ -18,7 +18,7 @@ const TABLE_NAME string = "party"
 
 var partyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
-	Columns: []string{"id", "user_id", "title", "is_public", "geohash", "created_at"},
+	Columns: []string{"id", "user_id", "title", "is_public", "stories", "geohash", "created_at"},
 	PartKey: []string{"id"},
 }
 var partyTable = table.New(partyMetadata)

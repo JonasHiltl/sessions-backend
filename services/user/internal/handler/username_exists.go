@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -19,7 +19,7 @@ func (a *httpApp) UsernameExists(c echo.Context) error {
 
 	usernameExists, err := a.userService.UsernameExists(c.Request().Context(), username)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, usernameExists)

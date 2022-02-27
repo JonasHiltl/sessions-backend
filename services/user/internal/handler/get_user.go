@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -20,7 +20,7 @@ func (a *httpApp) GetUser(c echo.Context) error {
 
 	u, err := a.userService.GetById(c.Request().Context(), uId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, u.ToPublicProfile())

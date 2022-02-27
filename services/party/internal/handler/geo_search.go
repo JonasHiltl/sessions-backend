@@ -53,7 +53,7 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 
 	ps, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var pp []datastruct.PublicParty

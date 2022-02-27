@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -31,7 +31,7 @@ func (a *httpApp) FriendSearch(c echo.Context) error {
 
 	friends, err := a.friendService.Search(c.Request().Context(), uId, query, acceptedB)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var publicFriends []datastruct.PublicUser

@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -28,7 +28,7 @@ func (a *httpApp) Register(c echo.Context) error {
 
 	token, err := a.authService.Register(c.Request().Context(), reqBody)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	res := datastruct.AuthRes{

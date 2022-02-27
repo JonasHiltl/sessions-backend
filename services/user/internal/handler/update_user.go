@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"net/http"
@@ -34,9 +34,8 @@ func (a *httpApp) UpdateUser(c echo.Context) error {
 	}
 
 	u, err := a.userService.Update(c.Request().Context(), me.Sub, reqBody)
-
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, u.ToPublicProfile())

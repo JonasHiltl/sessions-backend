@@ -19,7 +19,7 @@ func (a *httpApp) GetByUser(c echo.Context) error {
 
 	ps, err := a.partyService.GetByUser(c.Request().Context(), uId)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
 	var pp []datastruct.PublicParty

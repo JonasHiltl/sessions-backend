@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
