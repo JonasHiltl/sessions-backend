@@ -89,6 +89,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootPassword
 
+  nats:
+    image: nats
+    container_name: nats
+    restart: on-failure
+    ports:
+      - "8222:8222"
+
   envoy:
     image: envoyproxy/envoy:v1.20-latest
     container_name: envoy
