@@ -8,11 +8,12 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	_ "github.com/jonashiltl/sessions-backend/services/party/docs"
+	"github.com/jonashiltl/sessions-backend/services/party/internal/consumer"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/nats-io/nats.go"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -27,6 +28,14 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	nc, err := nats.Connect(nats.DefaultURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer nc.Close()
+
+	go consumer.Start(nc)
+
 	sess, err := repository.NewDB()
 	if err != nil {
 		log.Fatal(err)
@@ -37,17 +46,13 @@ func main() {
 
 	partyService := service.NewPartyServie(dao)
 
-	httpApp := handler.NewHttpApp(partyService)
+	httpApp := handler.NewHttpApp(partyService, nc)
 
 	e := echo.New()
 
 	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
 
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format:           "[${time_custom}] ${status} ${method} ${path} ${latency_human} ${error}\n",
-		CustomTimeFormat: "02.01.2006 15:04:05",
-		Output:           e.Logger.Output(),
-	}))
+	e.Use(comutils.NewLogger(e))
 
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 
