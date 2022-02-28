@@ -12,17 +12,18 @@ type Party struct {
 	Title      string    `json:"title"     db:"title"      validate:"required"`
 	IsPublic   bool      `json:"isPublic"  db:"is_public"`
 	GHash      string    `json:"geohash"   db:"geohash"    validate:"required"`
-	Stories    []string  `json:"stories"   db:"stories"`
+	Stories    []string  `json:"stories,omitempty"   db:"stories"`
 	Created_at time.Time `json:"createdAt" db:"created_at" validate:"required"`
 }
 
 type PublicParty struct {
-	Id       string  `json:"id"`
-	UId      string  `json:"userId"`
-	IsPublic bool    `json:"isPublic"`
-	Lat      float64 `json:"lat"`
-	Long     float64 `json:"long"`
-	Title    string  `json:"title"`
+	Id       string   `json:"id"`
+	UId      string   `json:"userId"`
+	IsPublic bool     `json:"isPublic"`
+	Lat      float64  `json:"lat"`
+	Long     float64  `json:"long"`
+	Stories  []string `json:"stories,omitempty"`
+	Title    string   `json:"title"`
 }
 
 func (p Party) ToPublicParty() PublicParty {
@@ -34,6 +35,7 @@ func (p Party) ToPublicParty() PublicParty {
 		IsPublic: p.IsPublic,
 		Lat:      lat,
 		Long:     lon,
+		Stories:  p.Stories,
 		Title:    p.Title,
 	}
 }

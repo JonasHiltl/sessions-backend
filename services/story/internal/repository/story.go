@@ -117,11 +117,12 @@ func (sq *storyQuery) GetByParty(c context.Context, pId string) ([]datastruct.St
 	var result []datastruct.Story
 	stmt, names := qb.
 		Select(TABLE_NAME).
-		Where(qb.EqLit("party_id", pId)).
+		Where(qb.Eq("party_id")).
 		ToCql()
 
 	err := sq.sess.
 		Query(stmt, names).
+		BindMap((qb.M{"party_id": pId})).
 		PageSize(10).
 		Iter().
 		Select(&result)

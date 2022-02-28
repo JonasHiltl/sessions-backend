@@ -7,13 +7,13 @@ import (
 )
 
 type Story struct {
-	Id            string    `json:"id"             db:"id"             validate:"required"`
-	PId           string    `json:"partyId"        db:"party_id"       validate:"required"`
-	UId           string    `json:"userId"         db:"user_id"        validate:"required"`
-	GHash         string    `json:"geohash"        db:"geohash"        validate:"required"`
-	Url           string    `json:"url"            db:"url"            validate:"required"`
-	TaggedFriends []string  `json:"tagged_friends" db:"tagged_friends"`
-	Created_at    time.Time `json:"createdAt"      db:"created_at"     validate:"required"`
+	Id            string    `json:"id"                       db:"id"             validate:"required"`
+	PId           string    `json:"partyId"                  db:"party_id"       validate:"required"`
+	UId           string    `json:"userId"                   db:"user_id"        validate:"required"`
+	GHash         string    `json:"geohash"                  db:"geohash"        validate:"required"`
+	Url           string    `json:"url"                      db:"url"            validate:"required"`
+	TaggedFriends []string  `json:"tagged_friends,omitempty" db:"tagged_friends"`
+	Created_at    time.Time `json:"createdAt"                db:"created_at"     validate:"required"`
 }
 
 type PublicStory struct {
@@ -23,7 +23,7 @@ type PublicStory struct {
 	Lat           float32   `json:"lat,omitempty"`
 	Long          float32   `json:"long,omitempty"`
 	Url           string    `json:"url"`
-	TaggedFriends []string  `json:"tagged_friends"`
+	TaggedFriends []string  `json:"tagged_friends,omitempty"`
 	CreatedAt     time.Time `json:"createdAt"`
 }
 
