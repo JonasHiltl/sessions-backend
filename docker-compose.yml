@@ -75,7 +75,7 @@ services:
     ports:
       - "9042:9042"
     volumes:
-      - ./data/scylla1:/var/lib/scylla/data
+      - ./_data/scylla1:/var/lib/scylla/data
 
   mysql:
     image: mysql
@@ -85,7 +85,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - ./_data/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootPassword
 
