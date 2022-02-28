@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -125,15 +126,19 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string) ([]datastruct.P
 	stmt, names := qb.
 		Select(TABLE_NAME).
 		Where(qb.Eq("user_id")).
-		OrderBy("created_at", qb.DESC).
 		ToCql()
+
+	log.Println(stmt)
 
 	err := pq.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"user_id": uId})).
-		GetRelease(&result)
+		PageSize(10).
+		Iter().
+		Select(&result)
 	if err != nil {
-		return []datastruct.Party{}, err
+		log.Println(err)
+		return []datastruct.Party{}, errors.New("no parties found")
 	}
 
 	return result, nil

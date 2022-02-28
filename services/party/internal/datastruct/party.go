@@ -12,6 +12,7 @@ type Party struct {
 	Title      string    `json:"title"     db:"title"      validate:"required"`
 	IsPublic   bool      `json:"isPublic"  db:"is_public"`
 	GHash      string    `json:"geohash"   db:"geohash"    validate:"required"`
+	Stories    []string  `json:"stories"   db:"stories"`
 	Created_at time.Time `json:"createdAt" db:"created_at" validate:"required"`
 }
 

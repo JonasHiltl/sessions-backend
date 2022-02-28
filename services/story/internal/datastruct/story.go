@@ -12,7 +12,7 @@ type Story struct {
 	UId           string    `json:"userId"         db:"user_id"        validate:"required"`
 	GHash         string    `json:"geohash"        db:"geohash"        validate:"required"`
 	Url           string    `json:"url"            db:"url"            validate:"required"`
-	TaggedFriends []string  `json:"tagged_friends" db:"tagged_friends" validate:"required"`
+	TaggedFriends []string  `json:"tagged_friends" db:"tagged_friends"`
 	Created_at    time.Time `json:"createdAt"      db:"created_at"     validate:"required"`
 }
 

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -94,11 +95,14 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string) ([]datastruct.Sto
 	var result []datastruct.Story
 	stmt, names := qb.
 		Select(TABLE_NAME).
-		Where(qb.EqLit("user_id", uId)).
+		Where(qb.Eq("user_id")).
 		ToCql()
+
+	log.Println(stmt)
 
 	err := sq.sess.
 		Query(stmt, names).
+		BindMap((qb.M{"user_id": uId})).
 		PageSize(10).
 		Iter().
 		Select(&result)
