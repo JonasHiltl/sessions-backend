@@ -8,7 +8,7 @@ func (u *User) ToPublicProfile() datastruct.PublicUser {
 		Username:    u.Username,
 		FirstName:   u.FirstName,
 		LastName:    u.LastName,
-		Picture:     u.Picture,
+		Avatar:      u.Avatar,
 		Role:        string(u.Role),
 		FriendCount: u.FriendCount,
 	}

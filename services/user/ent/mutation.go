@@ -38,7 +38,7 @@ type UserMutation struct {
 	last_name       *string
 	email           *string
 	password        *string
-	picture         *string
+	avatar          *string
 	blurhash        *string
 	role            *user.Role
 	created_at      *time.Time
@@ -350,53 +350,53 @@ func (m *UserMutation) ResetPassword() {
 	m.password = nil
 }
 
-// SetPicture sets the "picture" field.
-func (m *UserMutation) SetPicture(s string) {
-	m.picture = &s
+// SetAvatar sets the "avatar" field.
+func (m *UserMutation) SetAvatar(s string) {
+	m.avatar = &s
 }
 
-// Picture returns the value of the "picture" field in the mutation.
-func (m *UserMutation) Picture() (r string, exists bool) {
-	v := m.picture
+// Avatar returns the value of the "avatar" field in the mutation.
+func (m *UserMutation) Avatar() (r string, exists bool) {
+	v := m.avatar
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPicture returns the old "picture" field's value of the User entity.
+// OldAvatar returns the old "avatar" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldPicture(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldAvatar(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPicture is only allowed on UpdateOne operations")
+		return v, errors.New("OldAvatar is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPicture requires an ID field in the mutation")
+		return v, errors.New("OldAvatar requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPicture: %w", err)
+		return v, fmt.Errorf("querying old value for OldAvatar: %w", err)
 	}
-	return oldValue.Picture, nil
+	return oldValue.Avatar, nil
 }
 
-// ClearPicture clears the value of the "picture" field.
-func (m *UserMutation) ClearPicture() {
-	m.picture = nil
-	m.clearedFields[user.FieldPicture] = struct{}{}
+// ClearAvatar clears the value of the "avatar" field.
+func (m *UserMutation) ClearAvatar() {
+	m.avatar = nil
+	m.clearedFields[user.FieldAvatar] = struct{}{}
 }
 
-// PictureCleared returns if the "picture" field was cleared in this mutation.
-func (m *UserMutation) PictureCleared() bool {
-	_, ok := m.clearedFields[user.FieldPicture]
+// AvatarCleared returns if the "avatar" field was cleared in this mutation.
+func (m *UserMutation) AvatarCleared() bool {
+	_, ok := m.clearedFields[user.FieldAvatar]
 	return ok
 }
 
-// ResetPicture resets all changes to the "picture" field.
-func (m *UserMutation) ResetPicture() {
-	m.picture = nil
-	delete(m.clearedFields, user.FieldPicture)
+// ResetAvatar resets all changes to the "avatar" field.
+func (m *UserMutation) ResetAvatar() {
+	m.avatar = nil
+	delete(m.clearedFields, user.FieldAvatar)
 }
 
 // SetBlurhash sets the "blurhash" field.
@@ -665,8 +665,8 @@ func (m *UserMutation) Fields() []string {
 	if m.password != nil {
 		fields = append(fields, user.FieldPassword)
 	}
-	if m.picture != nil {
-		fields = append(fields, user.FieldPicture)
+	if m.avatar != nil {
+		fields = append(fields, user.FieldAvatar)
 	}
 	if m.blurhash != nil {
 		fields = append(fields, user.FieldBlurhash)
@@ -698,8 +698,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Email()
 	case user.FieldPassword:
 		return m.Password()
-	case user.FieldPicture:
-		return m.Picture()
+	case user.FieldAvatar:
+		return m.Avatar()
 	case user.FieldBlurhash:
 		return m.Blurhash()
 	case user.FieldRole:
@@ -727,8 +727,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldEmail(ctx)
 	case user.FieldPassword:
 		return m.OldPassword(ctx)
-	case user.FieldPicture:
-		return m.OldPicture(ctx)
+	case user.FieldAvatar:
+		return m.OldAvatar(ctx)
 	case user.FieldBlurhash:
 		return m.OldBlurhash(ctx)
 	case user.FieldRole:
@@ -781,12 +781,12 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPassword(v)
 		return nil
-	case user.FieldPicture:
+	case user.FieldAvatar:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPicture(v)
+		m.SetAvatar(v)
 		return nil
 	case user.FieldBlurhash:
 		v, ok := value.(string)
@@ -864,8 +864,8 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldLastName) {
 		fields = append(fields, user.FieldLastName)
 	}
-	if m.FieldCleared(user.FieldPicture) {
-		fields = append(fields, user.FieldPicture)
+	if m.FieldCleared(user.FieldAvatar) {
+		fields = append(fields, user.FieldAvatar)
 	}
 	if m.FieldCleared(user.FieldBlurhash) {
 		fields = append(fields, user.FieldBlurhash)
@@ -887,8 +887,8 @@ func (m *UserMutation) ClearField(name string) error {
 	case user.FieldLastName:
 		m.ClearLastName()
 		return nil
-	case user.FieldPicture:
-		m.ClearPicture()
+	case user.FieldAvatar:
+		m.ClearAvatar()
 		return nil
 	case user.FieldBlurhash:
 		m.ClearBlurhash()
@@ -916,8 +916,8 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldPassword:
 		m.ResetPassword()
 		return nil
-	case user.FieldPicture:
-		m.ResetPicture()
+	case user.FieldAvatar:
+		m.ResetAvatar()
 		return nil
 	case user.FieldBlurhash:
 		m.ResetBlurhash()

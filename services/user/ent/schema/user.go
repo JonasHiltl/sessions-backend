@@ -42,7 +42,7 @@ func (User) Fields() []ent.Field {
 
 		field.String("password"),
 
-		field.String("picture").
+		field.String("avatar").
 			Optional(),
 
 		field.String("blurhash").

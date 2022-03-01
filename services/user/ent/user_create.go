@@ -58,16 +58,16 @@ func (uc *UserCreate) SetPassword(s string) *UserCreate {
 	return uc
 }
 
-// SetPicture sets the "picture" field.
-func (uc *UserCreate) SetPicture(s string) *UserCreate {
-	uc.mutation.SetPicture(s)
+// SetAvatar sets the "avatar" field.
+func (uc *UserCreate) SetAvatar(s string) *UserCreate {
+	uc.mutation.SetAvatar(s)
 	return uc
 }
 
-// SetNillablePicture sets the "picture" field if the given value is not nil.
-func (uc *UserCreate) SetNillablePicture(s *string) *UserCreate {
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uc *UserCreate) SetNillableAvatar(s *string) *UserCreate {
 	if s != nil {
-		uc.SetPicture(*s)
+		uc.SetAvatar(*s)
 	}
 	return uc
 }
@@ -344,13 +344,13 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		})
 		_node.Password = value
 	}
-	if value, ok := uc.mutation.Picture(); ok {
+	if value, ok := uc.mutation.Avatar(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldPicture,
+			Column: user.FieldAvatar,
 		})
-		_node.Picture = value
+		_node.Avatar = value
 	}
 	if value, ok := uc.mutation.Blurhash(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -24,8 +24,8 @@ const (
 	FieldEmail = "email"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
-	// FieldPicture holds the string denoting the picture field in the database.
-	FieldPicture = "picture"
+	// FieldAvatar holds the string denoting the avatar field in the database.
+	FieldAvatar = "avatar"
 	// FieldBlurhash holds the string denoting the blurhash field in the database.
 	FieldBlurhash = "blurhash"
 	// FieldRole holds the string denoting the role field in the database.
@@ -50,7 +50,7 @@ var Columns = []string{
 	FieldLastName,
 	FieldEmail,
 	FieldPassword,
-	FieldPicture,
+	FieldAvatar,
 	FieldBlurhash,
 	FieldRole,
 	FieldCreatedAt,

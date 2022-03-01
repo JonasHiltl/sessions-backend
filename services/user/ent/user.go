@@ -26,8 +26,8 @@ type User struct {
 	Email string `json:"email,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"password,omitempty"`
-	// Picture holds the value of the "picture" field.
-	Picture string `json:"picture,omitempty"`
+	// Avatar holds the value of the "avatar" field.
+	Avatar string `json:"avatar,omitempty"`
 	// Blurhash holds the value of the "blurhash" field.
 	Blurhash string `json:"blurhash,omitempty"`
 	// Role holds the value of the "role" field.
@@ -66,7 +66,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case user.FieldFriendCount:
 			values[i] = new(sql.NullInt64)
-		case user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldEmail, user.FieldPassword, user.FieldPicture, user.FieldBlurhash, user.FieldRole:
+		case user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldEmail, user.FieldPassword, user.FieldAvatar, user.FieldBlurhash, user.FieldRole:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -121,11 +121,11 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.Password = value.String
 			}
-		case user.FieldPicture:
+		case user.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field picture", values[i])
+				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
-				u.Picture = value.String
+				u.Avatar = value.String
 			}
 		case user.FieldBlurhash:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -194,8 +194,8 @@ func (u *User) String() string {
 	builder.WriteString(u.Email)
 	builder.WriteString(", password=")
 	builder.WriteString(u.Password)
-	builder.WriteString(", picture=")
-	builder.WriteString(u.Picture)
+	builder.WriteString(", avatar=")
+	builder.WriteString(u.Avatar)
 	builder.WriteString(", blurhash=")
 	builder.WriteString(u.Blurhash)
 	builder.WriteString(", role=")

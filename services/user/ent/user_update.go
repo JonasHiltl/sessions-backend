@@ -72,23 +72,23 @@ func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	return uu
 }
 
-// SetPicture sets the "picture" field.
-func (uu *UserUpdate) SetPicture(s string) *UserUpdate {
-	uu.mutation.SetPicture(s)
+// SetAvatar sets the "avatar" field.
+func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
+	uu.mutation.SetAvatar(s)
 	return uu
 }
 
-// SetNillablePicture sets the "picture" field if the given value is not nil.
-func (uu *UserUpdate) SetNillablePicture(s *string) *UserUpdate {
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
 	if s != nil {
-		uu.SetPicture(*s)
+		uu.SetAvatar(*s)
 	}
 	return uu
 }
 
-// ClearPicture clears the value of the "picture" field.
-func (uu *UserUpdate) ClearPicture() *UserUpdate {
-	uu.mutation.ClearPicture()
+// ClearAvatar clears the value of the "avatar" field.
+func (uu *UserUpdate) ClearAvatar() *UserUpdate {
+	uu.mutation.ClearAvatar()
 	return uu
 }
 
@@ -331,17 +331,17 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldPassword,
 		})
 	}
-	if value, ok := uu.mutation.Picture(); ok {
+	if value, ok := uu.mutation.Avatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldPicture,
+			Column: user.FieldAvatar,
 		})
 	}
-	if uu.mutation.PictureCleared() {
+	if uu.mutation.AvatarCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: user.FieldPicture,
+			Column: user.FieldAvatar,
 		})
 	}
 	if value, ok := uu.mutation.Blurhash(); ok {
@@ -502,23 +502,23 @@ func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
 	return uuo
 }
 
-// SetPicture sets the "picture" field.
-func (uuo *UserUpdateOne) SetPicture(s string) *UserUpdateOne {
-	uuo.mutation.SetPicture(s)
+// SetAvatar sets the "avatar" field.
+func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
+	uuo.mutation.SetAvatar(s)
 	return uuo
 }
 
-// SetNillablePicture sets the "picture" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillablePicture(s *string) *UserUpdateOne {
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
 	if s != nil {
-		uuo.SetPicture(*s)
+		uuo.SetAvatar(*s)
 	}
 	return uuo
 }
 
-// ClearPicture clears the value of the "picture" field.
-func (uuo *UserUpdateOne) ClearPicture() *UserUpdateOne {
-	uuo.mutation.ClearPicture()
+// ClearAvatar clears the value of the "avatar" field.
+func (uuo *UserUpdateOne) ClearAvatar() *UserUpdateOne {
+	uuo.mutation.ClearAvatar()
 	return uuo
 }
 
@@ -785,17 +785,17 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldPassword,
 		})
 	}
-	if value, ok := uuo.mutation.Picture(); ok {
+	if value, ok := uuo.mutation.Avatar(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldPicture,
+			Column: user.FieldAvatar,
 		})
 	}
-	if uuo.mutation.PictureCleared() {
+	if uuo.mutation.AvatarCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: user.FieldPicture,
+			Column: user.FieldAvatar,
 		})
 	}
 	if value, ok := uuo.mutation.Blurhash(); ok {

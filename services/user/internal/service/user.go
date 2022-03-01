@@ -53,7 +53,7 @@ func (us *userService) GetById(ctx context.Context, id string) (*ent.User, error
 	res, err := us.client.
 		Query().
 		Where(user.ID(id)).
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldPicture).
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldAvatar).
 		Only(ctx)
 
 	return res, err
@@ -74,15 +74,15 @@ func (us *userService) Update(ctx context.Context, id string, u datastruct.Reque
 	if u.Email != "" {
 		builder.SetEmail(u.Email)
 	}
-	if u.Picture != "" {
-		builder.SetPicture(u.Picture)
+	if u.Avatar != "" {
+		builder.SetAvatar(u.Avatar)
 	}
 	if u.Password != "" {
 		builder.SetPassword(u.Password)
 	}
 
 	res, err := builder.
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldPicture).
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldAvatar).
 		Save(ctx)
 
 	return res, err

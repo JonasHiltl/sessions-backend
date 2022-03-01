@@ -26,7 +26,7 @@ func (fs *friendSerivce) Get(ctx context.Context, uId string, offset int, limit 
 		Query().
 		Where(user.ID(uId)).
 		QueryFriends().
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPicture, user.FieldRole).
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldAvatar, user.FieldRole).
 		Offset(offset).
 		Limit(limit).
 		All(ctx)
@@ -60,7 +60,7 @@ func (fs *friendSerivce) Search(ctx context.Context, uId string, query string, a
 			),
 		).
 		Limit(10).
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldPicture, user.FieldRole).
+		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldAvatar, user.FieldRole).
 		All(ctx)
 
 	return friends, err

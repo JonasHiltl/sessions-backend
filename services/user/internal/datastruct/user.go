@@ -5,7 +5,7 @@ type PublicUser struct {
 	Username    string `json:"username"              validate:"required"`
 	FirstName   string `json:"firstname"             validate:"required"`
 	LastName    string `json:"lastname,omitempty"`
-	Picture     string `json:"picture,omitempty"`
+	Avatar      string `json:"avatar,omitempty"`
 	Role        string `json:"role"`
 	FriendCount int    `json:"friendCount,omitempty"`
 }
@@ -16,5 +16,5 @@ type RequestUser struct {
 	LastName  string `json:"lastname,omitempty"`
 	Email     string `json:"email"                 validate:"required,email"`
 	Password  string `json:"password,omitempty"    validate:"required,gte=8"`
-	Picture   string `json:"picture,omitempty"`
+	Avatar    string `json:"avatar,omitempty"`
 }

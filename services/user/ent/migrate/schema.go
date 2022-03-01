@@ -16,7 +16,7 @@ var (
 		{Name: "last_name", Type: field.TypeString, Nullable: true},
 		{Name: "email", Type: field.TypeString, Unique: true},
 		{Name: "password", Type: field.TypeString},
-		{Name: "picture", Type: field.TypeString, Nullable: true},
+		{Name: "avatar", Type: field.TypeString, Nullable: true},
 		{Name: "blurhash", Type: field.TypeString, Nullable: true},
 		{Name: "role", Type: field.TypeEnum, Enums: []string{"ADMIN", "USER"}, Default: "USER"},
 		{Name: "created_at", Type: field.TypeTime},
