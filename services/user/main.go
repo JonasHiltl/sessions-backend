@@ -38,13 +38,14 @@ func main() {
 	userService := service.NewUserService(client)
 	authService := service.NewAuthService(client, tokenManager)
 	friendService := service.NewFriendService(client)
+	uploadService := service.NewUploadService()
 
 	e := echo.New()
 	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
 
 	e.Use(comutils.NewLogger(e))
 
-	httpApp := handler.NewHttpApp(userService, authService, friendService)
+	httpApp := handler.NewHttpApp(userService, authService, friendService, uploadService)
 
 	e.GET("/docs/*", echoSwagger.WrapHandler)
 

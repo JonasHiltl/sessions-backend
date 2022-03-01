@@ -23,12 +23,14 @@ type httpApp struct {
 	userService   service.UserService
 	authService   service.AuthService
 	friendService service.FriendService
+	uploadService service.UploadService
 }
 
-func NewHttpApp(userService service.UserService, authService service.AuthService, friendService service.FriendService) HttpApp {
+func NewHttpApp(userService service.UserService, authService service.AuthService, friendService service.FriendService, uploadService service.UploadService) HttpApp {
 	return &httpApp{
 		authService:   authService,
 		userService:   userService,
 		friendService: friendService,
+		uploadService: uploadService,
 	}
 }

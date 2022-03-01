@@ -33,6 +33,14 @@ func (a *httpApp) UpdateUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
 	}
 
+	if reqBody.Avatar != "" {
+		loc, err := a.uploadService.Upload(c.Request().Context(), me.Sub, reqBody.Avatar)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Error uploading Avatar")
+		}
+		reqBody.Avatar = loc
+	}
+
 	u, err := a.userService.Update(c.Request().Context(), me.Sub, reqBody)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
