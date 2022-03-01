@@ -13,7 +13,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 )
 
-const TABLE_NAME string = "story"
+const (
+	TABLE_NAME     string = "story"
+	STORY_BY_PARTY string = "story_by_party"
+)
 
 var storyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
@@ -46,6 +49,8 @@ func (sq *storyQuery) Create(c context.Context, s datastruct.Story) (datastruct.
 		Columns(storyMetadata.Columns...).
 		TTL(time.Hour * 24).
 		ToCql()
+
+	// TODO: insert story id with party id intt story_by_party table
 
 	err = sq.sess.
 		Query(stmt, names).
@@ -116,8 +121,9 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string) ([]datastruct.Sto
 func (sq *storyQuery) GetByParty(c context.Context, pId string) ([]datastruct.Story, error) {
 	var result []datastruct.Story
 	stmt, names := qb.
-		Select(TABLE_NAME).
+		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).
+		OrderBy("created_at", qb.DESC).
 		ToCql()
 
 	err := sq.sess.

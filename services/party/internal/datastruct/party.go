@@ -12,7 +12,6 @@ type Party struct {
 	Title      string    `json:"title"     db:"title"      validate:"required"`
 	IsPublic   bool      `json:"isPublic"  db:"is_public"`
 	GHash      string    `json:"geohash"   db:"geohash"    validate:"required"`
-	Stories    []string  `json:"stories,omitempty"   db:"stories"`
 	Created_at time.Time `json:"createdAt" db:"created_at" validate:"required"`
 }
 
@@ -35,7 +34,6 @@ func (p Party) ToPublicParty() PublicParty {
 		IsPublic: p.IsPublic,
 		Lat:      lat,
 		Long:     lon,
-		Stories:  p.Stories,
 		Title:    p.Title,
 	}
 }

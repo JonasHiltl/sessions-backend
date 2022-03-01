@@ -6,3 +6,5 @@ CREATE TABLE IF NOT EXISTS party (
   geohash text,
   created_at timestamp,
 ) WITH default_time_to_live = 86400;
+
+CREATE INDEX party_by_user ON sessions.party (user_id);
