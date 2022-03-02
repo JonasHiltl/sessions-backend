@@ -19,8 +19,8 @@ type UploadService interface {
 }
 
 type uploadService struct {
-	awsClient *session.Session
-	doClient  *godo.Client
+	awsSess  *session.Session
+	doClient *godo.Client
 }
 
 func NewUploadService() UploadService {
@@ -41,7 +41,7 @@ func NewUploadService() UploadService {
 
 	doClient := godo.NewFromToken(token)
 
-	return &uploadService{awsClient: sess, doClient: doClient}
+	return &uploadService{awsSess: sess, doClient: doClient}
 }
 
 func (as *uploadService) Upload(ctx context.Context, filename, base64File string) (string, error) {
@@ -50,7 +50,7 @@ func (as *uploadService) Upload(ctx context.Context, filename, base64File string
 		return "", err
 	}
 
-	uploader := s3manager.NewUploader(as.awsClient)
+	uploader := s3manager.NewUploader(as.awsSess)
 
 	res, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String("avatars"),
