@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"errors"
+	"log"
 	"os"
 	"strings"
 
@@ -23,10 +23,10 @@ type uploadService struct {
 	doClient  *godo.Client
 }
 
-func NewUploadService() (UploadService, error) {
+func NewUploadService() UploadService {
 	endpoint, exists := os.LookupEnv("DO_ENDPOINT")
 	if !exists {
-		return nil, errors.New("DigitalOcean spaces endpoint not defined")
+		log.Fatal("DigitalOcean spaces endpoint not defined")
 	}
 	region := strings.Split(endpoint, ".")[0]
 	sess := session.Must(session.NewSession(&aws.Config{
@@ -36,12 +36,12 @@ func NewUploadService() (UploadService, error) {
 
 	token, exists := os.LookupEnv("DO_TOKEN")
 	if !exists {
-		return nil, errors.New("DigitalOcean token is not defined")
+		log.Fatal("DigitalOcean token is not defined")
 	}
 
 	doClient := godo.NewFromToken(token)
 
-	return &uploadService{awsClient: sess, doClient: doClient}, nil
+	return &uploadService{awsClient: sess, doClient: doClient}
 }
 
 func (as *uploadService) Upload(ctx context.Context, filename, base64File string) (string, error) {
