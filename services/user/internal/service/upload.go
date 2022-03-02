@@ -4,10 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
+	"errors"
+	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/digitalocean/godo"
 )
 
 type UploadService interface {
@@ -15,18 +19,29 @@ type UploadService interface {
 }
 
 type uploadService struct {
-	aws *session.Session
+	awsClient *session.Session
+	doClient  *godo.Client
 }
 
-func NewUploadService() UploadService {
-	endpoint := "fra1.digitaloceanspaces.com"
-	region := "fra1"
+func NewUploadService() (UploadService, error) {
+	endpoint, exists := os.LookupEnv("DO_ENDPOINT")
+	if !exists {
+		return nil, errors.New("DigitalOcean spaces endpoint not defined")
+	}
+	region := strings.Split(endpoint, ".")[0]
 	sess := session.Must(session.NewSession(&aws.Config{
 		Endpoint: &endpoint,
 		Region:   &region,
 	}))
 
-	return &uploadService{aws: sess}
+	token, exists := os.LookupEnv("DO_TOKEN")
+	if !exists {
+		return nil, errors.New("DigitalOcean token is not defined")
+	}
+
+	doClient := godo.NewFromToken(token)
+
+	return &uploadService{awsClient: sess, doClient: doClient}, nil
 }
 
 func (as *uploadService) Upload(ctx context.Context, filename, base64File string) (string, error) {
@@ -35,7 +50,7 @@ func (as *uploadService) Upload(ctx context.Context, filename, base64File string
 		return "", err
 	}
 
-	uploader := s3manager.NewUploader(as.aws)
+	uploader := s3manager.NewUploader(as.awsClient)
 
 	res, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String("avatars"),
@@ -43,6 +58,15 @@ func (as *uploadService) Upload(ctx context.Context, filename, base64File string
 		ACL:    aws.String("public-read"),
 		Body:   bytes.NewReader(decode),
 	})
+	if err != nil {
+		return "", err
+	}
+
+	flushRequest := &godo.CDNFlushCacheRequest{
+		Files: []string{filename},
+	}
+
+	_, err = as.doClient.CDNs.FlushCache(ctx, "19f06b6a-3ace-4315-b086-499a0e521b76", flushRequest)
 	if err != nil {
 		return "", err
 	}
