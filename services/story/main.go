@@ -27,9 +27,10 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	storyService := service.NewStoryServie(dao)
+	sService := service.NewStoryServie(dao)
+	us := service.NewUploadService()
 
-	httpApp := handler.NewHttpApp(storyService)
+	httpApp := handler.NewHttpApp(sService, us)
 
 	e := echo.New()
 
@@ -42,6 +43,8 @@ func main() {
 	e.DELETE("/:sId", httpApp.DeleteStory)
 	e.GET("/user/:uId", httpApp.GetByUser)
 	e.GET("/party/:pId", httpApp.GetByParty)
+
+	e.GET("/presign/:key", httpApp.PresignURL)
 
 	if err := e.Start(":8080"); err != http.ErrServerClosed {
 		log.Fatal(err)

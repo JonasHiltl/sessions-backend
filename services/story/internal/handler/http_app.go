@@ -11,14 +11,17 @@ type HttpApp interface {
 	DeleteStory(c echo.Context) error
 	GetByUser(c echo.Context) error
 	GetByParty(c echo.Context) error
+	PresignURL(c echo.Context) error
 }
 
 type httpApp struct {
 	sService service.StoryService
+	us       service.UploadService
 }
 
-func NewHttpApp(sService service.StoryService) HttpApp {
+func NewHttpApp(sService service.StoryService, us service.UploadService) HttpApp {
 	return &httpApp{
 		sService: sService,
+		us:       us,
 	}
 }
