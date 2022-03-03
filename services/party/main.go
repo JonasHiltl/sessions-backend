@@ -13,7 +13,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
-	"github.com/nats-io/nats.go"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -28,9 +27,9 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	nc, err := nats.Connect(nats.DefaultURL)
+	nc, err := consumer.Connect()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 	defer nc.Close()
 

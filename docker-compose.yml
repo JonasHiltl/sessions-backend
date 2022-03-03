@@ -39,6 +39,7 @@ services:
     environment:
       SCYLLA_KEYSPACE: sessions
       SCYLLA_HOSTS: scylla-node1
+      NATS_CLUSTER: nats://nats:4222
 
   story:
     build:
