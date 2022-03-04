@@ -21,7 +21,7 @@ const (
 var storyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
 	Columns: []string{"id", "party_id", "user_id", "geohash", "url", "tagged_friends", "created_at"},
-	PartKey: []string{"id"},
+	PartKey: []string{"id", "party_id"},
 }
 var storyTable = table.New(storyMetadata)
 

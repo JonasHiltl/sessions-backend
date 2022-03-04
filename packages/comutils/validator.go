@@ -38,7 +38,16 @@ func msgForTag(tag string, field string) string {
 
 	switch tag {
 	case "required":
-		b.WriteString(field)
+		switch field {
+		case "PId":
+			b.WriteString("Party Id")
+		case "UId":
+			b.WriteString("User Id")
+		case "CId":
+			b.WriteString("Comment Id")
+		default:
+			b.WriteString(field)
+		}
 		b.WriteString(" is required")
 		return b.String()
 	case "email":
