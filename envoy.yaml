@@ -37,6 +37,12 @@ static_resources:
                             prefix_rewrite: "/"
                             cluster: party
                         - match:
+                            prefix: "/comment/"
+                          route:
+                            # host_rewrite: www.google.com
+                            prefix_rewrite: "/"
+                            cluster: comment
+                        - match:
                             prefix: "/story/"
                           route:
                             # host_rewrite: www.google.com
@@ -62,6 +68,8 @@ static_resources:
                         - match:
                             prefix: /party/story/index.html
                         - match:
+                            prefix: /comment/story/index.html
+                        - match:
                             prefix: /user/auth/login
                         - match:
                             prefix: /user/auth/register
@@ -71,6 +79,10 @@ static_resources:
                             provider_name: main_auth
                         - match:
                             prefix: /party
+                          requires:
+                            provider_name: main_auth
+                        - match:
+                            prefix: /comment
                           requires:
                             provider_name: main_auth
                         - match:
@@ -118,4 +130,17 @@ static_resources:
                   address:
                     socket_address:
                       address: story
+                      port_value: 8080
+    - name: comment
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: comment
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: comment
                       port_value: 8080

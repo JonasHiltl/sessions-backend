@@ -59,6 +59,24 @@ services:
       SCYLLA_KEYSPACE: sessions
       SCYLLA_HOSTS: scylla-node1
 
+  comment:
+    build:
+      context: .
+      dockerfile: ./services/comment/Dockerfile
+      target: builder
+    container_name: comment
+    command: air
+    depends_on:
+      - scylla-node1
+    ports:
+      - "8084:8080"
+    volumes:
+      - "./services/comment/:/app/services/comment"
+      - "./packages/:/app/packages"
+    environment:
+      SCYLLA_KEYSPACE: sessions
+      SCYLLA_HOSTS: scylla-node1
+
   #typesense:
   #  container_name: typesense
   #  entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"

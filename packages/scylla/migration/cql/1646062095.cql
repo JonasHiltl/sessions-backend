@@ -15,6 +15,5 @@ CREATE MATERIALIZED VIEW story_by_party AS
   SELECT * FROM story
   WHERE id IS NOT NULL AND party_id IS NOT NULL AND user_id IS NOT NULL AND created_at IS NOT NULL
   PRIMARY KEY (party_id, created_at, id)
-  WITH comment='Allow query by party and sorted by creation date';
-
+WITH CLUSTERING ORDER BY (created_at DESC);
 
