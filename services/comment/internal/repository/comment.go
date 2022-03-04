@@ -58,6 +58,7 @@ func (cq *commentQuery) Create(ctx context.Context, c datastruct.Comment) (datas
 	return c, err
 }
 
+// https://github.com/scylladb/scylla/issues/10171
 // TODO: currently deletion by index is not supported if supported create GSI on comment_id and delete by it
 func (cq *commentQuery) Delete(ctx context.Context, uId, pId, cId string) error {
 	stmt, names := qb.
