@@ -6,6 +6,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Get a Story
+// @Description Get a Story by it's id
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param sId path string true "Story Id"
+// @Success 200 {object} datastruct.PublicStory
+// @Failure 400 {object} echo.HTTPError
+// @Router /{sId} [get]
 func (a *httpApp) GetStory(c echo.Context) error {
 	sId := c.Param("sId")
 

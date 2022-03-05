@@ -1,0 +1,203 @@
+definitions:
+  comtypes.MessageRes:
+    properties:
+      message:
+        type: string
+    required:
+    - message
+    type: object
+  datastruct.PublicStory:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      lat:
+        type: number
+      long:
+        type: number
+      partyId:
+        type: string
+      tagged_friends:
+        items:
+          type: string
+        type: array
+      url:
+        type: string
+      userId:
+        type: string
+    type: object
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+  handler.StoryCreateRequest:
+    properties:
+      lat:
+        type: number
+      long:
+        type: number
+      p_id:
+        type: string
+      tagged_friends:
+        items:
+          type: string
+        type: array
+      url:
+        type: string
+    required:
+    - lat
+    - long
+    - p_id
+    - url
+    type: object
+  handler.presignRes:
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Story in DB
+      parameters:
+      - description: The body to create a Story
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.StoryCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.PublicStory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Create a Story
+      tags:
+      - CRUD
+  /{sId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a Story from our db
+      parameters:
+      - description: Story Id
+        in: path
+        name: sId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comtypes.MessageRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Delete a Story
+      tags:
+      - CRUD
+    get:
+      consumes:
+      - application/json
+      description: Get a Story by it's id
+      parameters:
+      - description: Story Id
+        in: path
+        name: sId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/datastruct.PublicStory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get a Story
+      tags:
+      - CRUD
+  /party/{pId}:
+    get:
+      description: Returns a list of stories of a party
+      parameters:
+      - description: Party id
+        in: path
+        name: pId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/datastruct.PublicStory'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get stories of a party
+  /presign/{key}:
+    get:
+      consumes:
+      - application/json
+      description: Returns a url to update a video story to
+      parameters:
+      - description: Key of file to upload
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.presignRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get a presigned S3 URL
+  /user/{uId}:
+    get:
+      description: Returns a list of stories of a user
+      parameters:
+      - description: User id
+        in: path
+        name: uId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/datastruct.PublicStory'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get stories of a user
+swagger: "2.0"

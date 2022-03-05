@@ -13,6 +13,15 @@ type CreateCommentBody struct {
 	Body string `json:"body"      validate:"required"`
 }
 
+// @Summary Create Comment
+// @Description Create a new Comment on a party
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param Body body CreateCommentBody true "Comment data"
+// @Success 201 {object} datastruct.Comment
+// @Failure 400 {object} echo.HTTPError
+// @Router / [post]
 func (a *httpApp) CreateComment(ctx echo.Context) error {
 	var reqBody CreateCommentBody
 

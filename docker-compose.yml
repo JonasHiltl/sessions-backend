@@ -58,6 +58,9 @@ services:
     environment:
       SCYLLA_KEYSPACE: sessions
       SCYLLA_HOSTS: scylla-node1
+      DO_KEY: testkey
+      DO_SECRET: testsecret
+      DO_ENDPOINT: http://example.com
 
   comment:
     build:

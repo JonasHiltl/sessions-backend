@@ -1,0 +1,101 @@
+definitions:
+  comtypes.MessageRes:
+    properties:
+      message:
+        type: string
+    required:
+    - message
+    type: object
+  datastruct.Comment:
+    properties:
+      author_id:
+        type: string
+      body:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      party_id:
+        type: string
+    required:
+    - author_id
+    - body
+    - createdAt
+    - id
+    - party_id
+    type: object
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+  handler.CreateCommentBody:
+    properties:
+      body:
+        type: string
+      p_id:
+        type: string
+    required:
+    - body
+    - p_id
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Comment on a party
+      parameters:
+      - description: Comment data
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateCommentBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/datastruct.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Create Comment
+      tags:
+      - CRUD
+  /{pId}/{cId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Comment by its id with the party id
+      parameters:
+      - description: Comment Id
+        in: path
+        name: cId
+        required: true
+        type: string
+      - description: Party Id
+        in: path
+        name: cId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/comtypes.MessageRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Delete a Comment
+      tags:
+      - CRUD
+swagger: "2.0"

@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// @Summary Get party
+// @Summary Get a party
 // @Description Get a Party by it's id
 // @Tags CRUD
 // @Accept json

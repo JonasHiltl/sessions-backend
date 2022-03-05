@@ -16,6 +16,15 @@ type StoryCreateRequest struct {
 	TaggedFriends []string `json:"tagged_friends,omitempty"`
 }
 
+// @Summary Create a Story
+// @Description Create a new Story in DB
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param Body body StoryCreateRequest true "The body to create a Story"
+// @Success 201 {object} datastruct.PublicStory
+// @Failure 400 {object} echo.HTTPError
+// @Router / [post]
 func (a *httpApp) CreateStory(c echo.Context) error {
 	var req StoryCreateRequest
 	if err := c.Bind(&req); err != nil {

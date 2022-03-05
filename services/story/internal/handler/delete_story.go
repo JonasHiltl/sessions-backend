@@ -8,6 +8,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Delete a Story
+// @Description Deletes a Story from our db
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param sId path string true "Story Id"
+// @Success 200 {object} comtypes.MessageRes
+// @Failure 400 {object} echo.HTTPError
+// @Router /{sId} [delete]
 func (a *httpApp) DeleteStory(c echo.Context) error {
 	sId := c.Param("sId")
 

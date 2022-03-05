@@ -8,6 +8,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Delete a Comment
+// @Description Delete a Comment by its id with the party id
+// @Tags CRUD
+// @Accept json
+// @Produce json
+// @Param cId path string true "Comment Id"
+// @Param cId path string true "Party Id"
+// @Success 200 {object} comtypes.MessageRes
+// @Failure 400 {object} echo.HTTPError
+// @Router /{pId}/{cId} [delete]
 func (a *httpApp) DeleteComment(c echo.Context) error {
 	cId := c.Param("cId")
 	pId := c.Param("pId")

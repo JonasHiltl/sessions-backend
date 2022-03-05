@@ -7,6 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Get stories of a user
+// @Description Returns a list of stories of a user
+// @Produce json
+// @Param uId path string true "User id"
+// @Success 200 {array} datastruct.PublicStory
+// @Failure 400 {object} echo.HTTPError
+// @Router /user/{uId} [get]
 func (a *httpApp) GetByUser(c echo.Context) error {
 	uid := c.Param("uId")
 	if uid == "" {

@@ -7,10 +7,12 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	_ "github.com/jonashiltl/sessions-backend/services/story/docs"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/service"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func main() {
@@ -35,6 +37,8 @@ func main() {
 	e := echo.New()
 
 	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
+
+	e.GET("/docs/*", echoSwagger.WrapHandler)
 
 	e.Use(comutils.NewLogger(e))
 
