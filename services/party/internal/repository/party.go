@@ -126,8 +126,6 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string) ([]datastruct.P
 		Where(qb.Eq("user_id")).
 		ToCql()
 
-	log.Println(stmt)
-
 	err := pq.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"user_id": uId})).
