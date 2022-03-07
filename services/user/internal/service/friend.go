@@ -5,6 +5,7 @@ import (
 
 	"github.com/jonashiltl/sessions-backend/services/user/ent"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/user"
+	"github.com/nats-io/nats.go"
 )
 
 type FriendService interface {
@@ -15,10 +16,11 @@ type FriendService interface {
 
 type friendSerivce struct {
 	client *ent.UserClient
+	nc     *nats.EncodedConn
 }
 
-func NewFriendService(client *ent.UserClient) FriendService {
-	return &friendSerivce{client: client}
+func NewFriendService(client *ent.UserClient, nc *nats.EncodedConn) FriendService {
+	return &friendSerivce{client: client, nc: nc}
 }
 
 func (fs *friendSerivce) Get(ctx context.Context, uId string, offset int, limit int) ([]*ent.User, error) {

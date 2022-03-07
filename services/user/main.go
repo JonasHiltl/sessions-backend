@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	"github.com/jonashiltl/sessions-backend/packages/nats"
 	_ "github.com/jonashiltl/sessions-backend/services/user/docs"
 	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handler"
@@ -27,6 +28,12 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	nc, err := nats.Connect()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer nc.Close()
+
 	client, err := repository.NewClient()
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +44,7 @@ func main() {
 
 	userService := service.NewUserService(client)
 	authService := service.NewAuthService(client, tokenManager)
-	friendService := service.NewFriendService(client)
+	friendService := service.NewFriendService(client, nc)
 	uploadService := service.NewUploadService()
 
 	e := echo.New()
