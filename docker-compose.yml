@@ -12,6 +12,7 @@ services:
     command: air
     depends_on:
       - mysql
+      - nats
     ports:
       - "8081:8080"
     volumes:
@@ -80,7 +81,24 @@ services:
       SCYLLA_KEYSPACE: sessions
       SCYLLA_HOSTS: scylla-node1
 
-  #typesense:
+  notification:
+    build:
+      context: .
+      dockerfile: ./services/notification/Dockerfile
+      target: builder
+    container_name: notification
+    command: air
+    depends_on:
+      - nats
+    ports:
+      - "8085:8080"
+    volumes:
+      - "./services/notification/:/app/services/notification"
+      - "./packages/:/app/packages"
+    environment:
+      NATS_CLUSTER: nats://nats:4222
+
+    #typesense:
   #  container_name: typesense
   #  entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
   #  restart: on-failure

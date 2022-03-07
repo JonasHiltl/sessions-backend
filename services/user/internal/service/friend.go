@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/services/user/ent"
 	"github.com/jonashiltl/sessions-backend/services/user/ent/user"
 	"github.com/nats-io/nats.go"
@@ -41,10 +42,11 @@ func (fs *friendSerivce) FriendRequest(ctx context.Context, fId string, meId str
 		UpdateOneID(meId).
 		AddFriendIDs(fId).
 		Save(ctx)
-
 	if err != nil {
 		return err
 	}
+
+	fs.nc.Publish("notification.push.friend.requested", comtypes.FriendRequestNotification{RequesterId: meId, RequestedId: fId})
 
 	return nil
 }
