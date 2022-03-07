@@ -19,8 +19,8 @@ type PartyService interface {
 	Update(ctx context.Context, p dto.Party) (datastruct.Party, error)
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
-	GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error)
-	GeoSearch(ctx context.Context, lat float64, long float64, precision uint) ([]datastruct.Party, error)
+	GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error)
+	GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error)
 }
 
 type partyService struct {
@@ -91,15 +91,15 @@ func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, 
 	return ps.dao.NewPartyQuery().Get(ctx, pId)
 }
 
-func (ps *partyService) GetByUser(ctx context.Context, uId string) ([]datastruct.Party, error) {
-	return ps.dao.NewPartyQuery().GetByUser(ctx, uId)
+func (ps *partyService) GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error) {
+	return ps.dao.NewPartyQuery().GetByUser(ctx, uId, page)
 }
 
-func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint) ([]datastruct.Party, error) {
+func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {
 	if precision == 0 {
 		precision = GEOHASH_PRECISION
 	}
 
 	h := geohash.Neighbors(geohash.EncodeWithPrecision(lat, long, precision))
-	return ps.dao.NewPartyQuery().GeoSearch(ctx, h)
+	return ps.dao.NewPartyQuery().GeoSearch(ctx, h, page)
 }

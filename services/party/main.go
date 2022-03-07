@@ -7,8 +7,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	"github.com/jonashiltl/sessions-backend/packages/nats"
 	_ "github.com/jonashiltl/sessions-backend/services/party/docs"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/consumer"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
@@ -27,13 +27,11 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	nc, err := consumer.Connect()
+	nc, err := nats.Connect()
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
-
-	go consumer.Start(nc)
 
 	sess, err := repository.NewDB()
 	if err != nil {

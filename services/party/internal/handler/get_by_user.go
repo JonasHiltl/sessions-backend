@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
@@ -17,7 +18,10 @@ import (
 func (a *httpApp) GetByUser(c echo.Context) error {
 	uId := c.Param("uId")
 
-	ps, err := a.partyService.GetByUser(c.Request().Context(), uId)
+	var page []byte
+
+	ps, nextPage, err := a.partyService.GetByUser(c.Request().Context(), uId, page)
+	log.Println("Next Page: ", nextPage)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

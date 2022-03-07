@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -51,7 +52,10 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		return err
 	}
 
-	ps, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision))
+	var page []byte
+
+	ps, nextPage, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), page)
+	log.Println("Next Page: ", nextPage)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
