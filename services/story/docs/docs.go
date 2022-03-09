@@ -76,10 +76,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicStory"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedStories"
                         }
                     },
                     "400": {
@@ -146,10 +143,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicStory"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedStories"
                         }
                     },
                     "400": {
@@ -245,6 +239,20 @@ const docTemplate_swagger = `{
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "datastruct.PagedStories": {
+            "type": "object",
+            "properties": {
+                "nextPage": {
+                    "type": "string"
+                },
+                "stories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/datastruct.PublicStory"
+                    }
                 }
             }
         },

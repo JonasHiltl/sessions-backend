@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/jonashiltl/sessions-backend/services/story/internal/datastruct"
@@ -11,7 +12,7 @@ import (
 // @Description Returns a list of stories of a user
 // @Produce json
 // @Param uId path string true "User id"
-// @Success 200 {array} datastruct.PublicStory
+// @Success 200 {object} datastruct.PagedStories
 // @Failure 400 {object} echo.HTTPError
 // @Router /user/{uId} [get]
 func (a *httpApp) GetByUser(c echo.Context) error {
@@ -20,15 +21,23 @@ func (a *httpApp) GetByUser(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid User Id")
 	}
 
-	stories, err := a.sService.GetByUser(c.Request().Context(), uid)
+	pageQuery := c.QueryParam("nextPage")
+	p, err := base64.URLEncoding.DecodeString(pageQuery)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
+	}
+
+	stories, p, err := a.sService.GetByUser(c.Request().Context(), uid, p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	nextPage := base64.URLEncoding.EncodeToString(p)
 
 	var result []datastruct.PublicStory
 	for _, s := range stories {
 		result = append(result, s.ToPublicStory())
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, datastruct.PagedStories{Stories: result, NextPage: nextPage})
 }

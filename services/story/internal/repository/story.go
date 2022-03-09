@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -21,7 +20,7 @@ const (
 
 var storyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
-	Columns: []string{"id", "party_id", "user_id", "geohash", "url", "tagged_friends", "created_at"},
+	Columns: []string{"id", "party_id", "user_id", "geohash", "url", "tagged_friends"},
 	PartKey: []string{"id", "party_id"},
 }
 var storyTable = table.New(storyMetadata)
@@ -30,8 +29,8 @@ type StoryQuery interface {
 	Create(c context.Context, s datastruct.Story) (datastruct.Story, error)
 	Delete(c context.Context, uId, sId string) error
 	Get(c context.Context, sId string) (datastruct.Story, error)
-	GetByUser(c context.Context, uId string) ([]datastruct.Story, error)
-	GetByParty(c context.Context, pId string) ([]datastruct.Story, error)
+	GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error)
+	GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error)
 }
 
 type storyQuery struct {
@@ -97,45 +96,49 @@ func (sq *storyQuery) Get(c context.Context, sId string) (datastruct.Story, erro
 	return result, nil
 }
 
-func (sq *storyQuery) GetByUser(c context.Context, uId string) ([]datastruct.Story, error) {
-	var result []datastruct.Story
+func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_USER).
 		Where(qb.Eq("user_id")).
 		ToCql()
 
-	log.Println(stmt)
-
-	err := sq.sess.
+	q := sq.sess.
 		Query(stmt, names).
-		BindMap((qb.M{"user_id": uId})).
-		PageSize(10).
-		Iter().
-		Select(&result)
+		BindMap((qb.M{"user_id": uId}))
+	defer q.Release()
+
+	q.PageState(page)
+	q.PageSize(10)
+
+	iter := q.Iter()
+	err = iter.Select(&result)
 	if err != nil {
-		return []datastruct.Story{}, errors.New("no stories found")
+		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 
-	return result, nil
+	return result, iter.PageState(), nil
 }
 
-func (sq *storyQuery) GetByParty(c context.Context, pId string) ([]datastruct.Story, error) {
-	var result []datastruct.Story
+func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).
 		OrderBy("created_at", qb.DESC).
 		ToCql()
 
-	err := sq.sess.
+	q := sq.sess.
 		Query(stmt, names).
-		BindMap((qb.M{"party_id": pId})).
-		PageSize(10).
-		Iter().
-		Select(&result)
+		BindMap((qb.M{"party_id": pId}))
+	defer q.Release()
+
+	q.PageState(page)
+	q.PageSize(10)
+
+	iter := q.Iter()
+	err = iter.Select(&result)
 	if err != nil {
-		return []datastruct.Story{}, errors.New("no stories found")
+		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 
-	return result, nil
+	return result, iter.PageState(), err
 }

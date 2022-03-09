@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/base64"
-	"log"
 	"net/http"
 
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
@@ -22,21 +21,20 @@ func (a *httpApp) GetByUser(c echo.Context) error {
 
 	p, err := base64.URLEncoding.DecodeString(pageQuery)
 	if err != nil {
-		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
 	}
 
-	ps, nextPage, err := a.partyService.GetByUser(c.Request().Context(), uId, p)
+	ps, p, err := a.partyService.GetByUser(c.Request().Context(), uId, p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	str := base64.URLEncoding.EncodeToString(nextPage)
+	nextPage := base64.URLEncoding.EncodeToString(p)
 
 	var pp []datastruct.PublicParty
 	for _, p := range ps {
 		pp = append(pp, p.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: str})
+	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: nextPage})
 }

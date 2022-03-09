@@ -7,8 +7,19 @@ definitions:
     required:
     - message
     type: object
+  datastruct.PagedParties:
+    properties:
+      nextPage:
+        type: string
+      parties:
+        items:
+          $ref: '#/definitions/datastruct.PublicParty'
+        type: array
+    type: object
   datastruct.PublicParty:
     properties:
+      createdAt:
+        type: string
       id:
         type: string
       isPublic:
@@ -17,6 +28,10 @@ definitions:
         type: number
       long:
         type: number
+      stories:
+        items:
+          type: string
+        type: array
       title:
         type: string
       userId:
@@ -133,7 +148,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/echo.HTTPError'
-      summary: Get party
+      summary: Get a party
       tags:
       - CRUD
     patch:
@@ -186,9 +201,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/datastruct.PublicParty'
-            type: array
+            $ref: '#/definitions/datastruct.PagedParties'
         "400":
           description: Bad Request
           schema:
@@ -211,9 +224,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/datastruct.PublicParty'
-            type: array
+            $ref: '#/definitions/datastruct.PagedParties'
         "400":
           description: Bad Request
           schema:

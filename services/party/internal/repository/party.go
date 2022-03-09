@@ -139,7 +139,6 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) (r
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {
-		log.Println(err)
 		return []datastruct.Party{}, nil, errors.New("no parties found")
 	}
 

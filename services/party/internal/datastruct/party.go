@@ -27,7 +27,7 @@ type PublicParty struct {
 }
 
 type PagedParties struct {
-	Parties  []PublicParty `json:"parties"`
+	Parties  []PublicParty `json:"parties,omitempty"`
 	NextPage string        `json:"nextPage"`
 }
 

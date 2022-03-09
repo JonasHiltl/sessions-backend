@@ -93,10 +93,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicParty"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedParties"
                         }
                     },
                     "400": {
@@ -128,10 +125,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicParty"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedParties"
                         }
                     },
                     "400": {
@@ -155,7 +149,7 @@ const docTemplate_swagger = `{
                 "tags": [
                     "CRUD"
                 ],
-                "summary": "Get party",
+                "summary": "Get a party",
                 "parameters": [
                     {
                         "type": "string",
@@ -268,9 +262,26 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "datastruct.PagedParties": {
+            "type": "object",
+            "properties": {
+                "nextPage": {
+                    "type": "string"
+                },
+                "parties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/datastruct.PublicParty"
+                    }
+                }
+            }
+        },
         "datastruct.PublicParty": {
             "type": "object",
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -282,6 +293,12 @@ const docTemplate_swagger = `{
                 },
                 "long": {
                     "type": "number"
+                },
+                "stories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "title": {
                     "type": "string"

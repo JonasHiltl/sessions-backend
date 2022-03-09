@@ -6,6 +6,15 @@ definitions:
     required:
     - message
     type: object
+  datastruct.PagedStories:
+    properties:
+      nextPage:
+        type: string
+      stories:
+        items:
+          $ref: '#/definitions/datastruct.PublicStory'
+        type: array
+    type: object
   datastruct.PublicStory:
     properties:
       createdAt:
@@ -146,9 +155,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/datastruct.PublicStory'
-            type: array
+            $ref: '#/definitions/datastruct.PagedStories'
         "400":
           description: Bad Request
           schema:
@@ -192,9 +199,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/datastruct.PublicStory'
-            type: array
+            $ref: '#/definitions/datastruct.PagedStories'
         "400":
           description: Bad Request
           schema:

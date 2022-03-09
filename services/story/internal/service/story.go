@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/gofrs/uuid"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/datastruct"
@@ -18,8 +17,8 @@ type StoryService interface {
 	Create(c context.Context, s dto.Story) (datastruct.Story, error)
 	Delete(c context.Context, uId, sId string) error
 	Get(c context.Context, sId string) (datastruct.Story, error)
-	GetByUser(c context.Context, uId string) ([]datastruct.Story, error)
-	GetByParty(c context.Context, pId string) ([]datastruct.Story, error)
+	GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error)
+	GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error)
 }
 
 type storyService struct {
@@ -45,7 +44,6 @@ func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct
 		GHash:         gHash,
 		Url:           s.Url,
 		TaggedFriends: s.TaggedFriends,
-		Created_at:    time.Now(),
 	}
 	return sService.dao.NewStoryQuery().Create(c, ds)
 }
@@ -54,12 +52,12 @@ func (sService *storyService) Get(c context.Context, sId string) (datastruct.Sto
 	return sService.dao.NewStoryQuery().Get(c, sId)
 }
 
-func (sService *storyService) GetByUser(c context.Context, uId string) ([]datastruct.Story, error) {
-	return sService.dao.NewStoryQuery().GetByUser(c, uId)
+func (sService *storyService) GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error) {
+	return sService.dao.NewStoryQuery().GetByUser(c, uId, page)
 }
 
-func (sService *storyService) GetByParty(c context.Context, pId string) ([]datastruct.Story, error) {
-	return sService.dao.NewStoryQuery().GetByParty(c, pId)
+func (sService *storyService) GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error) {
+	return sService.dao.NewStoryQuery().GetByParty(c, pId, page)
 }
 
 func (sService *storyService) Delete(c context.Context, uId, sId string) error {

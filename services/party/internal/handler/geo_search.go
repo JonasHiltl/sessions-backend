@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/base64"
 	"errors"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -49,7 +48,6 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 
 	p, err := base64.URLEncoding.DecodeString(pageQuery)
 	if err != nil {
-		log.Println(err)
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
 	}
 
@@ -61,12 +59,12 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		return err
 	}
 
-	ps, nextPage, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), p)
+	ps, p, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	str := base64.URLEncoding.EncodeToString(nextPage)
+	nextPage := base64.URLEncoding.EncodeToString(p)
 
 	var pp []datastruct.PublicParty
 
@@ -74,5 +72,5 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		pp = append(pp, ps.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: str})
+	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: nextPage})
 }

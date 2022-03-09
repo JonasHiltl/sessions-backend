@@ -86,10 +86,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicParty"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedParties"
                         }
                     },
                     "400": {
@@ -121,10 +118,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/datastruct.PublicParty"
-                            }
+                            "$ref": "#/definitions/datastruct.PagedParties"
                         }
                     },
                     "400": {
@@ -148,7 +142,7 @@
                 "tags": [
                     "CRUD"
                 ],
-                "summary": "Get party",
+                "summary": "Get a party",
                 "parameters": [
                     {
                         "type": "string",
@@ -261,9 +255,26 @@
                 }
             }
         },
+        "datastruct.PagedParties": {
+            "type": "object",
+            "properties": {
+                "nextPage": {
+                    "type": "string"
+                },
+                "parties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/datastruct.PublicParty"
+                    }
+                }
+            }
+        },
         "datastruct.PublicParty": {
             "type": "object",
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -275,6 +286,12 @@
                 },
                 "long": {
                     "type": "number"
+                },
+                "stories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "title": {
                     "type": "string"

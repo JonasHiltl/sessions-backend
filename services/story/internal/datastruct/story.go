@@ -3,17 +3,17 @@ package datastruct
 import (
 	"time"
 
+	"github.com/gofrs/uuid"
 	"github.com/mmcloughlin/geohash"
 )
 
 type Story struct {
-	Id            string    `json:"id"                       db:"id"             validate:"required"`
-	PId           string    `json:"partyId"                  db:"party_id"       validate:"required"`
-	UId           string    `json:"userId"                   db:"user_id"        validate:"required"`
-	GHash         string    `json:"geohash"                  db:"geohash"        validate:"required"`
-	Url           string    `json:"url"                      db:"url"            validate:"required"`
-	TaggedFriends []string  `json:"tagged_friends,omitempty" db:"tagged_friends"`
-	Created_at    time.Time `json:"createdAt"                db:"created_at"     validate:"required"`
+	Id            string   `json:"id"                       db:"id"             validate:"required"`
+	PId           string   `json:"partyId"                  db:"party_id"       validate:"required"`
+	UId           string   `json:"userId"                   db:"user_id"        validate:"required"`
+	GHash         string   `json:"geohash"                  db:"geohash"        validate:"required"`
+	Url           string   `json:"url"                      db:"url"            validate:"required"`
+	TaggedFriends []string `json:"tagged_friends,omitempty" db:"tagged_friends"`
 }
 
 type PublicStory struct {
@@ -27,8 +27,26 @@ type PublicStory struct {
 	CreatedAt     time.Time `json:"createdAt"`
 }
 
+type PagedStories struct {
+	Stories  []PublicStory `json:"stories,omitempty"`
+	NextPage string        `json:"nextPage"`
+}
+
 func (s Story) ToPublicStory() PublicStory {
 	lat, lon := geohash.DecodeCenter(s.GHash)
+
+	uuidv1, err := uuid.FromString(s.Id)
+	if err != nil {
+		return PublicStory{}
+	}
+	timestamp, err := uuid.TimestampFromV1(uuidv1)
+	if err != nil {
+		return PublicStory{}
+	}
+	t, err := timestamp.Time()
+	if err != nil {
+		return PublicStory{}
+	}
 
 	return PublicStory{
 		Id:            s.Id,
@@ -38,6 +56,6 @@ func (s Story) ToPublicStory() PublicStory {
 		Long:          float32(lon),
 		Url:           s.Url,
 		TaggedFriends: s.TaggedFriends,
-		CreatedAt:     s.Created_at,
+		CreatedAt:     t,
 	}
 }
