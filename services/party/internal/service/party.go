@@ -51,7 +51,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	}
 	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
 	if err == nil {
-		ps.nc.Publish("notification.push.party.created", comtypes.PartyCreatedNotification{CreatorId: p.Id, PartyTitle: p.Title})
+		ps.nc.Publish("notification.push.party.created", &comtypes.PartyCreatedNotification{CreatorId: p.Id, Title: p.Title})
 	}
 	return newParty, err
 }

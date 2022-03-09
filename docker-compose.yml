@@ -110,7 +110,6 @@ services:
   scylla-node1:
     container_name: scylla-node1
     image: scylladb/scylla:latest
-    restart: on-failure
     command: --smp 1 --api-address 0.0.0.0
     ports:
       - "9042:9042"
@@ -121,7 +120,6 @@ services:
     image: mysql
     container_name: mysql
     command: --default-authentication-plugin=mysql_native_password
-    restart: on-failure
     ports:
       - 3306:3306
     volumes:
@@ -132,9 +130,11 @@ services:
   nats:
     image: nats
     container_name: nats
-    restart: on-failure
+    expose:
+      - "4222"
     ports:
       - "8222:8222"
+      - "4222:4222"
 
   envoy:
     image: envoyproxy/envoy:v1.20-latest

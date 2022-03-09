@@ -15,3 +15,6 @@ swagger-comment:
 
 migrate:
 	SCYLLA_HOSTS=localhost SCYLLA_KEYSPACE=sessions go run packages/scylla/migration/main.go
+
+proto-comtypes:
+	protoc --go_out=. --go_opt=paths=source_relative packages/comtypes/*.proto

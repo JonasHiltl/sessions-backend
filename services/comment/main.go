@@ -7,11 +7,13 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	"github.com/jonashiltl/sessions-backend/packages/nats"
 	_ "github.com/jonashiltl/sessions-backend/services/comment/docs"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
 	"github.com/labstack/echo/v4"
+	gonats "github.com/nats-io/nats.go"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -20,6 +22,12 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	opts := []gonats.Option{gonats.Name("Comment Service")}
+	nc, err := nats.Connect(opts)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer nc.Close()
 
 	sess, err := repository.NewDB()
 	if err != nil {
@@ -29,7 +37,7 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	cs := service.NewCommentServie(dao)
+	cs := service.NewCommentServie(dao, nc)
 
 	httpApp := handler.NewHttpApp(cs)
 

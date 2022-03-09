@@ -46,7 +46,7 @@ func (fs *friendSerivce) FriendRequest(ctx context.Context, fId string, meId str
 		return err
 	}
 
-	fs.nc.Publish("notification.push.friend.requested", comtypes.FriendRequestNotification{RequesterId: meId, RequestedId: fId})
+	fs.nc.Publish("notification.push.friend.requested", &comtypes.FriendRequestNotification{RequesterId: meId, RequestedId: fId})
 
 	return nil
 }

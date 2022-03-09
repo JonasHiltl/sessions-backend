@@ -13,6 +13,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
+	gonats "github.com/nats-io/nats.go"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -27,7 +28,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	nc, err := nats.Connect()
+	opts := []gonats.Option{gonats.Name("Party Service")}
+	nc, err := nats.Connect(opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -41,9 +43,9 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	partyService := service.NewPartyServie(dao)
+	partyService := service.NewPartyServie(dao, nc)
 
-	httpApp := handler.NewHttpApp(partyService, nc)
+	httpApp := handler.NewHttpApp(partyService)
 
 	e := echo.New()
 

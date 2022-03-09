@@ -14,6 +14,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
 	"github.com/labstack/echo/v4"
+	gonats "github.com/nats-io/nats.go"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -28,7 +29,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	nc, err := nats.Connect()
+	opts := []gonats.Option{gonats.Name("User Service")}
+	nc, err := nats.Connect(opts)
 	if err != nil {
 		log.Fatalln(err)
 	}

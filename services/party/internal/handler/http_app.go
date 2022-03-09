@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/labstack/echo/v4"
-	"github.com/nats-io/nats.go"
 )
 
 type HttpApp interface {
@@ -17,12 +16,10 @@ type HttpApp interface {
 
 type httpApp struct {
 	partyService service.PartyService
-	nc           *nats.EncodedConn
 }
 
-func NewHttpApp(partyService service.PartyService, nc *nats.EncodedConn) HttpApp {
+func NewHttpApp(partyService service.PartyService) HttpApp {
 	return &httpApp{
 		partyService: partyService,
-		nc:           nc,
 	}
 }

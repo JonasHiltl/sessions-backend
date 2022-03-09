@@ -2,9 +2,11 @@ package main
 
 import (
 	"log"
+	"sync"
 
 	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/services/notification/internal/handler"
 	gonats "github.com/nats-io/nats.go"
 )
 
@@ -14,34 +16,55 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	nc, err := nats.Connect()
+	opts := []gonats.Option{gonats.Name("Notification Service")}
+	nc, err := nats.Connect(opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
 
-	go nc.QueueSubscribe("notification.email.verification", "email_verification", func(m *gonats.Msg) {
-		log.Println("Email Verification Notification received")
-		log.Println("Data", m.Data)
-	})
-	go nc.QueueSubscribe("notification.push.party.created", "party_created", func(m *gonats.Msg) {
-		log.Println("Party Creation Notification received")
-		log.Println("Data", m.Data)
-	})
-	go nc.QueueSubscribe("notification.push.comment.created", "party_comment", func(m *gonats.Msg) {
-		log.Println("Comment On Party Notification received")
-		log.Println("Data", m.Data)
-	})
-	go nc.QueueSubscribe("notification.push.comment.replied", "comment_reply", func(m *gonats.Msg) {
-		log.Println("Reply on Comment Notification received")
-		log.Println("Data", m.Data)
-	})
-	go nc.QueueSubscribe("notification.push.friend.requested", "friend_request", func(m *gonats.Msg) {
-		log.Println("Friend Request Notification received")
-		log.Println("Data", m.Data)
-	})
-	go nc.QueueSubscribe("notification.push.friend.accepted", "friend_accepted", func(m *gonats.Msg) {
-		log.Println("Friend Request Accepted Notification received")
-		log.Println("Data", m.Data)
-	})
+	s := handler.NewServer()
+
+	var wg sync.WaitGroup
+	wg.Add(6)
+
+	go func() {
+		_, err := nc.QueueSubscribe("notification.email.verification", "notification.email.verification", s.EmailVerification)
+		if err != nil {
+			log.Fatal("Email Verification couldn't start", err)
+		}
+	}()
+	go func() {
+		_, err := nc.QueueSubscribe("notification.push.party.created", "notification.push.party.created", s.PartyCreated)
+		if err != nil {
+			log.Fatal("Party Created couldn't start", err)
+		}
+	}()
+	go func() {
+		_, err := nc.QueueSubscribe("notification.push.comment.created", "notification.push.comment.created", s.Commented)
+		if err != nil {
+			log.Fatal("Comment created couldn't start", err)
+		}
+	}()
+	go func() {
+		_, err := nc.QueueSubscribe("notification.push.comment.replied", "notification.push.comment.replied", s.Replied)
+		if err != nil {
+			log.Fatal("Replied couldn't start", err)
+		}
+	}()
+	go func() {
+		_, err := nc.QueueSubscribe("notification.push.friend.requested", "notification.push.friend.requested", s.FriendRequest)
+		if err != nil {
+			log.Fatal("Friend Request couldn't start", err)
+		}
+	}()
+	go func() {
+		_, err := nc.QueueSubscribe("notification.push.friend.accepted", "notification.push.friend.accepted", s.FriendAccepted)
+		if err != nil {
+			log.Fatal("Friend Accepted couldn't start", err)
+		}
+	}()
+
+	// this will wait until the wg counter is at 0
+	wg.Wait()
 }

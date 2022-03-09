@@ -12,8 +12,3 @@ type JwtPayload struct {
 	Iat  int       `json:"iat"`
 	Role user.Role `json:"role"`
 }
-
-type FriendRequestNotification struct {
-	RequesterId string
-	RequestedId string
-}
