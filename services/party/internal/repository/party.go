@@ -124,7 +124,7 @@ func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
 
 func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
-		Select(TABLE_NAME).
+		Select(PARTY_BY_USER).
 		Where(qb.Eq("user_id")).
 		ToCql()
 

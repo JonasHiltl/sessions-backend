@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/base64"
 	"log"
 	"net/http"
 
@@ -12,24 +13,30 @@ import (
 // @Description Returns a list of parties of a user
 // @Produce json
 // @Param uId path string true "User id"
-// @Success 200 {array} datastruct.PublicParty
+// @Success 200 {object} datastruct.PagedParties
 // @Failure 400 {object} echo.HTTPError
 // @Router /user/{uId} [get]
 func (a *httpApp) GetByUser(c echo.Context) error {
 	uId := c.Param("uId")
+	pageQuery := c.QueryParam("nextPage")
 
-	var page []byte
+	p, err := base64.URLEncoding.DecodeString(pageQuery)
+	if err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
+	}
 
-	ps, nextPage, err := a.partyService.GetByUser(c.Request().Context(), uId, page)
-	log.Println("Next Page: ", nextPage)
+	ps, nextPage, err := a.partyService.GetByUser(c.Request().Context(), uId, p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	str := base64.URLEncoding.EncodeToString(nextPage)
 
 	var pp []datastruct.PublicParty
 	for _, p := range ps {
 		pp = append(pp, p.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, pp)
+	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: str})
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/base64"
 	"errors"
 	"log"
 	"net/http"
@@ -23,7 +24,7 @@ type GeoSearchBody struct {
 // @Param lat query float32 true "Latitude"
 // @Param long query float32 true "Longitude"
 // @Param precision query uint true "Geohash precision"
-// @Success 200 {array} datastruct.PublicParty
+// @Success 200 {object} datastruct.PagedParties
 // @Failure 400 {object} echo.HTTPError
 // @Router /near [get]
 func (a *httpApp) GeoSearch(c echo.Context) error {
@@ -44,6 +45,14 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		return errors.New("invalid lat parameter format")
 	}
 
+	pageQuery := c.QueryParam("nextPage")
+
+	p, err := base64.URLEncoding.DecodeString(pageQuery)
+	if err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
+	}
+
 	var reqBody GeoSearchBody
 	if err := c.Bind(&reqBody); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
@@ -52,13 +61,12 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		return err
 	}
 
-	var page []byte
-
-	ps, nextPage, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), page)
-	log.Println("Next Page: ", nextPage)
+	ps, nextPage, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), p)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+
+	str := base64.URLEncoding.EncodeToString(nextPage)
 
 	var pp []datastruct.PublicParty
 
@@ -66,5 +74,5 @@ func (a *httpApp) GeoSearch(c echo.Context) error {
 		pp = append(pp, ps.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, pp)
+	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: str})
 }

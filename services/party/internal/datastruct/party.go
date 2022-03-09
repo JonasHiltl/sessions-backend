@@ -28,7 +28,7 @@ type PublicParty struct {
 
 type PagedParties struct {
 	Parties  []PublicParty `json:"parties"`
-	NextPage []byte        `json:"nextPage"`
+	NextPage string        `json:"nextPage"`
 }
 
 func (p Party) ToPublicParty() PublicParty {
