@@ -14,11 +14,14 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 )
 
-const TABLE_NAME string = "party"
+const (
+	TABLE_NAME    string = "party"
+	PARTY_BY_USER string = "party_by_user"
+)
 
 var partyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
-	Columns: []string{"id", "user_id", "title", "is_public", "geohash", "created_at"},
+	Columns: []string{"id", "user_id", "title", "is_public", "geohash"},
 	PartKey: []string{"id"},
 }
 var partyTable = table.New(partyMetadata)
@@ -119,9 +122,7 @@ func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
 	return nil
 }
 
-func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error) {
-	var result []datastruct.Party
-
+func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(TABLE_NAME).
 		Where(qb.Eq("user_id")).
@@ -130,15 +131,13 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) ([
 	q := pq.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"user_id": uId}))
+	defer q.Release()
 
-	if page != nil {
-		q.PageState(page)
-	}
-
+	q.PageState(page)
 	q.PageSize(10)
-	iter := q.Iter()
 
-	err := iter.Select(&result)
+	iter := q.Iter()
+	err = iter.Select(&result)
 	if err != nil {
 		log.Println(err)
 		return []datastruct.Party{}, nil, errors.New("no parties found")
@@ -147,9 +146,7 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) ([
 	return result, iter.PageState(), nil
 }
 
-func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string, page []byte) ([]datastruct.Party, []byte, error) {
-	var result []datastruct.Party
-
+func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(TABLE_NAME).
 		Where(qb.Eq("is_public")).
@@ -161,14 +158,14 @@ func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string, page []by
 		Query(stmt, names).
 		BindMap((qb.M{"is_public": false, "geohash": nHashes}))
 
-	if page != nil {
+	if len(page) > 0 {
 		q.PageState(page)
 	}
 
 	q.PageSize(10)
 	iter := q.Iter()
 
-	err := iter.Select(&result)
+	err = iter.Select(&result)
 	if err != nil {
 		log.Println(err)
 		return []datastruct.Party{}, nil, errors.New("no parties found")

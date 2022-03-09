@@ -5,11 +5,13 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gofrs/uuid"
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/mmcloughlin/geohash"
+	"github.com/nats-io/nats.go"
 )
 
 const GEOHASH_PRECISION uint = 9
@@ -25,29 +27,33 @@ type PartyService interface {
 
 type partyService struct {
 	dao repository.Dao
+	nc  *nats.EncodedConn
 }
 
-func NewPartyServie(dao repository.Dao) PartyService {
-	return &partyService{dao: dao}
+func NewPartyServie(dao repository.Dao, nc *nats.EncodedConn) PartyService {
+	return &partyService{dao: dao, nc: nc}
 }
 
 func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
-	nanoid, err := gonanoid.New()
+	uuid, err := uuid.NewV1()
 	if err != nil {
-		return datastruct.Party{}, errors.New("failed generate id in hook")
+		return datastruct.Party{}, errors.New("failed generate Party id")
 	}
 
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
-		Id:         nanoid,
-		UId:        p.UId,
-		Title:      p.Title,
-		GHash:      gHash,
-		IsPublic:   p.IsPublic,
-		Created_at: time.Now(),
+		Id:       uuid.String(),
+		UId:      p.UId,
+		Title:    p.Title,
+		GHash:    gHash,
+		IsPublic: p.IsPublic,
 	}
-	return ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
+	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
+	if err == nil {
+		ps.nc.Publish("notification.push.party.created", comtypes.PartyCreatedNotification{CreatorId: p.Id, PartyTitle: p.Title})
+	}
+	return newParty, err
 }
 
 func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Party, error) {

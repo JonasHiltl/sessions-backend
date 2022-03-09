@@ -16,6 +16,7 @@ import (
 const (
 	TABLE_NAME     string = "story"
 	STORY_BY_PARTY string = "story_by_party"
+	STORY_BY_USER  string = "story_by_user"
 )
 
 var storyMetadata = table.Metadata{
@@ -99,7 +100,7 @@ func (sq *storyQuery) Get(c context.Context, sId string) (datastruct.Story, erro
 func (sq *storyQuery) GetByUser(c context.Context, uId string) ([]datastruct.Story, error) {
 	var result []datastruct.Story
 	stmt, names := qb.
-		Select(TABLE_NAME).
+		Select(STORY_BY_USER).
 		Where(qb.Eq("user_id")).
 		ToCql()
 
