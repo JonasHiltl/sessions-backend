@@ -3,24 +3,24 @@ module github.com/jonashiltl/sessions-backend
 go 1.17
 
 require (
-	entgo.io/ent v0.10.0
-	github.com/aws/aws-sdk-go v1.43.8
-	github.com/go-playground/validator/v10 v10.10.0
+	entgo.io/ent v0.10.1
+	github.com/aws/aws-sdk-go v1.43.20
+	github.com/go-playground/validator/v10 v10.10.1
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/gocql/gocql v0.0.0-20220216114134-360b71ee0a29
+	github.com/gocql/gocql v1.0.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/joho/godotenv v1.4.0
-	github.com/labstack/echo/v4 v4.6.3
+	github.com/labstack/echo/v4 v4.7.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcloughlin/geohash v0.10.0
-	github.com/scylladb/gocqlx/v2 v2.6.0
-	github.com/swaggo/echo-swagger v1.2.0
-	github.com/swaggo/swag v1.7.9
-	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
+	github.com/scylladb/gocqlx/v2 v2.7.0
+	github.com/swaggo/echo-swagger v1.3.0
+	github.com/swaggo/swag v1.8.0
+	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 )
 
 require (
-	github.com/digitalocean/godo v1.75.0
+	github.com/digitalocean/godo v1.77.0
 	github.com/gofrs/uuid v4.2.0+incompatible
 	google.golang.org/protobuf v1.27.1
 )
@@ -37,7 +37,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
@@ -53,18 +53,18 @@ require (
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
-	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
-	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
+	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
+	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
-	ariga.io/atlas v0.3.3 // indirect
+	ariga.io/atlas v0.3.7 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -74,6 +74,6 @@ require (
 	github.com/nats-io/nats-server/v2 v2.7.3 // indirect
 	github.com/nats-io/nats.go v1.13.1-0.20220121202836-972a071d373d
 	github.com/zclconf/go-cty v1.10.0 // indirect
-	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
-	golang.org/x/tools v0.1.9 // indirect
+	golang.org/x/sys v0.0.0-20220317061510-51cd9980dadf // indirect
+	golang.org/x/tools v0.1.10 // indirect
 )
