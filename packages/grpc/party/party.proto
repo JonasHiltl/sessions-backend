@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package party;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/party";
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service PartyService {
+    rpc CreateParty (CreatePartyRequest) returns (PublicParty) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    };
+    rpc GetParty (GetPartyRequest) returns (PublicParty) {
+        option (google.api.http) = {
+			get: "/{p_id}"
+        };
+    };
+    rpc UpdateParty (UpdatePartyRequest) returns (PublicParty) {
+        option (google.api.http) = {
+			patch: "/{p_id}"
+            body: "*"
+        };
+    };
+    rpc DeleteParty (GetPartyRequest) returns (common.MessageResponse) {
+        option (google.api.http) = {
+			delete: "/{p_id}"
+        };
+    };
+    rpc GetByUser (GetByUserRequest) returns (PagedParties) {
+        option (google.api.http) = {
+			get: "/user/{u_id}"
+        };
+    };
+}
+
+message CreatePartyRequest {
+    string title = 1;
+    float lat = 2;
+    float long = 3;
+    bool is_public = 4;
+}
+
+message UpdatePartyRequest {
+    string p_id = 1;
+    string title = 2;
+    float lat = 3;
+    float long = 4;
+}
+
+message GetPartyRequest {
+    string p_id = 1;
+}
+
+message GetByUserRequest {
+    string u_id = 1;
+}
+
+message PagedParties {
+    repeated PublicParty parties = 1;
+    string next_page = 2;
+}
+
+message PublicParty {
+    string id = 1;
+    string u_id = 2;
+    string title = 3;
+    bool is_public = 4;
+    float lat = 5;
+    float long = 6;
+    repeated string stories = 7;
+    string created_at = 8;
+}

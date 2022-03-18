@@ -22,6 +22,10 @@ require (
 require (
 	github.com/digitalocean/godo v1.77.0
 	github.com/gofrs/uuid v4.2.0+incompatible
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.9.0
+	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106
+	google.golang.org/grpc v1.45.0
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
 	google.golang.org/protobuf v1.27.1
 )
 
@@ -36,6 +40,7 @@ require (
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -61,6 +66,7 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
 require (

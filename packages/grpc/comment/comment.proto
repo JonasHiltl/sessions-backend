@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package comment;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/comment";
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service CommentService {
+    rpc CreateComment (CreateCommentRequest) returns (Comment){
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    };
+    rpc DeleteComment (GetCommentRequest) returns (common.MessageResponse){
+        option (google.api.http) = {
+			delete: "/{p_id}/{c_id}"
+        };
+    };
+}
+
+message CreateCommentRequest {
+    string p_id = 1;
+    string body = 2;
+}
+
+message Comment {
+    string id = 1;
+    string p_id = 2;
+    string a_id = 3;
+    string body = 4;
+    string created_at = 5;
+}
+
+message GetCommentRequest {
+    string p_id = 1;
+    string c_id = 2;
+}

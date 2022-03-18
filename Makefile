@@ -18,3 +18,38 @@ migrate:
 
 proto-comtypes:
 	protoc --go_out=. --go_opt=paths=source_relative packages/comtypes/*.proto
+
+protos-party:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	packages/grpc/party/*.proto
+
+protos-common:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	packages/grpc/common/*.proto
+
+protos-user:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	packages/grpc/user/*.proto
+		
+protos-story:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	packages/grpc/story/*.proto
+
+protos-comment:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	packages/grpc/comment/*.proto

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package common;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/common";
+
+message MessageResponse {
+    string message = 1;
+}
