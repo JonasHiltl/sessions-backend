@@ -4,7 +4,7 @@
 // - protoc             v3.6.1
 // source: story/story.proto
 
-package story
+package gs
 
 import (
 	context "context"

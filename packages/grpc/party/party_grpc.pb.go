@@ -4,7 +4,7 @@
 // - protoc             v3.6.1
 // source: party/party.proto
 
-package party
+package gp
 
 import (
 	context "context"

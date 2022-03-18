@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package user;
-option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/story";
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/gu";
 
 import "google/api/annotations.proto";
 import "common/common.proto";

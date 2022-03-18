@@ -4,7 +4,7 @@
 // - protoc             v3.6.1
 // source: comment/comment.proto
 
-package comment
+package gc
 
 import (
 	context "context"
