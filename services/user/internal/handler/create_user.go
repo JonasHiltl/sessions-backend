@@ -1,34 +1,25 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"github.com/labstack/echo/v4"
 )
 
-// @Summary Create a user
-// @Description Saves a user in our DB
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param Body body datastruct.RequestUser true "The body to create a user"
-// @Success 201 {object} datastruct.PublicUser
-// @Failure 400 {object} echo.HTTPError
-// @Router / [post]
-func (a *httpApp) CreateUser(c echo.Context) error {
-	var reqBody datastruct.RequestUser
-	if err := c.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
+func (s *userServer) CreateUser(c context.Context, req *ug.CreateUserRequest) (*ug.PublicUser, error) {
+	du := datastruct.RequestUser{
+		Username:  req.Username,
+		FirstName: req.Firstname,
+		LastName:  req.Lastname,
+		Email:     req.Email,
+		Password:  req.Password,
+		Avatar:    req.Avatar,
 	}
 
-	if err := c.Validate(reqBody); err != nil {
-		return err
-	}
-
-	u, err := a.userService.Create(c.Request().Context(), reqBody)
+	u, err := s.us.Create(c, du)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
-	return c.JSON(http.StatusCreated, u.ToPublicProfile())
+	return u.ToPublicUser(), nil
 }

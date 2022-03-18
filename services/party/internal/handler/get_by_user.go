@@ -1,40 +1,31 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
-	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
-	"github.com/labstack/echo/v4"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get parties of a user
-// @Description Returns a list of parties of a user
-// @Produce json
-// @Param uId path string true "User id"
-// @Success 200 {object} datastruct.PagedParties
-// @Failure 400 {object} echo.HTTPError
-// @Router /user/{uId} [get]
-func (a *httpApp) GetByUser(c echo.Context) error {
-	uId := c.Param("uId")
-	pageQuery := c.QueryParam("nextPage")
-
-	p, err := base64.URLEncoding.DecodeString(pageQuery)
+func (s *partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*pg.PagedParties, error) {
+	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
+		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	ps, p, err := a.partyService.GetByUser(c.Request().Context(), uId, p)
+	ps, p, err := s.ps.GetByUser(c, req.UId, p)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	var pp []datastruct.PublicParty
+	var pp []*pg.PublicParty
 	for _, p := range ps {
 		pp = append(pp, p.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: nextPage})
+	return &pg.PagedParties{Parties: pp, NextPage: nextPage}, nil
 }

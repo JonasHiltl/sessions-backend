@@ -34,6 +34,11 @@ service PartyService {
 			get: "/user/{u_id}"
         };
     };
+    rpc GeoSearch (GeoSearchRequest) returns (PagedParties) {
+        option (google.api.http) = {
+			get: "/near"
+        };
+    };
 }
 
 message CreatePartyRequest {
@@ -50,12 +55,20 @@ message UpdatePartyRequest {
     float long = 4;
 }
 
+message GeoSearchRequest {
+    int64 precision = 1;
+    float lat = 2;
+    float long = 3;
+    string next_page = 4;
+}
+
 message GetPartyRequest {
     string p_id = 1;
 }
 
 message GetByUserRequest {
     string u_id = 1;
+    string next_page = 2;
 }
 
 message PagedParties {

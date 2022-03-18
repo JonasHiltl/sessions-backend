@@ -1,15 +1,17 @@
 package ent
 
-import "github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
+import (
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+)
 
-func (u *User) ToPublicProfile() datastruct.PublicUser {
-	return datastruct.PublicUser{
-		ID:          u.ID,
+func (u *User) ToPublicUser() *ug.PublicUser {
+	return &ug.PublicUser{
+		Id:          u.ID,
 		Username:    u.Username,
-		FirstName:   u.FirstName,
-		LastName:    u.LastName,
+		Firstname:   u.FirstName,
+		Lastname:    u.LastName,
 		Avatar:      u.Avatar,
 		Role:        string(u.Role),
-		FriendCount: u.FriendCount,
+		FriendCount: int32(u.FriendCount),
 	}
 }

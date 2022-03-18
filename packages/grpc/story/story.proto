@@ -65,10 +65,12 @@ message GetStoryRequest {
 
 message GetByUserRequest {
     string u_id = 1;
+    string next_page = 2;
 }
 
 message GetByPartyRequest {
     string p_id = 1;
+    string next_page = 2;
 }
 
 message PresignURLRequest {

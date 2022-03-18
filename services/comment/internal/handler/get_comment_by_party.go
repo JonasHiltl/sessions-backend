@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (a *httpApp) GetCommentByParty(ctx echo.Context) error {
+func (a *commentServer) GetCommentByParty(ctx echo.Context) error {
 	pId := ctx.Param("pId")
 
 	c, err := a.cs.GetByParty(ctx.Request().Context(), pId)

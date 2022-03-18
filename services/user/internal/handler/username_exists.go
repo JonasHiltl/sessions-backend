@@ -1,26 +1,16 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/labstack/echo/v4"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
-// @Summary Check Username availability
-// @Description Check if username is already taken
-// @Accept json
-// @Produce json
-// @Param username path string true "Username"
-// @Success 200 {object} bool
-// @Failure 400 {object} echo.HTTPError
-// @Router /username-exists/{username} [get]
-func (a *httpApp) UsernameExists(c echo.Context) error {
-	username := c.Param("username")
-
-	usernameExists, err := a.userService.UsernameExists(c.Request().Context(), username)
+func (s *userServer) UsernameExists(c context.Context, req *ug.UsernameExistsRequest) (*ug.UsernameExistsResponse, error) {
+	usernameExists, err := s.us.UsernameExists(c, req.Username)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, usernameExists)
+	return &ug.UsernameExistsResponse{Exists: usernameExists}, nil
 }

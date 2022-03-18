@@ -1,28 +1,32 @@
 package middleware
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
+	"strings"
 
 	"github.com/jonashiltl/sessions-backend/packages/comtypes"
-	"github.com/labstack/echo/v4"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
-func ParseUser(c echo.Context) (comtypes.JwtPayload, error) {
-	p := c.Request().Header.Get("jwt_payload")
-	if p == "" {
-		return comtypes.JwtPayload{}, errors.New("not logged in")
+func ParseUser(c context.Context) (comtypes.JwtPayload, error) {
+	payload := ""
+	if md, ok := metadata.FromIncomingContext(c); ok {
+		if jwt, ok := md["jwt_payload"]; ok {
+			payload = strings.Join(jwt, ",")
+		}
 	}
 
-	stringBytes, err := base64.StdEncoding.DecodeString(p)
+	stringBytes, err := base64.StdEncoding.DecodeString(payload)
 	if err != nil {
-		return comtypes.JwtPayload{}, err
+		return comtypes.JwtPayload{}, status.Error(codes.Unauthenticated, "Not logged in")
 	}
 
 	result := comtypes.JwtPayload{}
 	json.Unmarshal(stringBytes, &result)
 
 	return result, nil
-
 }

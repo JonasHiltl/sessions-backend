@@ -1,27 +1,22 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/labstack/echo/v4"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get a party
-// @Description Get a Party by it's id
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param pId path string true "Party Id"
-// @Success 200 {object} datastruct.PublicParty
-// @Failure 400 {object} echo.HTTPError
-// @Router /{pId} [get]
-func (a *httpApp) GetParty(c echo.Context) error {
-	pId := c.Param("pId")
-
-	p, err := a.partyService.Get(c.Request().Context(), pId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+func (s *partyServer) GetParty(c context.Context, req *pg.GetPartyRequest) (*pg.PublicParty, error) {
+	if req.PId == "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid Party id")
 	}
 
-	return c.JSON(http.StatusOK, p.ToPublicParty())
+	p, err := s.ps.Get(c, req.PId)
+	if err != nil {
+		return nil, err
+	}
+
+	return p.ToPublicParty(), nil
 }

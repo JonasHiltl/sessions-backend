@@ -1,27 +1,22 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/labstack/echo/v4"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get a Story
-// @Description Get a Story by it's id
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param sId path string true "Story Id"
-// @Success 200 {object} datastruct.PublicStory
-// @Failure 400 {object} echo.HTTPError
-// @Router /{sId} [get]
-func (a *httpApp) GetStory(c echo.Context) error {
-	sId := c.Param("sId")
-
-	s, err := a.sService.Get(c.Request().Context(), sId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+func (s *storyServer) GetStory(c context.Context, req *sg.GetStoryRequest) (*sg.PublicStory, error) {
+	if req.SId == "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid Story id")
 	}
 
-	return c.JSON(http.StatusOK, s.ToPublicStory())
+	story, err := s.sService.Get(c, req.SId)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "Story not found")
+	}
+
+	return story.ToPublicStory(), nil
 }

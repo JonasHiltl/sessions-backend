@@ -1,53 +1,43 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
+	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/dto"
-	"github.com/labstack/echo/v4"
 )
 
-type CreateCommentBody struct {
-	PId  string `json:"p_id"     validate:"required"`
-	Body string `json:"body"      validate:"required"`
-}
-
-// @Summary Create Comment
-// @Description Create a new Comment on a party
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param Body body CreateCommentBody true "Comment data"
-// @Success 201 {object} datastruct.Comment
-// @Failure 400 {object} echo.HTTPError
-// @Router / [post]
-func (a *httpApp) CreateComment(ctx echo.Context) error {
-	var reqBody CreateCommentBody
-
-	if err := ctx.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
-	}
-	if err := ctx.Validate(reqBody); err != nil {
-		return err
-	}
-
+func (s *commentServer) CreateComment(ctx context.Context, req *cg.CreateCommentRequest) (*cg.Comment, error) {
 	me, err := middleware.ParseUser(ctx)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
 	dc := dto.Comment{
-		PId:  reqBody.PId,
+		PId:  req.PId,
 		AId:  me.Sub,
-		Body: reqBody.Body,
+		Body: req.Body,
 	}
 
-	c, err := a.cs.Create(ctx.Request().Context(), dc)
+	v := validator.New()
+	err = v.Struct(dc)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return ctx.JSON(http.StatusCreated, c)
+	c, err := s.cs.Create(ctx, dc)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cg.Comment{
+		Id:        c.Id,
+		PId:       c.PId,
+		AId:       c.AId,
+		Body:      c.Body,
+		CreatedAt: c.Created_at.String(),
+	}, nil
 
 }

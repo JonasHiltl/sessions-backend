@@ -1,20 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
-	_ "github.com/jonashiltl/sessions-backend/services/comment/docs"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
-	"github.com/labstack/echo/v4"
 	gonats "github.com/nats-io/nats.go"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -39,24 +37,21 @@ func main() {
 
 	cs := service.NewCommentServie(dao, nc)
 
-	httpApp := handler.NewHttpApp(cs)
+	addr := "0.0.0.0:8081"
 
-	e := echo.New()
+	conn, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
+	grpcServer := grpc.NewServer()
 
-	e.GET("/docs/*", echoSwagger.WrapHandler)
+	cServer := handler.NewCommentServer(cs)
 
-	e.Use(comutils.NewLogger(e))
+	cg.RegisterCommentServiceServer(grpcServer, cServer)
 
-	e.POST("/", httpApp.CreateComment)
-	e.DELETE("/:pId/:cId", httpApp.DeleteComment)
-
-	e.GET("/party/:pId", httpApp.GetCommentByParty)
-	// TODO: currently not implementable with schema
-	//e.GET("/party/:pId/user/:uId", httpApp.GetCommentByPartyUser)
-
-	if err := e.Start(":8080"); err != http.ErrServerClosed {
+	fmt.Println("Starting gRPC Server at: ", addr)
+	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -1,34 +1,23 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	"github.com/labstack/echo/v4"
+	common "github.com/jonashiltl/sessions-backend/packages/grpc/common"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 )
 
-// @Summary Delete a Story
-// @Description Deletes a Story from our db
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param sId path string true "Story Id"
-// @Success 200 {object} comtypes.MessageRes
-// @Failure 400 {object} echo.HTTPError
-// @Router /{sId} [delete]
-func (a *httpApp) DeleteStory(c echo.Context) error {
-	sId := c.Param("sId")
-
+func (s *storyServer) DeleteStory(c context.Context, req *sg.GetStoryRequest) (*common.MessageResponse, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
-	err = a.sService.Delete(c.Request().Context(), me.Sub, sId)
+	err = s.sService.Delete(c, me.Sub, req.SId)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, comtypes.MessageRes{Message: "Party removed"})
+	return &common.MessageResponse{Message: "Story removed"}, nil
 }

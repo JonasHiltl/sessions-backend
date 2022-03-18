@@ -1,37 +1,29 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	"github.com/labstack/echo/v4"
+	common "github.com/jonashiltl/sessions-backend/packages/grpc/common"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Send friend request
-// @Description Sends friend request to user with id from params
-// @Tags friend
-// @Accept json
-// @Produce json
-// @Param id path string true "Friend Id"
-// @Success 201 {object} datastruct.MessageRes
-// @Failure 400 {object} echo.HTTPError
-// @Router /friend/{id} [put]
-func (a *httpApp) FriendRequest(c echo.Context) error {
-	fId := c.Param("id")
+func (s *userServer) FriendRequest(c context.Context, req *ug.FriendRequestRequest) (*common.MessageResponse, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
-	if fId == me.Sub {
-		return echo.NewHTTPError(http.StatusBadRequest, "You can't add yourself")
+	if req.FId == me.Sub {
+		return nil, status.Error(codes.Unauthenticated, "You can't add yourself")
 	}
 
-	err = a.friendService.FriendRequest(c.Request().Context(), fId, me.Sub)
+	err = s.fs.FriendRequest(c, req.FId, me.Sub)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusCreated, comtypes.MessageRes{Message: "Friend request send"})
+	return &common.MessageResponse{Message: "Friend request send"}, nil
 }

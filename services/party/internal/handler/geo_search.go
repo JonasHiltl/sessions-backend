@@ -1,13 +1,12 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
-	"errors"
-	"net/http"
-	"strconv"
 
-	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
-	"github.com/labstack/echo/v4"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type GeoSearchBody struct {
@@ -26,51 +25,24 @@ type GeoSearchBody struct {
 // @Success 200 {object} datastruct.PagedParties
 // @Failure 400 {object} echo.HTTPError
 // @Router /near [get]
-func (a *httpApp) GeoSearch(c echo.Context) error {
-	lString := c.QueryParam("lat")
-	loString := c.QueryParam("long")
-	pString := c.QueryParam("precision")
-
-	precision, err := strconv.ParseUint(pString, 10, 8)
+func (s *partyServer) GeoSearch(c context.Context, req *pg.GeoSearchRequest) (*pg.PagedParties, error) {
+	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
-		return errors.New("invalid precision parameter format")
-	}
-	long, err := strconv.ParseFloat(loString, 64)
-	if err != nil {
-		return errors.New("invalid long parameter format")
-	}
-	lat, err := strconv.ParseFloat(lString, 64)
-	if err != nil {
-		return errors.New("invalid lat parameter format")
+		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	pageQuery := c.QueryParam("nextPage")
-
-	p, err := base64.URLEncoding.DecodeString(pageQuery)
+	ps, p, err := s.ps.GeoSearch(c, float64(req.Lat), float64(req.Long), uint(req.Precision), p)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
-	}
-
-	var reqBody GeoSearchBody
-	if err := c.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
-	}
-	if err := c.Validate(reqBody); err != nil {
-		return err
-	}
-
-	ps, p, err := a.partyService.GeoSearch(c.Request().Context(), lat, long, uint(precision), p)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	var pp []datastruct.PublicParty
+	var pp []*pg.PublicParty
 
 	for _, ps := range ps {
 		pp = append(pp, ps.ToPublicParty())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedParties{Parties: pp, NextPage: nextPage})
+	return &pg.PagedParties{Parties: pp, NextPage: nextPage}, nil
 }

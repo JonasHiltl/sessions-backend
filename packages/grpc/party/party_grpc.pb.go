@@ -28,6 +28,7 @@ type PartyServiceClient interface {
 	UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
 	DeleteParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetByUser(ctx context.Context, in *GetByUserRequest, opts ...grpc.CallOption) (*PagedParties, error)
+	GeoSearch(ctx context.Context, in *GeoSearchRequest, opts ...grpc.CallOption) (*PagedParties, error)
 }
 
 type partyServiceClient struct {
@@ -83,6 +84,15 @@ func (c *partyServiceClient) GetByUser(ctx context.Context, in *GetByUserRequest
 	return out, nil
 }
 
+func (c *partyServiceClient) GeoSearch(ctx context.Context, in *GeoSearchRequest, opts ...grpc.CallOption) (*PagedParties, error) {
+	out := new(PagedParties)
+	err := c.cc.Invoke(ctx, "/party.PartyService/GeoSearch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PartyServiceServer is the server API for PartyService service.
 // All implementations must embed UnimplementedPartyServiceServer
 // for forward compatibility
@@ -92,6 +102,7 @@ type PartyServiceServer interface {
 	UpdateParty(context.Context, *UpdatePartyRequest) (*PublicParty, error)
 	DeleteParty(context.Context, *GetPartyRequest) (*common.MessageResponse, error)
 	GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error)
+	GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error)
 	mustEmbedUnimplementedPartyServiceServer()
 }
 
@@ -113,6 +124,9 @@ func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *GetPartyReq
 }
 func (UnimplementedPartyServiceServer) GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByUser not implemented")
+}
+func (UnimplementedPartyServiceServer) GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GeoSearch not implemented")
 }
 func (UnimplementedPartyServiceServer) mustEmbedUnimplementedPartyServiceServer() {}
 
@@ -217,6 +231,24 @@ func _PartyService_GetByUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PartyService_GeoSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GeoSearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).GeoSearch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/GeoSearch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).GeoSearch(ctx, req.(*GeoSearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PartyService_ServiceDesc is the grpc.ServiceDesc for PartyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +275,10 @@ var PartyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByUser",
 			Handler:    _PartyService_GetByUser_Handler,
+		},
+		{
+			MethodName: "GeoSearch",
+			Handler:    _PartyService_GeoSearch_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

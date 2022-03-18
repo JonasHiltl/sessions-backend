@@ -1,40 +1,33 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
+	"github.com/go-playground/validator/v10"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"github.com/labstack/echo/v4"
 )
 
-// @Summary Login
-// @Description Login with credentials
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param Body body datastruct.LoginBody true "The required credentials"
-// @Success 200 {object} datastruct.AuthRes
-// @Failure 400 {object} echo.HTTPError
-// @Router /auth/login [post]
-func (a *httpApp) Login(c echo.Context) error {
-	var reqBody datastruct.LoginBody
-	if err := c.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
+func (s *userServer) Login(c context.Context, req *ug.LoginRequest) (*ug.AuthResponse, error) {
+	l := datastruct.LoginBody{
+		UsernameOrEmail: req.UsernameOrEmail,
+		Password:        req.Password,
 	}
-
-	if err := c.Validate(reqBody); err != nil {
-		return err
-	}
-
-	token, err := a.authService.Login(c.Request().Context(), reqBody)
+	v := validator.New()
+	err := v.Struct(l)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	res := datastruct.AuthRes{
+	token, err := s.as.Login(c, l)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &ug.AuthResponse{
 		Token:   token,
 		Message: "Successfully Logged in",
 	}
 
-	return c.JSON(http.StatusOK, res)
+	return res, nil
 }

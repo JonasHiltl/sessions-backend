@@ -2,17 +2,14 @@ package main
 
 import (
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
-	_ "github.com/jonashiltl/sessions-backend/services/story/docs"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/service"
-	"github.com/labstack/echo/v4"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -32,25 +29,18 @@ func main() {
 	sService := service.NewStoryServie(dao)
 	us := service.NewUploadService()
 
-	httpApp := handler.NewHttpApp(sService, us)
+	conn, err := net.Listen("tcp", "0.0.0.0:8081")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	e := echo.New()
+	grpcServer := grpc.NewServer()
 
-	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
+	sServer := handler.NewStoryServer(sService, us)
 
-	e.GET("/docs/*", echoSwagger.WrapHandler)
+	sg.RegisterStoryServiceServer(grpcServer, sServer)
 
-	e.Use(comutils.NewLogger(e))
-
-	e.GET("/:sId", httpApp.GetStory)
-	e.POST("/", httpApp.CreateStory)
-	e.DELETE("/:sId", httpApp.DeleteStory)
-	e.GET("/user/:uId", httpApp.GetByUser)
-	e.GET("/party/:pId", httpApp.GetByParty)
-
-	e.GET("/presign/:key", httpApp.PresignURL)
-
-	if err := e.Start(":8080"); err != http.ErrServerClosed {
+	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}
 }

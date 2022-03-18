@@ -1,40 +1,37 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
+	"github.com/go-playground/validator/v10"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"github.com/labstack/echo/v4"
 )
 
-// @Summary Register a new User
-// @Description Saves a new User in the Database and returns auth token
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param Body body datastruct.RequestUser true "The body to create a user"
-// @Success 201 {object} datastruct.AuthRes
-// @Failure 400 {object} echo.HTTPError
-// @Router /auth/register [post]
-func (a *httpApp) Register(c echo.Context) error {
-	var reqBody datastruct.RequestUser
-	if err := c.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
+func (s *userServer) Register(c context.Context, req *ug.CreateUserRequest) (*ug.AuthResponse, error) {
+	u := datastruct.RequestUser{
+		Username:  req.Username,
+		FirstName: req.Firstname,
+		LastName:  req.Lastname,
+		Email:     req.Email,
+		Password:  req.Password,
+		Avatar:    req.Avatar,
 	}
-
-	if err := c.Validate(reqBody); err != nil {
-		return err
-	}
-
-	token, err := a.authService.Register(c.Request().Context(), reqBody)
+	v := validator.New()
+	err := v.Struct(u)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	res := datastruct.AuthRes{
+	token, err := s.as.Register(c, u)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &ug.AuthResponse{
 		Token:   token,
 		Message: "Successfully Registered",
 	}
 
-	return c.JSON(http.StatusCreated, res)
+	return res, nil
 }

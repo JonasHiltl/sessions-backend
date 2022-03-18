@@ -1,27 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
-	_ "github.com/jonashiltl/sessions-backend/services/party/docs"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
-	"github.com/labstack/echo/v4"
 	gonats "github.com/nats-io/nats.go"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"google.golang.org/grpc"
 )
 
-// @title Party Microservice
-// @description This Microservice manages Party entities
-// @version 1.0
-// @host localhost:8082
-// @BasePath /
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -45,25 +38,21 @@ func main() {
 
 	partyService := service.NewPartyServie(dao, nc)
 
-	httpApp := handler.NewHttpApp(partyService)
+	addr := "0.0.0.0:8081"
 
-	e := echo.New()
+	conn, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
+	grpcServer := grpc.NewServer()
 
-	e.Use(comutils.NewLogger(e))
+	pServer := handler.NewPartyServer(partyService)
 
-	e.GET("/docs/*", echoSwagger.WrapHandler)
+	pg.RegisterPartyServiceServer(grpcServer, pServer)
 
-	e.GET("/:pId", httpApp.GetParty)
-	e.POST("/", httpApp.CreateParty)
-	e.DELETE("/:pId", httpApp.DeleteParty)
-	e.PATCH("/:pId", httpApp.UpdateParty)
-
-	e.GET("/user/:uId", httpApp.GetByUser)
-	e.PATCH("/near", httpApp.GeoSearch)
-
-	if err := e.Start(":8080"); err != http.ErrServerClosed {
+	fmt.Println("Starting gRPC Server at: ", addr)
+	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}
 }

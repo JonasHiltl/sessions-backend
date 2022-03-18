@@ -1,43 +1,31 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
-	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/story/internal/datastruct"
-	"github.com/labstack/echo/v4"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get stories of a party
-// @Description Returns a list of stories of a party
-// @Produce json
-// @Param pId path string true "Party id"
-// @Success 200 {object} datastruct.PagedStories
-// @Failure 400 {object} echo.HTTPError
-// @Router /party/{pId} [get]
-func (a *httpApp) GetByParty(c echo.Context) error {
-	pId := c.Param("pId")
-	if pId == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Party Id")
+func (s *storyServer) GetByParty(c context.Context, req *sg.GetByPartyRequest) (*sg.PagedStories, error) {
+	p, err := base64.URLEncoding.DecodeString(req.NextPage)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	pageQuery := c.QueryParam("nextPage")
-	p, err := base64.URLEncoding.DecodeString(pageQuery)
+	stories, p, err := s.sService.GetByParty(c, req.PId, p)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
-	}
-
-	stories, p, err := a.sService.GetByParty(c.Request().Context(), pId, p)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	var result []datastruct.PublicStory
+	var result []*sg.PublicStory
 	for _, s := range stories {
 		result = append(result, s.ToPublicStory())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedStories{Stories: result, NextPage: nextPage})
+	return &sg.PagedStories{Stories: result, NextPage: nextPage}, nil
 }

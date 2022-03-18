@@ -1,52 +1,31 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
-	"github.com/labstack/echo/v4"
 )
 
-type UpdatePartyBody struct {
-	Title string  `json:"title"     validate:"required"`
-	Lat   float64 `json:"lat"       validate:"required,latitude"`
-	Long  float64 `json:"long"      validate:"required,longitude"`
-}
-
-// @Summary Update a Party
-// @Description Updates a party with the provided values
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param Body body UpdatePartyBody true "The body to create a Party"
-// @Success 200 {object} datastruct.PublicParty
-// @Failure 400 {object} echo.HTTPError
-// @Router /{pId} [patch]
-func (a *httpApp) UpdateParty(c echo.Context) error {
-	var reqBody UpdatePartyBody
-	if err := c.Bind(&reqBody); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
-	}
-
-	pId := c.Param("pId")
+func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.PublicParty, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
 	d := dto.Party{
-		Id:    pId,
+		Id:    req.PId,
 		UId:   me.Sub,
-		Title: reqBody.Title,
-		Lat:   reqBody.Lat,
-		Long:  reqBody.Long,
+		Title: req.Title,
+		Lat:   float64(req.Lat),
+		Long:  float64(req.Long),
 	}
 
-	p, err := a.partyService.Update(c.Request().Context(), d)
+	p, err := s.ps.Update(c, d)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, p.ToPublicParty())
+	return p.ToPublicParty(), nil
 }

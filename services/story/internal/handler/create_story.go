@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/dto"
-	"github.com/labstack/echo/v4"
 )
 
 type StoryCreateRequest struct {
@@ -16,42 +16,25 @@ type StoryCreateRequest struct {
 	TaggedFriends []string `json:"tagged_friends,omitempty"`
 }
 
-// @Summary Create a Story
-// @Description Create a new Story in DB
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param Body body StoryCreateRequest true "The body to create a Story"
-// @Success 201 {object} datastruct.PublicStory
-// @Failure 400 {object} echo.HTTPError
-// @Router / [post]
-func (a *httpApp) CreateStory(c echo.Context) error {
-	var req StoryCreateRequest
-	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Couldn't find request body")
-	}
-	if err := c.Validate(req); err != nil {
-		return err
-	}
-
+func (s *storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest) (*sg.PublicStory, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
 	d := dto.Story{
 		PId:           req.PId,
 		UId:           me.Sub,
-		Lat:           float64(req.Lat),
-		Long:          float64(req.Long),
+		Lat:           float64(req.GetLat()),
+		Long:          float64(req.GetLong()),
 		Url:           req.Url,
 		TaggedFriends: req.TaggedFriends,
 	}
 
-	story, err := a.sService.Create(c.Request().Context(), d)
+	story, err := s.sService.Create(c, d)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusCreated, story.ToPublicStory())
+	return story.ToPublicStory(), err
 }

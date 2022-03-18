@@ -1,21 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
-	_ "github.com/jonashiltl/sessions-backend/services/user/docs"
 	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
-	"github.com/labstack/echo/v4"
 	gonats "github.com/nats-io/nats.go"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"google.golang.org/grpc"
 )
 
 // @title User Microservice
@@ -48,32 +46,21 @@ func main() {
 	authService := service.NewAuthService(client, tokenManager)
 	friendService := service.NewFriendService(client, nc)
 	uploadService := service.NewUploadService()
+	addr := "0.0.0.0:8081"
 
-	e := echo.New()
-	e.Validator = &comutils.CustomValidator{Validator: validator.New()}
+	conn, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	e.Use(comutils.NewLogger(e))
+	grpcServer := grpc.NewServer()
 
-	httpApp := handler.NewHttpApp(userService, authService, friendService, uploadService)
+	uServer := handler.NewUserServer(userService, uploadService, authService, friendService)
 
-	e.GET("/docs/*", echoSwagger.WrapHandler)
+	ug.RegisterUserServiceServer(grpcServer, uServer)
 
-	e.POST("/", httpApp.CreateUser)
-	e.DELETE("/:id", httpApp.DeleteUser)
-	e.GET("/:id", httpApp.GetUser)
-	e.PATCH("/:id", httpApp.UpdateUser)
-
-	e.GET("/me", httpApp.GetMe)
-	e.GET("/username-exists/:username", httpApp.UsernameExists)
-
-	e.POST("/auth/login", httpApp.Login)
-	e.POST("/auth/register", httpApp.Register)
-
-	e.GET("/friend/:id", httpApp.GetFriends)
-	e.PUT("/friend/:id", httpApp.FriendRequest)
-	e.GET("/friend/search/:id", httpApp.FriendSearch)
-
-	if err := e.Start(":8080"); err != http.ErrServerClosed {
+	fmt.Println("Starting gRPC Server at: ", addr)
+	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}
 }

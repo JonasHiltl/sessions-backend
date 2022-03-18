@@ -1,30 +1,22 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	"github.com/labstack/echo/v4"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
-// @Summary Get current user
-// @Description Gets the user information of currently logged in user
-// @Accept json
-// @Produce json
-// @Param jwt_payload header string true "Base64 encoded JWT Payload"
-// @Success 200 {object} datastruct.PublicUser
-// @Failure 400 {object} echo.HTTPError
-// @Router /me [get]
-func (a *httpApp) GetMe(c echo.Context) error {
+func (s *userServer) GetMe(c context.Context, req *ug.Empty) (*ug.PublicUser, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
-	u, err := a.userService.GetById(c.Request().Context(), me.Sub)
+	u, err := s.us.GetById(c, me.Sub)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, u.ToPublicProfile())
+	return u.ToPublicUser(), nil
 }

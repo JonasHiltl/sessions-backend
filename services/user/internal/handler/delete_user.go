@@ -1,37 +1,29 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	"github.com/labstack/echo/v4"
+	common "github.com/jonashiltl/sessions-backend/packages/grpc/common"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Delete a user
-// @Description Deletes a user from our DB
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param id path string true "User Id"
-// @Success 200 {object} datastruct.PublicUser
-// @Failure 400 {object} echo.HTTPError
-// @Router /{id} [delete]
-func (a *httpApp) DeleteUser(c echo.Context) error {
-	uId := c.Param("id")
+func (s *userServer) DeleteUser(c context.Context, req *ug.GetUserRequest) (*common.MessageResponse, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return nil, err
 	}
 
-	if uId != me.Sub {
-		return echo.NewHTTPError(http.StatusBadRequest, "You can only delete your own account")
+	if req.UId != me.Sub {
+		return nil, status.Error(codes.Unauthenticated, "You can only delete your own account")
 	}
 
-	err = a.userService.Delete(c.Request().Context(), me.Sub)
+	err = s.us.Delete(c, me.Sub)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, comtypes.MessageRes{Message: "User deleted"})
+	return &common.MessageResponse{Message: "User removed"}, nil
 }

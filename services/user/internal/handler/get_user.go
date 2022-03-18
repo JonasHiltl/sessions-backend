@@ -1,27 +1,22 @@
 package handler
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/labstack/echo/v4"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get user
-// @Description Gets the user information by id user
-// @Tags CRUD
-// @Accept json
-// @Produce json
-// @Param id path string true "User Id"
-// @Success 200 {object} datastruct.PublicUser
-// @Failure 400 {object} echo.HTTPError
-// @Router /{id} [get]
-func (a *httpApp) GetUser(c echo.Context) error {
-	uId := c.Param("id")
-
-	u, err := a.userService.GetById(c.Request().Context(), uId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+func (s *userServer) GetUser(c context.Context, req *ug.GetUserRequest) (*ug.PublicUser, error) {
+	if req.UId == "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid User id")
 	}
 
-	return c.JSON(http.StatusOK, u.ToPublicProfile())
+	u, err := s.us.GetById(c, req.UId)
+	if err != nil {
+		return nil, err
+	}
+
+	return u.ToPublicUser(), nil
 }

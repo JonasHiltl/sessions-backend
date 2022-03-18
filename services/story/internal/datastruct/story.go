@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/mmcloughlin/geohash"
 )
 
@@ -32,23 +33,23 @@ type PagedStories struct {
 	NextPage string        `json:"nextPage"`
 }
 
-func (s Story) ToPublicStory() PublicStory {
+func (s Story) ToPublicStory() *sg.PublicStory {
 	lat, lon := geohash.DecodeCenter(s.GHash)
 
 	uuidv1, err := uuid.FromString(s.Id)
 	if err != nil {
-		return PublicStory{}
+		return &sg.PublicStory{}
 	}
 	timestamp, err := uuid.TimestampFromV1(uuidv1)
 	if err != nil {
-		return PublicStory{}
+		return &sg.PublicStory{}
 	}
 	t, err := timestamp.Time()
 	if err != nil {
-		return PublicStory{}
+		return &sg.PublicStory{}
 	}
 
-	return PublicStory{
+	return &sg.PublicStory{
 		Id:            s.Id,
 		PId:           s.PId,
 		UId:           s.UId,
@@ -56,6 +57,6 @@ func (s Story) ToPublicStory() PublicStory {
 		Long:          float32(lon),
 		Url:           s.Url,
 		TaggedFriends: s.TaggedFriends,
-		CreatedAt:     t,
+		CreatedAt:     t.String(),
 	}
 }

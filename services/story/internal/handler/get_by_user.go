@@ -1,43 +1,30 @@
 package handler
 
 import (
+	"context"
 	"encoding/base64"
-	"net/http"
 
-	"github.com/jonashiltl/sessions-backend/services/story/internal/datastruct"
-	"github.com/labstack/echo/v4"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-// @Summary Get stories of a user
-// @Description Returns a list of stories of a user
-// @Produce json
-// @Param uId path string true "User id"
-// @Success 200 {object} datastruct.PagedStories
-// @Failure 400 {object} echo.HTTPError
-// @Router /user/{uId} [get]
-func (a *httpApp) GetByUser(c echo.Context) error {
-	uid := c.Param("uId")
-	if uid == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid User Id")
-	}
-
-	pageQuery := c.QueryParam("nextPage")
-	p, err := base64.URLEncoding.DecodeString(pageQuery)
+func (s *storyServer) GetByUser(c context.Context, req *sg.GetByUserRequest) (*sg.PagedStories, error) {
+	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Next Page Param")
+		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
-
-	stories, p, err := a.sService.GetByUser(c.Request().Context(), uid, p)
+	stories, p, err := s.sService.GetByUser(c, req.UId, p)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return nil, err
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	var result []datastruct.PublicStory
+	var result []*sg.PublicStory
 	for _, s := range stories {
 		result = append(result, s.ToPublicStory())
 	}
 
-	return c.JSON(http.StatusOK, datastruct.PagedStories{Stories: result, NextPage: nextPage})
+	return &sg.PagedStories{Stories: result, NextPage: nextPage}, nil
 }
