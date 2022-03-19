@@ -24,6 +24,7 @@ protos-party:
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out packages/grpc/party/descriptor \
 	packages/grpc/party/*.proto
 
 protos-common:
@@ -31,6 +32,7 @@ protos-common:
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out packages/grpc/common/descriptor \
 	packages/grpc/common/*.proto
 
 protos-user:
@@ -38,6 +40,7 @@ protos-user:
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out packages/grpc/user/descriptor \
 	packages/grpc/user/*.proto
 		
 protos-story:
@@ -45,6 +48,7 @@ protos-story:
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out packages/grpc/story/descriptor \
 	packages/grpc/story/*.proto
 
 protos-comment:
@@ -52,4 +56,5 @@ protos-comment:
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out packages/grpc/comment/descriptor \
 	packages/grpc/comment/*.proto

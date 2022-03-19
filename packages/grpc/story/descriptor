@@ -1,0 +1,44 @@
+
+≠
+
+story/story.protostorygoogle/api/annotations.protocommon/common.proto"¡
+PublicStory
+id (	Rid
+p_id (	RpId
+u_id (	RuId
+lat (Rlat
+long (Rlong
+url (	Rurl%
+tagged_friends (	RtaggedFriends
+
+created_at (	R	createdAt"Ü
+CreateStoryRequest
+p_id (	RpId
+url (	Rurl
+lat (Rlat
+long (Rlong%
+tagged_friends (	RtaggedFriends"$
+GetStoryRequest
+s_id (	RsId"B
+GetByUserRequest
+u_id (	RuId
+	next_page (	RnextPage"C
+GetByPartyRequest
+p_id (	RpId
+	next_page (	RnextPage"%
+PresignURLRequest
+key (	Rkey"Y
+PagedStories,
+stories (2.story.PublicStoryRstories
+	next_page (	RnextPage"&
+PresignURLResponse
+url (	Rurl2Ù
+StoryServiceJ
+CreateStory.story.CreateStoryRequest.story.PublicStory"Ç”‰ì"/:*G
+GetStory.story.GetStoryRequest.story.PublicStory"Ç”‰ì	/{s_id}O
+DeleteStory.story.GetStoryRequest.common.MessageResponse"Ç”‰ì	*/{s_id}O
+	GetByUser.story.GetByUserRequest.story.PagedStories"Ç”‰ì/user/{u_id}R
+
+GetByParty.story.GetByPartyRequest.story.PagedStories"Ç”‰ì/party/{p_id}Y
+
+PresignURL.story.PresignURLRequest.story.PresignURLResponse"Ç”‰ì/presign/{key}B9Z7github.com/jonashiltl/sessions-backend/packages/grpc/gsbproto3

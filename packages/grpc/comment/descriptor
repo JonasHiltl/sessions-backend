@@ -1,0 +1,19 @@
+
+≈
+comment/comment.protocommentgoogle/api/annotations.protocommon/common.proto"=
+CreateCommentRequest
+p_id (	RpId
+body (	Rbody"r
+Comment
+id (	Rid
+p_id (	RpId
+a_id (	RaId
+body (	Rbody
+
+created_at (	R	createdAt"9
+GetCommentRequest
+p_id (	RpId
+c_id (	RcId2æ
+CommentServiceN
+CreateComment.comment.CreateCommentRequest.comment.Comment"Ç”‰ì"/:*\
+DeleteComment.comment.GetCommentRequest.common.MessageResponse"Ç”‰ì*/{p_id}/{c_id}B9Z7github.com/jonashiltl/sessions-backend/packages/grpc/gcbproto3
