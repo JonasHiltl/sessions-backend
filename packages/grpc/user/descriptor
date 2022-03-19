@@ -1,69 +1,0 @@
-
-ù
-user/user.protousergoogle/api/annotations.protocommon/common.proto"¿
-
-PublicUser
-id (	Rid
-username (	Rusername
-	firstname (	R	firstname
-lastname (	Rlastname
-avatar (	Ravatar
-role (	Rrole 
-friendCount (RfriendCount"≥
-CreateUserRequest
-username (	Rusername
-	firstname (	R	firstname
-lastname (	Rlastname
-email (	Remail
-password (	Rpassword
-avatar (	Ravatar"√
-UpdateUserRequest
-id (	Rid
-username (	Rusername
-	firstname (	R	firstname
-lastname (	Rlastname
-email (	Remail
-password (	Rpassword
-avatar (	Ravatar"#
-GetUserRequest
-u_id (	RuId")
-FriendRequestRequest
-f_id (	RfId"T
-GetFriendsRequest
-u_id (	RuId
-offset (Roffset
-limit (Rlimit"Z
-FriendSearchRequest
-u_id (	RuId
-query (	Rquery
-accepted (Raccepted"3
-UsernameExistsRequest
-username (	Rusername"0
-UsernameExistsResponse
-exists (Rexists"V
-LoginRequest*
-username_or_email (	RusernameOrEmail
-password (	Rpassword"<
-FriendResponse*
-friends (2.user.PublicUserRfriends">
-AuthResponse
-token (	Rtoken
-message (	Rmessage"
-Empty2Ü
-UserServiceE
-
-CreateUser.user.CreateUserRequest.user.PublicUser"Ç”‰ì"/:*@
-GetUser.user.GetUserRequest.user.PublicUser"Ç”‰ì/{id}3
-GetMe.user.Empty.user.PublicUser"Ç”‰ì/meI
-
-UpdateUser.user.UpdateUserRequest.user.PublicUser"Ç”‰ì
-2/{id}:*L
-
-DeleteUser.user.GetUserRequest.common.MessageResponse"Ç”‰ì	*/{u_id}p
-UsernameExists.user.UsernameExistsRequest.user.UsernameExistsResponse"#Ç”‰ì/username-exists/{username}R
-Register.user.CreateUserRequest.user.AuthResponse"Ç”‰ì"/auth/register:*G
-Login.user.LoginRequest.user.AuthResponse"Ç”‰ì"/auth/login:*S
-
-GetFriends.user.GetFriendsRequest.user.FriendResponse"Ç”‰ì/friend/{u_id}^
-FriendSearch.user.FriendSearchRequest.user.FriendResponse"Ç”‰ì/friend/search/{u_id}\
-FriendRequest.user.FriendRequestRequest.common.MessageResponse"Ç”‰ì/friend/{f_id}B9Z7github.com/jonashiltl/sessions-backend/packages/grpc/gubproto3

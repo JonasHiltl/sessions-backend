@@ -1,44 +1,0 @@
-
-«
-
-party/party.protopartygoogle/api/annotations.protocommon/common.proto"m
-CreatePartyRequest
-title (	Rtitle
-lat (Rlat
-long (Rlong
-	is_public (RisPublic"c
-UpdatePartyRequest
-p_id (	RpId
-title (	Rtitle
-lat (Rlat
-long (Rlong"s
-GeoSearchRequest
-	precision (R	precision
-lat (Rlat
-long (Rlong
-	next_page (	RnextPage"$
-GetPartyRequest
-p_id (	RpId"B
-GetByUserRequest
-u_id (	RuId
-	next_page (	RnextPage"Y
-PagedParties,
-parties (2.party.PublicPartyRparties
-	next_page (	RnextPage"¬
-PublicParty
-id (	Rid
-u_id (	RuId
-title (	Rtitle
-	is_public (RisPublic
-lat (Rlat
-long (Rlong
-stories (	Rstories
-
-created_at (	R	createdAt2·
-PartyServiceJ
-CreateParty.party.CreatePartyRequest.party.PublicParty"Ç”‰ì"/:*G
-GetParty.party.GetPartyRequest.party.PublicParty"Ç”‰ì	/{p_id}P
-UpdateParty.party.UpdatePartyRequest.party.PublicParty"Ç”‰ì2/{p_id}:*O
-DeleteParty.party.GetPartyRequest.common.MessageResponse"Ç”‰ì	*/{p_id}O
-	GetByUser.party.GetByUserRequest.party.PagedParties"Ç”‰ì/user/{u_id}H
-	GeoSearch.party.GeoSearchRequest.party.PagedParties"Ç”‰ì/nearB9Z7github.com/jonashiltl/sessions-backend/packages/grpc/gpbproto3
