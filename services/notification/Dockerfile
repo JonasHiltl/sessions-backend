@@ -3,11 +3,10 @@ FROM golang:1.17-alpine as builder
 WORKDIR /app
 
 COPY go.mod go.sum ./
+COPY ./services ./services
+COPY ./packages ./packages
 RUN go mod tidy
-RUN go mod download
 RUN go get github.com/cosmtrek/air
-
-COPY . ./
 
 EXPOSE 8080
 
