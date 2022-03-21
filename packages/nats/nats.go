@@ -1,7 +1,7 @@
 package nats
 
 import (
-	"errors"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -13,7 +13,8 @@ import (
 func Connect(opts []nats.Option) (*nats.EncodedConn, error) {
 	cluster, exists := os.LookupEnv("NATS_CLUSTER")
 	if !exists {
-		return nil, errors.New("nats connection url not defined")
+		fmt.Println("No Nats connection url defined using default url: nats://0.0.0.0:4222 ")
+		cluster = "nats://0.0.0.0:4222"
 	}
 
 	opts = setupConnOptions(opts)
