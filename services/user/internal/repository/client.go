@@ -35,7 +35,7 @@ func NewClient() (*ent.UserClient, error) {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
-	log.Printf("Connected to mySQL at %v \n", drv)
+	log.Printf("Connected to mySQL at %v \n", os.Getenv("MYSQL"))
 
 	return client.User, nil
 }
