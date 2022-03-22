@@ -18,6 +18,11 @@ static_resources:
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
                 stat_prefix: ingress_http
+                codec_type: AUTO
+                access_log:
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+                    path: /dev/stdout
                 route_config:
                   name: all
                   virtual_hosts:
@@ -26,24 +31,28 @@ static_resources:
                       routes:
                         - match:
                             prefix: "/user/"
+                            grpc: {}
                           route:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
                             cluster: user
                         - match:
                             prefix: "/party/"
+                            grpc: {}
                           route:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
                             cluster: party
                         - match:
                             prefix: "/comment/"
+                            grpc: {}
                           route:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
                             cluster: comment
                         - match:
                             prefix: "/story/"
+                            grpc: {}
                           route:
                             # host_rewrite: www.google.com
                             prefix_rewrite: "/"
@@ -94,8 +103,10 @@ static_resources:
   clusters:
     - name: user
       connect_timeout: 0.25s
-      type: STRICT_DNS
+      type: LOGICAL_DNS
       lb_policy: ROUND_ROBIN
+      dns_lookup_family: V4_ONLY
+      http2_protocol_options: {}
       load_assignment:
         cluster_name: user
         endpoints:
@@ -107,8 +118,10 @@ static_resources:
                       port_value: 8080
     - name: party
       connect_timeout: 0.25s
-      type: STRICT_DNS
+      type: LOGICAL_DNS
       lb_policy: ROUND_ROBIN
+      dns_lookup_family: V4_ONLY
+      http2_protocol_options: {}
       load_assignment:
         cluster_name: party
         endpoints:
@@ -120,8 +133,10 @@ static_resources:
                       port_value: 8080
     - name: story
       connect_timeout: 0.25s
-      type: STRICT_DNS
+      type: LOGICAL_DNS
       lb_policy: ROUND_ROBIN
+      dns_lookup_family: V4_ONLY
+      http2_protocol_options: {}
       load_assignment:
         cluster_name: story
         endpoints:
@@ -133,8 +148,10 @@ static_resources:
                       port_value: 8080
     - name: comment
       connect_timeout: 0.25s
-      type: STRICT_DNS
+      type: LOGICAL_DNS
       lb_policy: ROUND_ROBIN
+      dns_lookup_family: V4_ONLY
+      http2_protocol_options: {}
       load_assignment:
         cluster_name: comment
         endpoints:

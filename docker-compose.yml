@@ -3,102 +3,7 @@ version: "3.1"
 # bash into container docker exec -it user sh
 
 services:
-  user:
-    build:
-      context: .
-      dockerfile: ./services/user/Dockerfile
-      target: builder
-    container_name: user
-    command: air
-    depends_on:
-      - mysql
-      - nats
-    ports:
-      - "8081:8080"
-    volumes:
-      - "./services/user/:/app/services/user"
-      - "./packages/:/app/packages"
-    environment:
-      MYSQL: root:rootPassword@tcp(mysql:3306)/sessions?parseTime=true
-
-  party:
-    build:
-      context: .
-      dockerfile: ./services/party/Dockerfile
-      target: builder
-    container_name: party
-    command: air
-    depends_on:
-      - scylla-node1
-      - scylla-node2
-      - scylla-node3
-    ports:
-      - "8082:8080"
-    volumes:
-      - "./services/party/:/app/services/party"
-      - "./packages/:/app/packages"
-    environment:
-      SCYLLA_KEYSPACE: sessions
-      SCYLLA_HOSTS: scylla-node1
-      NATS_CLUSTER: nats://nats:4222
-
-  story:
-    build:
-      context: .
-      dockerfile: ./services/story/Dockerfile
-      target: builder
-    container_name: story
-    command: air
-    depends_on:
-      - scylla-node1
-    ports:
-      - "8083:8080"
-    volumes:
-      - "./services/story/:/app/services/story"
-      - "./packages/:/app/packages"
-    environment:
-      SCYLLA_KEYSPACE: sessions
-      SCYLLA_HOSTS: scylla-node1
-      DO_KEY: testkey
-      DO_SECRET: testsecret
-      DO_ENDPOINT: http://example.com
-
-  comment:
-    build:
-      context: .
-      dockerfile: ./services/comment/Dockerfile
-      target: builder
-    container_name: comment
-    command: air
-    depends_on:
-      - scylla-node1
-    ports:
-      - "8084:8080"
-    volumes:
-      - "./services/comment/:/app/services/comment"
-      - "./packages/:/app/packages"
-    environment:
-      SCYLLA_KEYSPACE: sessions
-      SCYLLA_HOSTS: scylla-node1
-
-  notification:
-    build:
-      context: .
-      dockerfile: ./services/notification/Dockerfile
-      target: builder
-    container_name: notification
-    command: air
-    depends_on:
-      - nats
-    ports:
-      - "8085:8080"
-    volumes:
-      - "./services/notification/:/app/services/notification"
-      - "./packages/:/app/packages"
-    environment:
-      NATS_CLUSTER: nats://nats:4222
-
-    #typesense:
+  #typesense:
   #  container_name: typesense
   #  entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
   #  restart: on-failure
@@ -107,8 +12,8 @@ services:
   #  volumes:
   #    - ./data/typesense:/data
 
-  scylla-node1:
-    container_name: scylla-node1
+  scylla:
+    container_name: scylla
     image: scylladb/scylla:latest
     command: --smp 1 --api-address 0.0.0.0
     ports:
@@ -135,7 +40,6 @@ services:
     ports:
       - "8222:8222"
       - "4222:4222"
-
   envoy:
     image: envoyproxy/envoy:v1.20-latest
     container_name: envoy
@@ -147,6 +51,11 @@ services:
       - party
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
+      - ./packages/grpc/comment/comment_descriptor.pb:/tmp/envoy/comment_descriptor.pb
+      - ./packages/grpc/common/common_descriptor.pb:/tmp/envoy/common_descriptor.pb
+      - ./packages/grpc/party/party_descriptor.pb:/tmp/envoy/party_descriptor.pb
+      - ./packages/grpc/story/story_descriptor.pb:/tmp/envoy/story_descriptor.pb
+      - ./packages/grpc/user/user_descriptor.pb:/tmp/envoy/user_descriptor.pb
     command:
       - -l debug
       - -c /etc/envoy/envoy.yaml

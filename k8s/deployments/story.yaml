@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story
+spec:
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: jonashiltl/story-service
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: SCYLLA_KEYSPACE
+              value: sessions
+            - name: SCYLLA_HOSTS
+              value: host.docker.internal
+            - name: DO_KEY
+              value: testkey
+            - name: DO_SECRET
+              value: testsecret
+            - name: DO_ENDPOINT
+              value: http://example.com
+          ports:
+            - containerPort: 8080
