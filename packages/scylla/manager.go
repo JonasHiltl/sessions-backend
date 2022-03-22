@@ -1,6 +1,8 @@
 package scylla
 
 import (
+	"log"
+
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 )
@@ -18,7 +20,11 @@ func NewManager(keyspace string, hosts []string) *Manager {
 }
 
 func (m *Manager) Connect() (gocqlx.Session, error) {
-	return m.connect(m.keyspace, m.hosts)
+	sess, err := m.connect(m.keyspace, m.hosts)
+	if err == nil {
+		log.Printf("Connected to Scylla keyspace %v and hosts %v \n", m.keyspace, m.hosts)
+	}
+	return sess, err
 }
 
 func (m *Manager) connect(keyspace string, hosts []string) (gocqlx.Session, error) {
