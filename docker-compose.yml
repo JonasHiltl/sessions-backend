@@ -15,7 +15,7 @@ services:
   scylla:
     container_name: scylla
     image: scylladb/scylla:latest
-    command: --smp 1 --api-address 0.0.0.0
+    command: --smp 2 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     ports:
       - "9042:9042"
     volumes:
