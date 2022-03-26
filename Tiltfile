@@ -24,6 +24,12 @@ docker_build(
     ]
 )
 docker_build(
+    'jonashiltl/user-service-sidecar', 
+    '.', 
+    dockerfile='services/user/sidecar.Dockerfile',
+)
+
+docker_build(
     'jonashiltl/party-service', 
     '.', 
     dockerfile='services/party/Dockerfile', 
@@ -34,6 +40,12 @@ docker_build(
         sync('./packages', '/app/packages'),
     ]
 )
+docker_build(
+    'jonashiltl/party-service-sidecar', 
+    '.', 
+    dockerfile='services/party/sidecar.Dockerfile',
+)
+
 docker_build(
     'jonashiltl/story-service', 
     '.', 
@@ -46,6 +58,12 @@ docker_build(
     ]
 )
 docker_build(
+    'jonashiltl/story-service-sidecar', 
+    '.', 
+    dockerfile='services/story/sidecar.Dockerfile',
+)
+
+docker_build(
     'jonashiltl/comment-service', 
     '.', 
     dockerfile='services/comment/Dockerfile', 
@@ -56,6 +74,12 @@ docker_build(
         sync('./packages', '/app/packages'),
     ]
 )
+docker_build(
+    'jonashiltl/comment-service-sidecar', 
+    '.', 
+    dockerfile='services/comment/sidecar.Dockerfile',
+)
+
 docker_build(
     'jonashiltl/notification-service', 
     '.', 
