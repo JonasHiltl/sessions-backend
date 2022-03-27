@@ -6,28 +6,16 @@ schema user {
             rank:filter
         }
         field username type string {
-            indexing: summary | attribute | index
-            index: enable-bm25
-            match {
-                gram
-                gram-size: 3
-            }
+            indexing: summary | attribute
+            attribute: fast-search 
         }
         field firstname type string {
-            indexing: summary | attribute | index
-            index: enable-bm25
-            match {
-                gram
-                gram-size: 3
-            }
+            indexing: summary | attribute
+            attribute: fast-search 
         }
         field lastname type string {
-            indexing: summary | attribute | index
-            index: enable-bm25
-            match {
-                gram
-                gram-size: 3
-            }
+            indexing: summary | attribute
+            attribute: fast-search 
         }
         field id type tensor<int8>(uuid{}) {
             indexing: summary | attribute
@@ -43,8 +31,8 @@ schema user {
         expression: sum(query(friends) * attribute(id)) 
       } 
       first-phase {
-        expression: 2*social() + bm25(username) + bm25(firstname) + bm25(lastname)
+        expression: 2*social() + nativeRank(username) + nativeRank(firstname) + nativeRank(lastname)
       }
-      match-features: social() bm25(username) bm25(firstname) bm25(lastname)
+      match-features: social() nativeRank(username) nativeRank(firstname) nativeRank(lastname)
     }
 }

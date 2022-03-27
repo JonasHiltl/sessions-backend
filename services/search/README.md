@@ -1,5 +1,7 @@
 ## Deployment
 ```
+kubectl port-forward vespa-0 19071 8080 &
+
 vespa config set target local
 vespa deploy --wait 300
 ```
