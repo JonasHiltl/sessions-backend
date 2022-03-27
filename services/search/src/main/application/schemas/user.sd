@@ -6,19 +6,28 @@ schema user {
             rank:filter
         }
         field username type string {
-            indexing: summary | index
+            indexing: summary | attribute | index
             index: enable-bm25
-            match: prefix
+            match {
+                gram
+                gram-size: 3
+            }
         }
         field firstname type string {
-            indexing: summary | index
+            indexing: summary | attribute | index
             index: enable-bm25
-            match: prefix
+            match {
+                gram
+                gram-size: 3
+            }
         }
         field lastname type string {
-            indexing: summary | index
+            indexing: summary | attribute | index
             index: enable-bm25
-            match: prefix
+            match {
+                gram
+                gram-size: 3
+            }
         }
         field id type tensor<int8>(uuid{}) {
             indexing: summary | attribute
@@ -36,6 +45,6 @@ schema user {
       first-phase {
         expression: 2*social() + bm25(username) + bm25(firstname) + bm25(lastname)
       }
-      match-features: social() + bm25(username) + bm25(firstname) bm25(lastname)
+      match-features: social() bm25(username) bm25(firstname) bm25(lastname)
     }
 }

@@ -6,7 +6,7 @@ schema party {
             rank:filter
         }
         field title type string {
-            indexing: summary | index
+            indexing: summary | attribute | index
             match {
                 gram
                 gram-size: 3
