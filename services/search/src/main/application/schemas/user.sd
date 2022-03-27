@@ -7,14 +7,17 @@ schema user {
         }
         field username type string {
             indexing: summary | index
+            index: enable-bm25
             match: prefix
         }
         field firstname type string {
             indexing: summary | index
+            index: enable-bm25
             match: prefix
         }
         field lastname type string {
             indexing: summary | index
+            index: enable-bm25
             match: prefix
         }
         field id type tensor<int8>(uuid{}) {
@@ -31,8 +34,8 @@ schema user {
         expression: sum(query(friends) * attribute(id)) 
       } 
       first-phase {
-        expression: 2*social() + nativeRank(firstname) + nativeRank(lastname)
+        expression: 2*social() + bm25(username) + bm25(firstname) + bm25(lastname)
       }
-      match-features: social() nativeRank(firstname) nativeRank(lastname)
+      match-features: social() + bm25(username) + bm25(firstname) bm25(lastname)
     }
 }
