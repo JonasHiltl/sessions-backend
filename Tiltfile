@@ -116,9 +116,13 @@ k8s_yaml([
     'k8s/services/party.yaml', 
     'k8s/services/story.yaml', 
     'k8s/services/user.yaml',
+    'k8s/services/vespa.yaml',
 ])
 k8s_yaml([
     'k8s/deployments/notification.yaml', 
+])
+k8s_yaml([
+    'k8s/statefulsets/vespa.yaml', 
 ])
 
 
