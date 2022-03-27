@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: story
+  labels:
+    name: story
+spec:
+  containers:
+    - name: story
+      image: jonashiltl/story-service
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      env:
+        - name: SCYLLA_KEYSPACE
+          value: sessions
+        - name: SCYLLA_HOSTS
+          value: host.docker.internal
+        - name: DO_KEY
+          value: testkey
+        - name: DO_SECRET
+          value: testsecret
+        - name: DO_ENDPOINT
+          value: http://example.com
+      ports:
+        - containerPort: 8080
+
+    - name: story-sidecar
+      image: jonashiltl/story-service-sidecar
+      lifecycle:
+        type: Sidecar
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 8080

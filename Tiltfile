@@ -105,6 +105,12 @@ docker_build(
 #   More info: https://docs.tilt.dev/api.html#api.k8s_yaml
 #
 k8s_yaml([
+    'k8s/pods/comment.yaml', 
+    'k8s/pods/party.yaml', 
+    'k8s/pods/story.yaml', 
+    'k8s/pods/user.yaml',
+])
+k8s_yaml([
     'k8s/services/comment.yaml', 
     'k8s/services/notification.yaml', 
     'k8s/services/party.yaml', 
@@ -112,11 +118,7 @@ k8s_yaml([
     'k8s/services/user.yaml',
 ])
 k8s_yaml([
-    'k8s/deployments/comment.yaml', 
     'k8s/deployments/notification.yaml', 
-    'k8s/deployments/party.yaml', 
-    'k8s/deployments/story.yaml', 
-    'k8s/deployments/user.yaml'
 ])
 
 

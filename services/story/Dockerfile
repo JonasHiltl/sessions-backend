@@ -8,7 +8,7 @@ COPY ./packages ./packages
 RUN go mod tidy
 RUN go get github.com/cosmtrek/air
 
-EXPOSE 8080
+EXPOSE 8081
 
 WORKDIR /app/services/story
 

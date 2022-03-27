@@ -6,5 +6,5 @@ spec:
   selector:
     app: party
   ports:
-    - port: 8080
+    - port: 8080 # the ip of the envoy sidecar
       targetPort: 8080

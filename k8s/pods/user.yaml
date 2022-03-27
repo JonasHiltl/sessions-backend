@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: user
+  labels:
+    name: user
+spec:
+  containers:
+    - name: user
+      image: jonashiltl/user-service
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      env:
+        - name: MYSQL
+          value: root:rootPassword@tcp(host.docker.internal:3306)/sessions?parseTime=true
+        - name: NATS_CLUSTER
+          value: nats://host.docker.internal:4222
+
+    - name: user-sidecar
+      image: jonashiltl/user-service-sidecar
+      lifecycle:
+        type: Sidecar
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 8080

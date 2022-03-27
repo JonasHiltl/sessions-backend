@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: comment
+  labels:
+    name: comment
+spec:
+  containers:
+    - name: comment
+      image: jonashiltl/comment-service
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      env:
+        - name: SCYLLA_KEYSPACE
+          value: sessions
+        - name: SCYLLA_HOSTS
+          value: host.docker.internal
+        - name: NATS_CLUSTER
+          value: nats://host.docker.internal:4222
+      ports:
+        - containerPort: 8080
+
+    - name: comment-sidecar
+      image: jonashiltl/comment-service-sidecar
+      lifecycle:
+        type: Sidecar
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 8080
