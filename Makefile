@@ -69,4 +69,10 @@ protos-comment:
 encode-descriptors:
 	cd packages/grpc/utils/encode_descriptors; ./encode_descriptors
 
+kratos-up:
+	docker-compose -f ./services/kratos/quickstart-docker.yml up -d --build
+
+kratos-down:
+	docker-compose -f ./services/kratos/quickstart-docker.yml down -v
+
 # minikube ssh
