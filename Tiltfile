@@ -11,10 +11,14 @@
 #
 #   More info: https://docs.tilt.dev/api.html#api.docker_build
 #
+load('ext://restart_process', 'docker_build_with_restart')
+
 docker_build(
     'jonashiltl/user-service', 
     '.', 
     dockerfile='services/user/Dockerfile', 
+    # entrypoint=['/app/services/user/user-service'],
+    only=['./services/user', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
         # Sync files from host to container
         sync('./services/user/internal', '/app/services/user/internal'),
@@ -29,12 +33,13 @@ docker_build(
     dockerfile='services/user/sidecar.Dockerfile',
 )
 
-docker_build(
+docker_build_with_restart(
     'jonashiltl/party-service', 
     '.', 
     dockerfile='services/party/Dockerfile', 
+    entrypoint=['/app/services/party/party-service'],
+    only=['./services/party', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
-        # Sync files from host to container
         sync('./services/party/internal', '/app/services/party/internal'),
         sync('./services/party/main.go', '/app/services/party/main.go'),
         sync('./packages', '/app/packages'),
@@ -46,12 +51,13 @@ docker_build(
     dockerfile='services/party/sidecar.Dockerfile',
 )
 
-docker_build(
+docker_build_with_restart(
     'jonashiltl/story-service', 
     '.', 
     dockerfile='services/story/Dockerfile', 
+    entrypoint=['/app/services/story/story-service'],
+    only=['./services/story', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
-        # Sync files from host to container
         sync('./services/story/internal', '/app/services/story/internal'),
         sync('./services/story/main.go', '/app/services/story/main.go'),
         sync('./packages', '/app/packages'),
@@ -63,12 +69,13 @@ docker_build(
     dockerfile='services/story/sidecar.Dockerfile',
 )
 
-docker_build(
+docker_build_with_restart(
     'jonashiltl/comment-service', 
     '.', 
     dockerfile='services/comment/Dockerfile', 
+    entrypoint=['/app/services/comment/comment-service'],
+    only=['./services/comment', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
-        # Sync files from host to container
         sync('./services/comment/internal', '/app/services/comment/internal'),
         sync('./services/comment/main.go', '/app/services/comment/main.go'),
         sync('./packages', '/app/packages'),
@@ -80,12 +87,13 @@ docker_build(
     dockerfile='services/comment/sidecar.Dockerfile',
 )
 
-docker_build(
+docker_build_with_restart(
     'jonashiltl/notification-service', 
     '.', 
     dockerfile='services/notification/Dockerfile', 
+    entrypoint=['/app/services/notification/notification-service'],
+    only=['./services/notification', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
-        # Sync files from host to container
         sync('./services/notification/internal', '/app/services/notification/internal'),
         sync('./services/notification/main.go', '/app/services/notification/main.go'),
         sync('./packages', '/app/packages'),
@@ -136,14 +144,7 @@ k8s_yaml([
 #
 #   More info: https://docs.tilt.dev/api.html#api.k8s_resource
 #
-# k8s_resource('my-deployment',
-#              # map one or more local ports to ports on your Pod
-#              port_forwards=['5000:8080'],
-#              # change whether the resource is started by default
-#              auto_init=False,
-#              # control whether the resource automatically updates
-#              trigger_mode=TRIGGER_MODE_MANUAL
-# )
+k8s_resource('user', port_forwards=['8080:8080','8081:8081','8180:8180'])
 
 
 # Run local commands

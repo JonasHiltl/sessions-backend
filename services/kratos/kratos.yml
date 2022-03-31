@@ -16,6 +16,17 @@ selfservice:
     - http://127.0.0.1:4455
 
   methods:
+    oidc:
+      enabled: true
+      config:
+        providers:
+          - id: github # this is `<provider-id>` in the Authorization callback URL. DO NOT CHANGE IT ONCE SET!
+            provider: github
+            client_id: 97c0caf01f17939e46d2 # Replace this with the OAuth2 Client ID provided by GitHub
+            client_secret: 28f5b8c491618b9ae82d67a22943902596ba8fe0 # Replace this with the OAuth2 Client Secret provided by GitHub
+            mapper_url: file:///etc/config/kratos/oidc.github.jsonnet
+            scope:
+              - user:email
     password:
       enabled: true
 
@@ -53,6 +64,11 @@ selfservice:
           hooks:
             -
               hook: session
+        oidc:
+          hooks:
+            - hook: session
+
+
 
 log:
   level: debug

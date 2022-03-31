@@ -1,3 +1,8 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 8180 }
+
 static_resources:
   listeners:
   - name: listener_0
@@ -20,7 +25,7 @@ static_resources:
             - name: user_service
               domains: ["*"]
               routes:
-              - match: { prefix: "/" }
+              - match: { prefix: "/user.UserService", grpc: {} }
                 route:
                   cluster: user
                   max_stream_duration:
@@ -36,20 +41,19 @@ static_resources:
                 always_print_primitive_fields: true
                 always_print_enums_as_ints: false
                 preserve_proto_field_names: false
+              convert_grpc_status: true
           - name: envoy.filters.http.router
 
   clusters:
   - name: user
     connect_timeout: 0.25s
     type: logical_dns
+    lb_policy: round_robin
+    dns_lookup_family: V4_ONLY
+    http2_protocol_options: {}
     load_assignment:
       cluster_name: user
       endpoints:
       - lb_endpoints:
         - endpoint:
             address: { socket_address: { address: localhost, port_value: 8081 }}
-    typed_extension_protocol_options:
-      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
-        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
-        explicit_http_config:
-          http2_protocol_options: {}

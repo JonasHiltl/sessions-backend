@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/joho/godotenv"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
@@ -34,17 +36,20 @@ func main() {
 	}
 	defer nc.Close()
 
-	client, err := repository.NewClient()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	mongo, err := repository.NewDB()
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
+	defer mongo.Client().Disconnect(ctx)
 
-	tokenManager := service.NewTokenManager()
+	dao := repository.NewDAO(mongo)
 
-	userService := service.NewUserService(client)
-	authService := service.NewAuthService(client, tokenManager)
-	friendService := service.NewFriendService(client, nc)
+	_ = service.NewTokenManager()
+
+	userService := service.NewUserService(dao)
 	uploadService := service.NewUploadService()
 	addr := "0.0.0.0:8081"
 
@@ -55,7 +60,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	uServer := handler.NewUserServer(userService, uploadService, authService, friendService)
+	uServer := handler.NewUserServer(userService, uploadService)
 
 	ug.RegisterUserServiceServer(grpcServer, uServer)
 

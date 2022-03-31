@@ -8,16 +8,12 @@ import (
 type userServer struct {
 	us      service.UserService
 	uploadS service.UploadService
-	as      service.AuthService
-	fs      service.FriendService
 	ug.UnimplementedUserServiceServer
 }
 
-func NewUserServer(us service.UserService, uploadS service.UploadService, as service.AuthService, fs service.FriendService) ug.UserServiceServer {
+func NewUserServer(us service.UserService, uploadS service.UploadService) ug.UserServiceServer {
 	return &userServer{
-		as:      as,
 		uploadS: uploadS,
 		us:      us,
-		fs:      fs,
 	}
 }

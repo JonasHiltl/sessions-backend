@@ -21,15 +21,12 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*PublicUser, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*PublicUser, error)
+	GetUserByUsername(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*PublicUser, error)
+	GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*PublicUser, error)
 	GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PublicUser, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*PublicUser, error)
 	DeleteUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
-	UsernameExists(ctx context.Context, in *UsernameExistsRequest, opts ...grpc.CallOption) (*UsernameExistsResponse, error)
-	Register(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	GetFriends(ctx context.Context, in *GetFriendsRequest, opts ...grpc.CallOption) (*FriendResponse, error)
-	FriendSearch(ctx context.Context, in *FriendSearchRequest, opts ...grpc.CallOption) (*FriendResponse, error)
-	FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error)
 }
 
 type userServiceClient struct {
@@ -52,6 +49,24 @@ func (c *userServiceClient) CreateUser(ctx context.Context, in *CreateUserReques
 func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*PublicUser, error) {
 	out := new(PublicUser)
 	err := c.cc.Invoke(ctx, "/user.UserService/GetUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUserByUsername(ctx context.Context, in *GetUserByUsernameRequest, opts ...grpc.CallOption) (*PublicUser, error) {
+	out := new(PublicUser)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetUserByUsername", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*PublicUser, error) {
+	out := new(PublicUser)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetUserByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,54 +100,9 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *GetUserRequest, 
 	return out, nil
 }
 
-func (c *userServiceClient) UsernameExists(ctx context.Context, in *UsernameExistsRequest, opts ...grpc.CallOption) (*UsernameExistsResponse, error) {
-	out := new(UsernameExistsResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/UsernameExists", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) Register(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
-	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/Register", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
-	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/Login", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) GetFriends(ctx context.Context, in *GetFriendsRequest, opts ...grpc.CallOption) (*FriendResponse, error) {
-	out := new(FriendResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/GetFriends", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) FriendSearch(ctx context.Context, in *FriendSearchRequest, opts ...grpc.CallOption) (*FriendResponse, error) {
-	out := new(FriendResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/FriendSearch", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
-	err := c.cc.Invoke(ctx, "/user.UserService/FriendRequest", in, out, opts...)
+func (c *userServiceClient) UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error) {
+	out := new(UsernameTakenResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/UsernameTaken", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,15 +115,12 @@ func (c *userServiceClient) FriendRequest(ctx context.Context, in *FriendRequest
 type UserServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*PublicUser, error)
 	GetUser(context.Context, *GetUserRequest) (*PublicUser, error)
+	GetUserByUsername(context.Context, *GetUserByUsernameRequest) (*PublicUser, error)
+	GetUserByEmail(context.Context, *GetUserByEmailRequest) (*PublicUser, error)
 	GetMe(context.Context, *Empty) (*PublicUser, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*PublicUser, error)
 	DeleteUser(context.Context, *GetUserRequest) (*common.MessageResponse, error)
-	UsernameExists(context.Context, *UsernameExistsRequest) (*UsernameExistsResponse, error)
-	Register(context.Context, *CreateUserRequest) (*AuthResponse, error)
-	Login(context.Context, *LoginRequest) (*AuthResponse, error)
-	GetFriends(context.Context, *GetFriendsRequest) (*FriendResponse, error)
-	FriendSearch(context.Context, *FriendSearchRequest) (*FriendResponse, error)
-	FriendRequest(context.Context, *FriendRequestRequest) (*common.MessageResponse, error)
+	UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -167,6 +134,12 @@ func (UnimplementedUserServiceServer) CreateUser(context.Context, *CreateUserReq
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*PublicUser, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
+func (UnimplementedUserServiceServer) GetUserByUsername(context.Context, *GetUserByUsernameRequest) (*PublicUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByUsername not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserByEmail(context.Context, *GetUserByEmailRequest) (*PublicUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByEmail not implemented")
+}
 func (UnimplementedUserServiceServer) GetMe(context.Context, *Empty) (*PublicUser, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMe not implemented")
 }
@@ -176,23 +149,8 @@ func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserReq
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *GetUserRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (UnimplementedUserServiceServer) UsernameExists(context.Context, *UsernameExistsRequest) (*UsernameExistsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UsernameExists not implemented")
-}
-func (UnimplementedUserServiceServer) Register(context.Context, *CreateUserRequest) (*AuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
-}
-func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*AuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
-}
-func (UnimplementedUserServiceServer) GetFriends(context.Context, *GetFriendsRequest) (*FriendResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFriends not implemented")
-}
-func (UnimplementedUserServiceServer) FriendSearch(context.Context, *FriendSearchRequest) (*FriendResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FriendSearch not implemented")
-}
-func (UnimplementedUserServiceServer) FriendRequest(context.Context, *FriendRequestRequest) (*common.MessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FriendRequest not implemented")
+func (UnimplementedUserServiceServer) UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UsernameTaken not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -239,6 +197,42 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUserByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByUsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetUserByUsername",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByUsername(ctx, req.(*GetUserByUsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetUserByEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByEmail(ctx, req.(*GetUserByEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -297,110 +291,20 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_UsernameExists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UsernameExistsRequest)
+func _UserService_UsernameTaken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UsernameTakenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).UsernameExists(ctx, in)
+		return srv.(UserServiceServer).UsernameTaken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/UsernameExists",
+		FullMethod: "/user.UserService/UsernameTaken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UsernameExists(ctx, req.(*UsernameExistsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).Register(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/Register",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Register(ctx, req.(*CreateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/Login",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).Login(ctx, req.(*LoginRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_GetFriends_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFriendsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).GetFriends(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/GetFriends",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetFriends(ctx, req.(*GetFriendsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_FriendSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FriendSearchRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).FriendSearch(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/FriendSearch",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).FriendSearch(ctx, req.(*FriendSearchRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_FriendRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FriendRequestRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).FriendRequest(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/user.UserService/FriendRequest",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).FriendRequest(ctx, req.(*FriendRequestRequest))
+		return srv.(UserServiceServer).UsernameTaken(ctx, req.(*UsernameTakenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -421,6 +325,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_GetUser_Handler,
 		},
 		{
+			MethodName: "GetUserByUsername",
+			Handler:    _UserService_GetUserByUsername_Handler,
+		},
+		{
+			MethodName: "GetUserByEmail",
+			Handler:    _UserService_GetUserByEmail_Handler,
+		},
+		{
 			MethodName: "GetMe",
 			Handler:    _UserService_GetMe_Handler,
 		},
@@ -433,28 +345,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_DeleteUser_Handler,
 		},
 		{
-			MethodName: "UsernameExists",
-			Handler:    _UserService_UsernameExists_Handler,
-		},
-		{
-			MethodName: "Register",
-			Handler:    _UserService_Register_Handler,
-		},
-		{
-			MethodName: "Login",
-			Handler:    _UserService_Login_Handler,
-		},
-		{
-			MethodName: "GetFriends",
-			Handler:    _UserService_GetFriends_Handler,
-		},
-		{
-			MethodName: "FriendSearch",
-			Handler:    _UserService_FriendSearch_Handler,
-		},
-		{
-			MethodName: "FriendRequest",
-			Handler:    _UserService_FriendRequest_Handler,
+			MethodName: "UsernameTaken",
+			Handler:    _UserService_UsernameTaken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

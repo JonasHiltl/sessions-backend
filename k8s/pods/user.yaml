@@ -13,10 +13,14 @@ spec:
           memory: "128Mi"
           cpu: "500m"
       env:
-        - name: MYSQL
-          value: root:rootPassword@tcp(host.docker.internal:3306)/sessions?parseTime=true
+        - name: MONGO_URL
+          value: mongodb://root:rootpassword@host.docker.internal:27017/
         - name: NATS_CLUSTER
           value: nats://host.docker.internal:4222
+        - name: DO_ENDPOINT
+          value: https://example.comn
+        - name: DO_TOKEN
+          value: gaww12t2tawdawgt12
 
     - name: user-sidecar
       image: jonashiltl/user-service-sidecar

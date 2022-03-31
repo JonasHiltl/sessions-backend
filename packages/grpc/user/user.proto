@@ -18,6 +18,16 @@ service UserService {
 			get: "/{id}"
         };
     };
+    rpc GetUserByUsername (GetUserByUsernameRequest) returns (PublicUser) {
+        option (google.api.http) = {
+			get: "/{username}"
+        };
+    };
+    rpc GetUserByEmail (GetUserByEmailRequest) returns (PublicUser) {
+        option (google.api.http) = {
+			get: "/{email}"
+        };
+    };
     rpc GetMe (Empty) returns (PublicUser) {
         option (google.api.http) = {
 			get: "/me"
@@ -34,38 +44,23 @@ service UserService {
 			delete: "/{u_id}"
         };
     };
-    rpc UsernameExists (UsernameExistsRequest) returns (UsernameExistsResponse) {
+    rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {
         option (google.api.http) = {
 			get: "/username-exists/{username}"
         };
     };
-    rpc Register (CreateUserRequest) returns (AuthResponse) {
-        option (google.api.http) = {
-			post: "/auth/register"
-            body: "*"
-        };
-    };
-    rpc Login (LoginRequest) returns (AuthResponse) {
-        option (google.api.http) = {
-			post: "/auth/login"
-            body: "*"
-        };
-    };
-    rpc GetFriends (GetFriendsRequest) returns (FriendResponse) {
-        option (google.api.http) = {
-			get: "/friend/{u_id}"
-        };
-    };
-    rpc FriendSearch (FriendSearchRequest) returns (FriendResponse) {
-        option (google.api.http) = {
-			get: "/friend/search/{u_id}"
-        };
-    };
-    rpc FriendRequest (FriendRequestRequest) returns (common.MessageResponse) {
-        option (google.api.http) = {
-			put: "/friend/{f_id}"
-        };
-    };
+    // rpc Register (CreateUserRequest) returns (AuthResponse) {
+    //     option (google.api.http) = {
+	// 		post: "/auth/register"
+    //         body: "*"
+    //     };
+    // };
+    // rpc Login (LoginRequest) returns (AuthResponse) {
+    //     option (google.api.http) = {
+	// 		post: "/auth/login"
+    //         body: "*"
+    //     };
+    // };
 }
 
 message PublicUser {
@@ -101,36 +96,24 @@ message GetUserRequest {
     string u_id = 1;
 }
 
-message FriendRequestRequest {
-    string f_id = 1;
-}
-
-message GetFriendsRequest {
-    string u_id = 1;
-    int32 offset = 2;
-    int32 limit = 3;
-}
-
-message FriendSearchRequest {
-    string u_id = 1;
-    string query = 2;
-    bool accepted = 3;
-}
-
-message UsernameExistsRequest {
+message GetUserByUsernameRequest {
     string username = 1;
 }
-message UsernameExistsResponse {
-    bool exists = 1;
+
+message GetUserByEmailRequest {
+    string email = 1;
+}
+
+message UsernameTakenRequest {
+    string username = 1;
+}
+message UsernameTakenResponse {
+    bool taken = 1;
 }
 
 message LoginRequest {
     string username_or_email = 1;
     string password = 2;
-}
-
-message FriendResponse {
-    repeated PublicUser friends = 1;
 }
 
 message AuthResponse {

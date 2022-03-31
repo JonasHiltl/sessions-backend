@@ -5,104 +5,92 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jonashiltl/sessions-backend/services/user/ent"
-	"github.com/jonashiltl/sessions-backend/services/user/ent/user"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/dto"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserService interface {
-	Create(ctx context.Context, u datastruct.RequestUser) (*ent.User, error)
-	GetById(ctx context.Context, id string) (*ent.User, error)
-	Update(ctx context.Context, id string, u datastruct.RequestUser) (*ent.User, error)
+	Create(ctx context.Context, u dto.User) (datastruct.User, error)
+	GetById(ctx context.Context, id string) (datastruct.User, error)
+	GetByEmail(ctx context.Context, email string) (datastruct.User, error)
+	GetByUsername(ctx context.Context, username string) (datastruct.User, error)
+	Update(ctx context.Context, u dto.User) (datastruct.User, error)
 	Delete(ctx context.Context, id string) error
-	UsernameExists(ctx context.Context, uName string) (bool, error)
-	CountFriends(ctx context.Context, id string) int
+	UsernameTaken(ctx context.Context, uName string) bool
 }
 
 type userService struct {
-	client *ent.UserClient
+	dao repository.Dao
 }
 
-func NewUserService(client *ent.UserClient) UserService {
-	return &userService{client: client}
+func NewUserService(dao repository.Dao) UserService {
+	return &userService{dao: dao}
 }
 
-func (us *userService) Create(ctx context.Context, u datastruct.RequestUser) (*ent.User, error) {
-	res, err := us.client.
-		Create().
-		SetUsername(u.Username).
-		SetFirstName(u.FirstName).
-		SetLastName(u.LastName).
-		SetEmail(u.Email).
-		SetPassword(u.Password).
-		Save(ctx)
+func (us *userService) Create(ctx context.Context, u dto.User) (datastruct.User, error) {
+	id := primitive.NewObjectID()
 
+	newU := datastruct.User{
+		Id:        id,
+		Provider:  u.Provider,
+		Username:  u.Username,
+		Email:     u.Email,
+		Firstname: u.Firstname,
+		Lastname:  u.Lastname,
+		Password:  u.Password,
+		Avatar:    u.Avatar,
+		Role:      datastruct.UserRole.String(),
+	}
+
+	res, err := us.dao.NewUserRepository().Create(ctx, newU)
 	if err != nil {
-		if strings.Contains(err.Error(), "for key 'users.email'") {
-			return &ent.User{}, errors.New("email already taken")
+		if strings.Contains(err.Error(), "dup key: { email:") {
+			return datastruct.User{}, errors.New("email already taken")
 		}
-		if strings.Contains(err.Error(), "for key 'users.username'") {
-			return &ent.User{}, errors.New("username already taken")
+		if strings.Contains(err.Error(), "dup key: { username:") {
+			return datastruct.User{}, errors.New("username 2 already taken")
 		}
 	}
 
 	return res, err
 }
 
-func (us *userService) GetById(ctx context.Context, id string) (*ent.User, error) {
-	res, err := us.client.
-		Query().
-		Where(user.ID(id)).
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldAvatar).
-		Only(ctx)
-
-	return res, err
+func (us *userService) GetById(ctx context.Context, id string) (datastruct.User, error) {
+	return us.dao.NewUserRepository().GetById(ctx, id)
+}
+func (us *userService) GetByEmail(ctx context.Context, email string) (datastruct.User, error) {
+	return us.dao.NewUserRepository().GetByEmail(ctx, email)
+}
+func (us *userService) GetByUsername(ctx context.Context, username string) (datastruct.User, error) {
+	return us.dao.NewUserRepository().GetByUsername(ctx, username)
 }
 
-func (us *userService) Update(ctx context.Context, id string, u datastruct.RequestUser) (*ent.User, error) {
-	builder := us.client.UpdateOneID(id)
-
-	if u.Username != "" {
-		builder.SetUsername(u.Username)
-	}
-	if u.FirstName != "" {
-		builder.SetFirstName(u.FirstName)
-	}
-	if u.LastName != "" {
-		builder.SetLastName(u.LastName)
-	}
-	if u.Email != "" {
-		builder.SetEmail(u.Email)
-	}
-	if u.Avatar != "" {
-		builder.SetAvatar(u.Avatar)
-	}
-	if u.Password != "" {
-		builder.SetPassword(u.Password)
+func (us *userService) Update(ctx context.Context, u dto.User) (datastruct.User, error) {
+	id, err := primitive.ObjectIDFromHex(u.Id)
+	if err != nil {
+		return datastruct.User{}, err
 	}
 
-	res, err := builder.
-		Select(user.FieldID, user.FieldUsername, user.FieldFirstName, user.FieldLastName, user.FieldRole, user.FieldCreatedAt, user.FieldAvatar).
-		Save(ctx)
+	newU := datastruct.User{
+		Id:        id,
+		Provider:  u.Provider,
+		Username:  u.Username,
+		Email:     u.Email,
+		Firstname: u.Firstname,
+		Lastname:  u.Lastname,
+		Password:  u.Password,
+		Avatar:    u.Avatar,
+	}
 
-	return res, err
+	return us.dao.NewUserRepository().Update(ctx, newU)
 }
 
 func (us *userService) Delete(ctx context.Context, id string) error {
-	return us.client.DeleteOneID(id).Exec(ctx)
+	return us.dao.NewUserRepository().Delete(ctx, id)
 }
 
-func (us *userService) UsernameExists(ctx context.Context, uName string) (bool, error) {
-	return us.client.
-		Query().
-		Where(user.UsernameEQ(uName)).
-		Exist(ctx)
-}
-
-func (us *userService) CountFriends(ctx context.Context, id string) int {
-	count, err := us.client.Query().Where(user.ID(id)).QueryFriends().Count(ctx)
-	if err != nil {
-		return 0
-	}
-	return count
+func (us *userService) UsernameTaken(ctx context.Context, uName string) bool {
+	return us.dao.NewUserRepository().UsernameTaken(ctx, uName)
 }

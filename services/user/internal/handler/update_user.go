@@ -5,7 +5,7 @@ import (
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/dto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -20,10 +20,11 @@ func (s *userServer) UpdateUser(c context.Context, req *ug.UpdateUserRequest) (*
 		return nil, status.Error(codes.Unauthenticated, "You can only update your own information")
 	}
 
-	du := datastruct.RequestUser{
+	du := dto.User{
+		Id:        req.Id,
 		Username:  req.Username,
-		FirstName: req.Firstname,
-		LastName:  req.Lastname,
+		Firstname: req.Firstname,
+		Lastname:  req.Lastname,
 		Email:     req.Email,
 		Password:  req.Password,
 		Avatar:    req.Avatar,
@@ -37,7 +38,7 @@ func (s *userServer) UpdateUser(c context.Context, req *ug.UpdateUserRequest) (*
 		du.Avatar = loc
 	}
 
-	u, err := s.us.Update(c, me.Sub, du)
+	u, err := s.us.Update(c, du)
 	if err != nil {
 		return nil, err
 	}
