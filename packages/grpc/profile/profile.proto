@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package profile;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/profile";
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service ProfileService {
+    rpc CreateProfile (CreateProfileRequest) returns (PublicProfile) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    };
+    rpc GetProfile (GetProfileRequest) returns (PublicProfile) {
+        option (google.api.http) = {
+			get: "/{id}"
+        };
+    };
+    rpc GetProfileByProfilename (GetProfileByUsernameRequest) returns (PublicProfile) {
+        option (google.api.http) = {
+			get: "/{username}"
+        };
+    };
+    rpc GetMe (Empty) returns (PublicProfile) {
+        option (google.api.http) = {
+			get: "/me"
+        };
+    };
+    rpc UpdateProfile (UpdateProfileRequest) returns (PublicProfile) {
+        option (google.api.http) = {
+			patch: "/{id}"
+            body: "*"
+        };
+    };
+    rpc DeleteProfile (GetProfileRequest) returns (common.MessageResponse) {
+        option (google.api.http) = {
+			delete: "/{u_id}"
+        };
+    };
+    rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {
+        option (google.api.http) = {
+			get: "/username-taken/{username}"
+        };
+    };
+}
+
+message PublicProfile {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+    int32 friendCount = 6;
+}
+
+message CreateProfileRequest {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+}
+
+message UpdateProfileRequest {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+}
+
+message GetProfileRequest {
+    string u_id = 1;
+}
+
+message GetProfileByUsernameRequest {
+    string username = 1;
+}
+
+message UsernameTakenRequest {
+    string username = 1;
+}
+message UserenameTakenResponse {
+    bool taken = 1;
+}
+
+message Empty {
+
+}
