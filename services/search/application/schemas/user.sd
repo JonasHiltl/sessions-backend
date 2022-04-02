@@ -7,19 +7,22 @@ schema user {
         }
         field username type string {
             indexing: summary | attribute
-            attribute: fast-search 
+            attribute: fast-search
+            match: prefix
         }
         field firstname type string {
             indexing: summary | attribute
             attribute: fast-search 
+            match: prefix
         }
         field lastname type string {
             indexing: summary | attribute
-            attribute: fast-search 
+            attribute: fast-search
+            match: prefix 
         }
         field id type tensor<int8>(user_id{}) {
             indexing: summary | attribute
-            attribute: fast-search 
+            attribute: fast-search
         }
     }
     fieldset default {
