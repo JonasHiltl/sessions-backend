@@ -6,13 +6,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 RUN go get github.com/cosmtrek/air
 
-COPY ./services/user ./services/user
+COPY ./services/profile ./services/profile
 COPY ./packages ./packages
 
 EXPOSE 8081
 
-WORKDIR /app/services/user
+WORKDIR /app/services/profile
 
-RUN go build -o ./user-service
+RUN go build -o ./profile-service
 
-ENTRYPOINT user-service
+ENTRYPOINT profile-service

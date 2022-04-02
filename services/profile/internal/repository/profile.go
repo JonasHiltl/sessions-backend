@@ -5,39 +5,38 @@ import (
 	"errors"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/datastruct"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type UserQuery interface {
-	Create(ctx context.Context, u datastruct.User) (datastruct.User, error)
+type ProfileQuery interface {
+	Create(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error)
 	Delete(ctx context.Context, id string) error
-	Update(ctx context.Context, u datastruct.User) (datastruct.User, error)
-	GetById(ctx context.Context, id string) (datastruct.User, error)
-	GetByEmail(ctx context.Context, email string) (datastruct.User, error)
-	GetByUsername(ctx context.Context, username string) (datastruct.User, error)
+	Update(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error)
+	GetById(ctx context.Context, id string) (datastruct.Profile, error)
+	GetByUsername(ctx context.Context, username string) (datastruct.Profile, error)
 	UsernameTaken(ctx context.Context, username string) bool
 }
 
-type userQuery struct {
+type profileQuery struct {
 	col *mongo.Collection
 }
 
-func (uq *userQuery) Create(ctx context.Context, u datastruct.User) (datastruct.User, error) {
+func (uq *profileQuery) Create(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error) {
 	v := validator.New()
 	err := v.Struct(u)
 	if err != nil {
-		return datastruct.User{}, err
+		return datastruct.Profile{}, err
 	}
 
 	res, err := uq.
 		col.
 		InsertOne(ctx, u)
 	if err != nil {
-		return datastruct.User{}, err
+		return datastruct.Profile{}, err
 	}
 
 	id := res.InsertedID.(primitive.ObjectID)
@@ -49,7 +48,7 @@ func (uq *userQuery) Create(ctx context.Context, u datastruct.User) (datastruct.
 	return u, nil
 }
 
-func (uq *userQuery) GetById(ctx context.Context, id string) (res datastruct.User, err error) {
+func (uq *profileQuery) GetById(ctx context.Context, id string) (res datastruct.Profile, err error) {
 	err = uq.
 		col.
 		FindOne(ctx, bson.M{"_id": id}).
@@ -61,7 +60,7 @@ func (uq *userQuery) GetById(ctx context.Context, id string) (res datastruct.Use
 	return res, err
 }
 
-func (uq *userQuery) Delete(ctx context.Context, id string) error {
+func (uq *profileQuery) Delete(ctx context.Context, id string) error {
 	res, err := uq.
 		col.
 		DeleteOne(ctx, bson.M{"_id": id})
@@ -76,7 +75,7 @@ func (uq *userQuery) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (uq *userQuery) Update(ctx context.Context, u datastruct.User) (res datastruct.User, err error) {
+func (uq *profileQuery) Update(ctx context.Context, u datastruct.Profile) (res datastruct.Profile, err error) {
 	input := bson.M{}
 	filter := bson.M{"_id": u.Id}
 
@@ -87,20 +86,12 @@ func (uq *userQuery) Update(ctx context.Context, u datastruct.User) (res datastr
 		input["username"] = u.Username
 	}
 
-	if u.Email != "" {
-		input["email"] = u.Email
-	}
-
 	if u.Firstname != "" {
 		input["firstname"] = u.Firstname
 	}
 
 	if u.Lastname != "" {
 		input["lastname"] = u.Lastname
-	}
-
-	if u.Password != "" {
-		input["password"] = u.Password
 	}
 
 	if u.Avatar != "" {
@@ -118,19 +109,7 @@ func (uq *userQuery) Update(ctx context.Context, u datastruct.User) (res datastr
 	return res, nil
 }
 
-func (uq *userQuery) GetByEmail(ctx context.Context, email string) (res datastruct.User, err error) {
-	err = uq.
-		col.
-		FindOne(ctx, bson.M{"email": email}).
-		Decode(&res)
-	if err != nil {
-		return res, err
-	}
-
-	return res, err
-}
-
-func (uq *userQuery) GetByUsername(ctx context.Context, username string) (res datastruct.User, err error) {
+func (uq *profileQuery) GetByUsername(ctx context.Context, username string) (res datastruct.Profile, err error) {
 	err = uq.
 		col.
 		FindOne(ctx, bson.M{"username": username}).
@@ -142,8 +121,8 @@ func (uq *userQuery) GetByUsername(ctx context.Context, username string) (res da
 	return res, err
 }
 
-func (uq *userQuery) UsernameTaken(ctx context.Context, username string) bool {
-	user := datastruct.User{}
+func (uq *profileQuery) UsernameTaken(ctx context.Context, username string) bool {
+	user := datastruct.Profile{}
 	err := uq.col.FindOne(ctx, bson.M{"username": username}).Decode(&user)
 	if err != nil {
 		return false

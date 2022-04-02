@@ -12,7 +12,7 @@ import (
 )
 
 type Dao interface {
-	NewUserRepository() UserQuery
+	NewProfileRepository() ProfileQuery
 }
 
 type dao struct {
@@ -20,7 +20,7 @@ type dao struct {
 }
 
 const (
-	USER_COLLECTION = "users"
+	PROFILE_COLLECTION = "profiles"
 )
 
 func NewDB() (*mongo.Database, error) {
@@ -44,7 +44,7 @@ func NewDB() (*mongo.Database, error) {
 		},
 	}
 
-	db.Collection(USER_COLLECTION).Indexes().CreateMany(ctx, models)
+	db.Collection(PROFILE_COLLECTION).Indexes().CreateMany(ctx, models)
 
 	return db, nil
 }
@@ -53,6 +53,6 @@ func NewDAO(db *mongo.Database) Dao {
 	return &dao{db: db}
 }
 
-func (d *dao) NewUserRepository() UserQuery {
-	return &userQuery{col: d.db.Collection(USER_COLLECTION)}
+func (d *dao) NewProfileRepository() ProfileQuery {
+	return &profileQuery{col: d.db.Collection(PROFILE_COLLECTION)}
 }

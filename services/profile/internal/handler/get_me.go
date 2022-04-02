@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 )
 
-func (s *userServer) GetMe(c context.Context, req *ug.Empty) (*ug.PublicUser, error) {
+func (s *profileServer) GetMe(c context.Context, req *pg.Empty) (*pg.PublicProfile, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return nil, err
@@ -18,5 +18,5 @@ func (s *userServer) GetMe(c context.Context, req *ug.Empty) (*ug.PublicUser, er
 		return nil, err
 	}
 
-	return u.ToPublicUser(), nil
+	return u.ToPublicProfile(), nil
 }

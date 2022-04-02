@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
-	_ "github.com/jonashiltl/sessions-backend/services/user/ent/runtime"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/handler"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/handler"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/repository"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
 )
@@ -24,7 +23,7 @@ func main() {
 		log.Println("No .env file found")
 	}
 
-	opts := []gonats.Option{gonats.Name("User Service")}
+	opts := []gonats.Option{gonats.Name("Profile Service")}
 	nc, err := nats.Connect(opts)
 	if err != nil {
 		log.Fatalln(err)
@@ -42,10 +41,10 @@ func main() {
 
 	dao := repository.NewDAO(mongo)
 
-	userService := service.NewUserService(dao)
+	userService := service.NewProfileService(dao)
 	uploadService := service.NewUploadService()
-	addr := "0.0.0.0:8081"
 
+	addr := "0.0.0.0:8081"
 	conn, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalln(err)
@@ -53,9 +52,9 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	uServer := handler.NewUserServer(userService, uploadService)
+	uServer := handler.NewProfileServer(userService, uploadService)
 
-	ug.RegisterUserServiceServer(grpcServer, uServer)
+	profile.RegisterProfileServiceServer(grpcServer, uServer)
 
 	fmt.Println("Starting gRPC Server at: ", addr)
 	if err := grpcServer.Serve(conn); err != nil {

@@ -82,7 +82,7 @@ message GetProfileByUsernameRequest {
 message UsernameTakenRequest {
     string username = 1;
 }
-message UserenameTakenResponse {
+message UsernameTakenResponse {
     bool taken = 1;
 }
 

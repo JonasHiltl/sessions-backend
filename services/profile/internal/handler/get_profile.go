@@ -3,12 +3,12 @@ package handler
 import (
 	"context"
 
-	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) GetUser(c context.Context, req *ug.GetUserRequest) (*ug.PublicUser, error) {
+func (s *profileServer) GetProfile(c context.Context, req *pg.GetProfileRequest) (*pg.PublicProfile, error) {
 	if req.UId == "" {
 		return nil, status.Error(codes.InvalidArgument, "invalid User id")
 	}
@@ -18,5 +18,5 @@ func (s *userServer) GetUser(c context.Context, req *ug.GetUserRequest) (*ug.Pub
 		return nil, err
 	}
 
-	return u.ToPublicUser(), nil
+	return u.ToPublicProfile(), nil
 }

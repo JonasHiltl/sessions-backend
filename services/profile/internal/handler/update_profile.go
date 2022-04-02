@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
-	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/dto"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/dto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) UpdateUser(c context.Context, req *ug.UpdateUserRequest) (*ug.PublicUser, error) {
+func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRequest) (*pg.PublicProfile, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return nil, err
@@ -20,13 +20,11 @@ func (s *userServer) UpdateUser(c context.Context, req *ug.UpdateUserRequest) (*
 		return nil, status.Error(codes.Unauthenticated, "You can only update your own information")
 	}
 
-	du := dto.User{
+	du := dto.Profile{
 		Id:        req.Id,
 		Username:  req.Username,
 		Firstname: req.Firstname,
 		Lastname:  req.Lastname,
-		Email:     req.Email,
-		Password:  req.Password,
 		Avatar:    req.Avatar,
 	}
 
@@ -43,5 +41,5 @@ func (s *userServer) UpdateUser(c context.Context, req *ug.UpdateUserRequest) (*
 		return nil, err
 	}
 
-	return u.ToPublicUser(), nil
+	return u.ToPublicProfile(), nil
 }

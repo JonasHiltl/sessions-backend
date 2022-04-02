@@ -36,14 +36,14 @@ protos-common:
 	--include_imports \
 	packages/grpc/common/*.proto
 
-protos-user:
+protos-profile:
 	protoc \
 	--proto_path packages/grpc \
 	--go_out packages/grpc/ --go_opt paths=source_relative \
 	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/user/descriptor.pb \
+	--descriptor_set_out services/profile/descriptor.pb \
 	--include_imports \
-	packages/grpc/user/*.proto
+	packages/grpc/profile/*.proto
 		
 protos-story:
 	protoc \
@@ -62,6 +62,15 @@ protos-comment:
 	--descriptor_set_out services/comment/descriptor.pb \
 	--include_imports \
 	packages/grpc/comment/*.proto
+
+protos-auth:
+	protoc \
+	--proto_path packages/grpc \
+	--go_out packages/grpc/ --go_opt paths=source_relative \
+	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
+	--descriptor_set_out services/auth/descriptor.pb \
+	--include_imports \
+	packages/grpc/auth/*.proto
 
 
 # You can also view the base64 in the terminal through this command:
