@@ -31,6 +31,11 @@ service AuthService {
             body: "*"
         };
     }
+    rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {
+        option (google.api.http) = {
+            put: "/{email}"
+        };
+    }
 }
 
 message TokenResponse {
@@ -57,4 +62,8 @@ message GoogleLoginRequest {
 
 message AppleLoginRequest {
     string token = 1;
+}
+
+message VerifyEmailRequest {
+    string email = 1;
 }

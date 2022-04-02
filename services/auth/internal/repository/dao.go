@@ -12,7 +12,7 @@ import (
 )
 
 type Dao interface {
-	NewUserRepository() UserQuery
+	NewAuthRepository() AuthQuery
 }
 
 type dao struct {
@@ -20,7 +20,7 @@ type dao struct {
 }
 
 const (
-	USER_COLLECTION = "users"
+	AUTH_COLLECTION = "auth"
 )
 
 func NewDB() (*mongo.Database, error) {
@@ -40,7 +40,7 @@ func NewDB() (*mongo.Database, error) {
 	db := client.Database("sessions")
 	models := []mongo.IndexModel{
 		{
-			Keys: bson.M{"username": 1}, Options: options.Index().SetUnique(true),
+			Keys: bson.M{"email": 1}, Options: options.Index().SetUnique(true),
 		},
 	}
 
@@ -53,6 +53,6 @@ func NewDAO(db *mongo.Database) Dao {
 	return &dao{db: db}
 }
 
-func (d *dao) NewUserRepository() UserQuery {
-	return &userQuery{col: d.db.Collection(USER_COLLECTION)}
+func (d *dao) NewAuthRepository() UserQuery {
+	return &authQuery{col: d.db.Collection(AUTH_COLLECTION)}
 }

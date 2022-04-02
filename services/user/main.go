@@ -18,11 +18,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// @title User Microservice
-// @description This Microservice manages user entities
-// @version 1.0
-// @host localhost:8081
-// @BasePath /
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -46,8 +41,6 @@ func main() {
 	defer mongo.Client().Disconnect(ctx)
 
 	dao := repository.NewDAO(mongo)
-
-	_ = service.NewTokenManager()
 
 	userService := service.NewUserService(dao)
 	uploadService := service.NewUploadService()
