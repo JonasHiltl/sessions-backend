@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package auth;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/auth";
+
+import "google/api/annotations.proto";
+import "common/common.proto";
+
+service AuthService {
+    rpc Register (RegisterRequest) returns (TokenResponse) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    }
+    rpc Login (LoginRequest) returns (TokenResponse) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    }
+    rpc GoogleLogin (GoogleLoginRequest) returns (TokenResponse) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    }
+    rpc AppleLogin (AppleLoginRequest) returns (TokenResponse) {
+        option (google.api.http) = {
+            post: "/"
+            body: "*"
+        };
+    }
+}
+
+message TokenResponse {
+    string jwt = 1;
+    string message = 2;
+}
+
+message RegisterRequest {
+    string email = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message GoogleLoginRequest {
+    string token = 1;
+}
+
+message AppleLoginRequest {
+    string token = 1;
+}
