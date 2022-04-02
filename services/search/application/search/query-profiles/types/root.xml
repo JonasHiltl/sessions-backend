@@ -1,5 +1,5 @@
 <!-- Copyright Yahoo. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root. -->
 
 <query-profile-type id="root" inherits="native">
-    <field name="ranking.features.query(friends)" type="tensor&lt;int8&gt;(uuid{})" />
+    <field name="ranking.features.query(friends)" type="tensor&lt;int8&gt;(user_id{})" />
 </query-profile-type>

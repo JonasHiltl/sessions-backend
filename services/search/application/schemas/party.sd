@@ -6,14 +6,16 @@ schema party {
             rank:filter
         }
         field title type string {
-            indexing: summary | attribute | index
-            match {
-                gram
-                gram-size: 3
-            }
+            indexing: summary | index
+            index: enable-bm25
         }
         field location type position {
             indexing: attribute
+        }
+    }
+    document-summary party_id {
+        summary party_id type string { 
+            source: party_id
         }
     }
 }

@@ -2,8 +2,8 @@ schema user {
     document user {
         field user_id type string {
             indexing: summary | index
-            match:word
-            rank:filter
+            match: word
+            rank: filter
         }
         field username type string {
             indexing: summary | attribute
@@ -17,13 +17,19 @@ schema user {
             indexing: summary | attribute
             attribute: fast-search 
         }
-        field id type tensor<int8>(uuid{}) {
+        field id type tensor<int8>(user_id{}) {
             indexing: summary | attribute
-            attribute:fast-search 
+            attribute: fast-search 
         }
     }
     fieldset default {
       fields: firstname, lastname, username
+    }
+
+    document-summary user_id {
+        summary user_id type string { 
+            source: user_id
+        }
     }
 
     rank-profile friend inherits default {
