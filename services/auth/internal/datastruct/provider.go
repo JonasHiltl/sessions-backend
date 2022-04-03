@@ -20,3 +20,11 @@ func (p Provider) String() string {
 func (p Provider) EnumIndex() int {
 	return int(p)
 }
+
+func (p Provider) IsNil() bool {
+	if p.String() == "unknown" {
+		return true
+	} else {
+		return false
+	}
+}

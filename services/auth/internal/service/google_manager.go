@@ -1,7 +1,20 @@
-package service 
+package service
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
+)
 
 type GoogleManager interface {
-	ValidateGoogleJWT(token string) (GoogleClaims, error)
+	ValidateGoogleJWT(token string) (datastruct.GoogleClaims, error)
 	getGooglePublicKey(keyID string) (string, error)
 }
 
@@ -11,11 +24,11 @@ type googleManager struct {
 
 func NewGoogleManager() googleManager {
 	clientId := os.Getenv("GOOGLE_CLIENTID")
-	return &googleManager{clientId: clientId}
+	return googleManager{clientId: clientId}
 }
 
-func (g *googleManager) ValidateGoogleJWT(tokenString string) (GoogleClaims, error) {
-	claimsStruct := GoogleClaims{}
+func (g googleManager) ValidateGoogleJWT(tokenString string) (datastruct.GoogleClaims, error) {
+	claimsStruct := datastruct.GoogleClaims{}
 
 	token, err := jwt.ParseWithClaims(
 		tokenString,
@@ -33,30 +46,30 @@ func (g *googleManager) ValidateGoogleJWT(tokenString string) (GoogleClaims, err
 		},
 	)
 	if err != nil {
-		return GoogleClaims{}, err
+		return datastruct.GoogleClaims{}, err
 	}
 
-	claims, ok := token.Claims.(*GoogleClaims)
+	claims, ok := token.Claims.(*datastruct.GoogleClaims)
 	if !ok {
-		return GoogleClaims{}, errors.New("Invalid Google JWT")
+		return datastruct.GoogleClaims{}, errors.New("Invalid Google JWT")
 	}
 
 	if claims.Issuer != "accounts.google.com" && claims.Issuer != "https://accounts.google.com" {
-		return GoogleClaims{}, errors.New("iss is invalid")
+		return datastruct.GoogleClaims{}, errors.New("iss is invalid")
 	}
 
 	if claims.Audience != g.clientId {
-		return GoogleClaims{}, errors.New("aud is invalid")
+		return datastruct.GoogleClaims{}, errors.New("aud is invalid")
 	}
 
 	if claims.ExpiresAt < time.Now().UTC().Unix() {
-		return GoogleClaims{}, errors.New("JWT is expired")
+		return datastruct.GoogleClaims{}, errors.New("JWT is expired")
 	}
 
 	return *claims, nil
 }
 
-func (g *googleManager) getGooglePublicKey(keyID string) (string, error) {
+func (g googleManager) getGooglePublicKey(keyID string) (string, error) {
 	resp, err := http.Get("https://www.googleapis.com/oauth2/v1/certs")
 	if err != nil {
 		return "", err

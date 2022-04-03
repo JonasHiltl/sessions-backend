@@ -44,7 +44,7 @@ func NewDB() (*mongo.Database, error) {
 		},
 	}
 
-	db.Collection(USER_COLLECTION).Indexes().CreateMany(ctx, models)
+	db.Collection(AUTH_COLLECTION).Indexes().CreateMany(ctx, models)
 
 	return db, nil
 }
@@ -53,6 +53,6 @@ func NewDAO(db *mongo.Database) Dao {
 	return &dao{db: db}
 }
 
-func (d *dao) NewAuthRepository() UserQuery {
+func (d *dao) NewAuthRepository() AuthQuery {
 	return &authQuery{col: d.db.Collection(AUTH_COLLECTION)}
 }

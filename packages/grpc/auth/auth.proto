@@ -21,17 +21,20 @@ service AuthService {
     }
     rpc GoogleLogin (GoogleLoginRequest) returns (TokenResponse) {
         option (google.api.http) = {
-            post: "/"
-            body: "*"
+            put: "/{token}"
         };
     }
     rpc AppleLogin (AppleLoginRequest) returns (TokenResponse) {
         option (google.api.http) = {
-            post: "/"
-            body: "*"
+            put: "/{token}"
         };
     }
     rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {
+        option (google.api.http) = {
+            put: "/{email}"
+        };
+    }
+    rpc ResendVerificationEmail (Empty) returns (common.MessageResponse) {
         option (google.api.http) = {
             put: "/{email}"
         };
@@ -45,10 +48,11 @@ message TokenResponse {
 
 message RegisterRequest {
     string email = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+    string password = 2;
+    string username = 3;
+    string firstname = 4;
+    string lastname = 5;
+    string avatar = 6;
 }
 
 message LoginRequest {
@@ -66,4 +70,9 @@ message AppleLoginRequest {
 
 message VerifyEmailRequest {
     string email = 1;
+    string code = 2;
+}
+
+message Empty {
+
 }

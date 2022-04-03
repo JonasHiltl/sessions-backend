@@ -4,11 +4,11 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/jonashiltl/sessions-backend/services/user/ent"
+	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 )
 
 type TokenManager interface {
-	NewJWT(u ent.User) (string, error)
+	NewJWT(u datastruct.AuthUser) (string, error)
 }
 
 type tokenManager struct {
@@ -17,14 +17,15 @@ type tokenManager struct {
 
 func NewTokenManager() TokenManager {
 	secret := os.Getenv("TOKEN_SECRET")
-	return &tokenManager{secret: secret}
+	return tokenManager{secret: secret}
 }
 
-func (t *tokenManager) NewJWT(u ent.User) (string, error) {
+func (t tokenManager) NewJWT(u datastruct.AuthUser) (string, error) {
 	claims := jwt.MapClaims{
-		"sub":  u.ID,
-		"iss":  "sessions.com",
-		"role": u.Role.String(),
+		"sub":           u.Id,
+		"iss":           "sessions.com",
+		"emailVerified": u.EmailVerified,
+		"role":          u.Role.String(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
