@@ -14,23 +14,23 @@
 load('ext://restart_process', 'docker_build_with_restart')
 
 docker_build(
-    'jonashiltl/user-service', 
+    'jonashiltl/profile-service', 
     '.', 
-    dockerfile='services/user/Dockerfile', 
-    # entrypoint=['/app/services/user/user-service'],
-    only=['./services/user', './packages', './go.mod', './go.sum', './tools.go'],
+    dockerfile='services/profile/Dockerfile', 
+    # entrypoint=['/app/services/profile/profile-service'],
+    only=['./services/profile', './packages', './go.mod', './go.sum', './tools.go'],
     live_update=[
         # Sync files from host to container
-        sync('./services/user/internal', '/app/services/user/internal'),
-        sync('./services/user/ent', '/app/services/user/ent'),
-        sync('./services/user/main.go', '/app/services/user/main.go'),
+        sync('./services/profile/internal', '/app/services/profile/internal'),
+        sync('./services/profile/ent', '/app/services/profile/ent'),
+        sync('./services/profile/main.go', '/app/services/profile/main.go'),
         sync('./packages', '/app/packages'),
     ]
 )
 docker_build(
-    'jonashiltl/user-service-sidecar', 
+    'jonashiltl/profile-service-sidecar', 
     '.', 
-    dockerfile='services/user/sidecar.Dockerfile',
+    dockerfile='services/profile/sidecar.Dockerfile',
 )
 
 docker_build_with_restart(
