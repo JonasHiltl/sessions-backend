@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/dto"
@@ -13,7 +14,7 @@ import (
 func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRequest) (*pg.PublicProfile, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	if req.Id != me.Sub {
@@ -31,14 +32,14 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 	if du.Avatar != "" {
 		loc, err := s.uploadS.Upload(c, me.Sub, du.Avatar)
 		if err != nil {
-			return nil, err
+			return nil, comutils.HandleError(err)
 		}
 		du.Avatar = loc
 	}
 
 	u, err := s.us.Update(c, du)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	return u.ToPublicProfile(), nil

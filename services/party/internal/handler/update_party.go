@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
@@ -11,7 +12,7 @@ import (
 func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.PublicParty, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	d := dto.Party{
@@ -24,7 +25,7 @@ func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest)
 
 	p, err := s.ps.Update(c, d)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	return p.ToPublicParty(), nil

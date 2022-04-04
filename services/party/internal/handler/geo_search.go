@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,7 +34,7 @@ func (s *partyServer) GeoSearch(c context.Context, req *pg.GeoSearchRequest) (*p
 
 	ps, p, err := s.ps.GeoSearch(c, float64(req.Lat), float64(req.Long), uint(req.Precision), p)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)

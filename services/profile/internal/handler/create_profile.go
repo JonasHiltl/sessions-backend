@@ -2,12 +2,10 @@ package handler
 
 import (
 	"context"
-	"log"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/dto"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRequest) (*pg.PublicProfile, error) {
@@ -18,11 +16,9 @@ func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRe
 		Avatar:    req.Avatar,
 	}
 
-	log.Println(du)
-
 	u, err := s.us.Create(c, du)
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, comutils.HandleError(err)
 	}
 	return u.ToPublicProfile(), nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,7 +18,7 @@ func (s *partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*p
 
 	ps, p, err := s.ps.GetByUser(c, req.UId, p)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)

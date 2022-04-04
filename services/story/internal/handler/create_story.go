@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/dto"
@@ -19,7 +20,7 @@ type StoryCreateRequest struct {
 func (s *storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest) (*sg.PublicStory, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	d := dto.Story{
@@ -33,7 +34,7 @@ func (s *storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest)
 
 	story, err := s.sService.Create(c, d)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	return story.ToPublicStory(), err

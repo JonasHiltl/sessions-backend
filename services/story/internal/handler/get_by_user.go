@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,7 +17,7 @@ func (s *storyServer) GetByUser(c context.Context, req *sg.GetByUserRequest) (*s
 	}
 	stories, p, err := s.sService.GetByUser(c, req.UId, p)
 	if err != nil {
-		return nil, err
+		return nil, comutils.HandleError(err)
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
