@@ -20,7 +20,7 @@ type AuthQuery interface {
 	GetById(ctx context.Context, id string) (datastruct.AuthUser, error)
 	GetByEmail(ctx context.Context, email string) (datastruct.AuthUser, error)
 	RotateEmailCode(ctx context.Context, email string) (datastruct.AuthUser, error)
-	SetVerified(ctx context.Context, email string) (datastruct.AuthUser, error)
+	UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error)
 }
 
 type authQuery struct {
@@ -155,9 +155,9 @@ func (aq *authQuery) RotateEmailCode(ctx context.Context, email string) (res dat
 	return res, nil
 }
 
-func (aq *authQuery) SetVerified(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
+func (aq *authQuery) UpdateVerified(ctx context.Context, email string, emailVerified bool) (res datastruct.AuthUser, err error) {
 	input := bson.M{
-		"email_verified": true,
+		"email_verified": emailVerified,
 	}
 	filter := bson.M{"email": email}
 

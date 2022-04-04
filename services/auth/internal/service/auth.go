@@ -17,7 +17,7 @@ type AuthService interface {
 	Update(ctx context.Context, u dto.AuthUser) (datastruct.AuthUser, error)
 	GetById(ctx context.Context, id string) (datastruct.AuthUser, error)
 	GetByEmail(ctx context.Context, email string) (datastruct.AuthUser, error)
-	SetVerified(ctx context.Context, email string) (datastruct.AuthUser, error)
+	UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error)
 }
 
 type authService struct {
@@ -79,6 +79,6 @@ func (as *authService) GetByEmail(ctx context.Context, username string) (datastr
 	return as.dao.NewAuthRepository().GetByEmail(ctx, username)
 }
 
-func (as *authService) SetVerified(ctx context.Context, email string) (datastruct.AuthUser, error) {
-	return as.dao.NewAuthRepository().SetVerified(ctx, email)
+func (as *authService) UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error) {
+	return as.dao.NewAuthRepository().UpdateVerified(ctx, email, emailVerified)
 }

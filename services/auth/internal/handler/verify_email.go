@@ -26,7 +26,7 @@ func (s *authServer) VerifyEmail(ctx context.Context, req *ag.VerifyEmailRequest
 		return nil, status.Error(codes.InvalidArgument, "Invalid Code")
 	}
 
-	u, err = s.authService.SetVerified(ctx, req.Email)
+	u, err = s.authService.UpdateVerified(ctx, req.Email, true)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}
