@@ -1,6 +1,9 @@
 package dto
 
-import "github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
+import (
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
+	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
+)
 
 type AuthUser struct {
 	Id            string
@@ -8,5 +11,5 @@ type AuthUser struct {
 	Email         string
 	EmailVerified bool
 	PasswordHash  string
-	Role          datastruct.Role
+	Role          comtypes.Role
 }

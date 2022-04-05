@@ -1,6 +1,7 @@
 package datastruct
 
 import (
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -14,5 +15,5 @@ type AuthUser struct {
 	EmailVerified bool               `json:"email_verified"          bson:"email_verified"`
 	EmailCode     string             `json:"email_code"              bson:"email_code,omitempty"`
 	PasswordHash  string             `json:"password_hash,omitempty" bson:"password_hash,omitempty" validate:"required_without=Provider"`
-	Role          Role               `json:"role,omitempty"          bson:"role,omitempty"          validate:"required"`
+	Role          comtypes.Role      `json:"role,omitempty"          bson:"role,omitempty"          validate:"required"`
 }

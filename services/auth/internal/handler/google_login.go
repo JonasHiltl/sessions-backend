@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
@@ -19,7 +20,7 @@ func (s *authServer) GoogleLogin(c context.Context, req *ag.GoogleLoginRequest) 
 		Provider:      datastruct.Google,
 		Email:         claims.Email,
 		EmailVerified: claims.EmailVerified,
-		Role:          datastruct.UserRole,
+		Role:          comtypes.UserRole,
 	}
 
 	u, err := s.authService.Create(c, du)

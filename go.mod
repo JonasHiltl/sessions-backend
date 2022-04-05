@@ -3,12 +3,10 @@ module github.com/jonashiltl/sessions-backend
 go 1.17
 
 require (
-	entgo.io/ent v0.10.1
 	github.com/aws/aws-sdk-go v1.43.20
 	github.com/go-playground/validator/v10 v10.10.1
 	github.com/gocql/gocql v1.0.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcloughlin/geohash v0.10.0
@@ -34,7 +32,6 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
@@ -54,6 +51,7 @@ require (
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect

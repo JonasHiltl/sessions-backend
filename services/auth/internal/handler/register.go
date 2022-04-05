@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/mail"
 
+	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
-	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/dto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -27,7 +27,7 @@ func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.T
 		Email:         req.Email,
 		EmailVerified: false,
 		PasswordHash:  hash,
-		Role:          datastruct.UserRole,
+		Role:          comtypes.UserRole,
 	}
 
 	u, err := s.authService.Create(c, du)
