@@ -116,14 +116,14 @@ k8s_yaml([
     'k8s/pods/comment.yaml', 
     'k8s/pods/party.yaml', 
     'k8s/pods/story.yaml', 
-    'k8s/pods/user.yaml',
+    'k8s/pods/profile.yaml',
 ])
 k8s_yaml([
     'k8s/services/comment.yaml', 
     'k8s/services/notification.yaml', 
     'k8s/services/party.yaml', 
     'k8s/services/story.yaml', 
-    'k8s/services/user.yaml',
+    'k8s/services/profile.yaml',
     'k8s/services/vespa.yaml',
 ])
 k8s_yaml([
@@ -144,7 +144,7 @@ k8s_yaml([
 #
 #   More info: https://docs.tilt.dev/api.html#api.k8s_resource
 #
-k8s_resource('user', port_forwards=['8080:8080','8081:8081','8180:8180'])
+k8s_resource('profile', port_forwards=['8080:8080','8081:8081','8180:8180'])
 
 
 # Run local commands

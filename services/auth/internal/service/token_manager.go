@@ -1,8 +1,6 @@
 package service
 
 import (
-	"os"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 )
@@ -15,8 +13,7 @@ type tokenManager struct {
 	secret string
 }
 
-func NewTokenManager() TokenManager {
-	secret := os.Getenv("TOKEN_SECRET")
+func NewTokenManager(secret string) TokenManager {
 	return tokenManager{secret: secret}
 }
 

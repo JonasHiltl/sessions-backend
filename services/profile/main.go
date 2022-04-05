@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/service"
@@ -18,13 +19,13 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
+	c, err := config.LoadConfig()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Fatalln(err)
 	}
 
 	opts := []gonats.Option{gonats.Name("Profile Service")}
-	nc, err := nats.Connect(opts)
+	nc, err := nats.Connect(c.NatsCluster, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -33,7 +34,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	mongo, err := repository.NewDB()
+	mongo, err := repository.NewDB(c.MongoURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,10 +43,12 @@ func main() {
 	dao := repository.NewDAO(mongo)
 
 	userService := service.NewProfileService(dao)
-	uploadService := service.NewUploadService()
+	uploadService := service.NewUploadService(c.SpacesEndpoint, c.SpacesToken)
 
-	addr := "0.0.0.0:8081"
-	conn, err := net.Listen("tcp", addr)
+	var sb strings.Builder
+	sb.WriteString("0.0.0.0:")
+	sb.WriteString(c.Port)
+	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -56,7 +59,7 @@ func main() {
 
 	profile.RegisterProfileServiceServer(grpcServer, uServer)
 
-	fmt.Println("Starting gRPC Server at: ", addr)
+	fmt.Println("Starting gRPC Server at: ", sb.String())
 	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -22,8 +21,7 @@ type googleManager struct {
 	clientId string
 }
 
-func NewGoogleManager() googleManager {
-	clientId := os.Getenv("GOOGLE_CLIENTID")
+func NewGoogleManager(clientId string) googleManager {
 	return googleManager{clientId: clientId}
 }
 

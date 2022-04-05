@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -23,23 +21,14 @@ type uploadService struct {
 	doClient *godo.Client
 }
 
-func NewUploadService() UploadService {
-	endpoint, exists := os.LookupEnv("DO_ENDPOINT")
-	if !exists {
-		log.Fatal("DigitalOcean spaces endpoint not defined")
-	}
-	region := strings.Split(endpoint, ".")[0]
+func NewUploadService(spacesEndpoint, spacesToken string) UploadService {
+	region := strings.Split(spacesEndpoint, ".")[0]
 	sess := session.Must(session.NewSession(&aws.Config{
-		Endpoint: &endpoint,
+		Endpoint: &spacesEndpoint,
 		Region:   &region,
 	}))
 
-	token, exists := os.LookupEnv("DO_TOKEN")
-	if !exists {
-		log.Fatal("DigitalOcean token is not defined")
-	}
-
-	doClient := godo.NewFromToken(token)
+	doClient := godo.NewFromToken(spacesToken)
 
 	return &uploadService{awsSess: sess, doClient: doClient}
 }

@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
-	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -23,14 +21,9 @@ const (
 	PROFILE_COLLECTION = "profiles"
 )
 
-func NewDB() (*mongo.Database, error) {
+func NewDB(url string) (*mongo.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	url, exists := os.LookupEnv("MONGO_URL")
-	if !exists {
-		return nil, errors.New("Mongo url not defined")
-	}
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
 	if err != nil {

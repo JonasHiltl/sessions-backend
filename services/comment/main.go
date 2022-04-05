@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 
-	"github.com/joho/godotenv"
 	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/services/comment/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
@@ -16,18 +17,19 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
+	c, err := config.LoadConfig()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Fatalln(err)
 	}
+
 	opts := []gonats.Option{gonats.Name("Comment Service")}
-	nc, err := nats.Connect(opts)
+	nc, err := nats.Connect(c.NatsCluster, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
 
-	sess, err := repository.NewDB()
+	sess, err := repository.NewDB(c.ScyllaKeyspace, c.ScyllaHosts)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,9 +39,11 @@ func main() {
 
 	cs := service.NewCommentServie(dao, nc)
 
-	addr := "0.0.0.0:8081"
-
-	conn, err := net.Listen("tcp", addr)
+	var sb strings.Builder
+	sb.WriteString("0.0.0.0:")
+	sb.WriteString(c.Port)
+	log.Println(sb)
+	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -50,7 +54,7 @@ func main() {
 
 	cg.RegisterCommentServiceServer(grpcServer, cServer)
 
-	fmt.Println("Starting gRPC Server at: ", addr)
+	fmt.Println("Starting gRPC Server at: ", sb.String())
 	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}

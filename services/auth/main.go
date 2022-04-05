@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
+	"github.com/jonashiltl/sessions-backend/services/auth/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/service"
@@ -16,15 +17,15 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
+	c, err := config.LoadConfig()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Fatalln(err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	mongo, err := repository.NewDB()
+	mongo, err := repository.NewDB(c.MongoURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,13 +33,16 @@ func main() {
 
 	dao := repository.NewDAO(mongo)
 
-	tm := service.NewTokenManager()
-	gm := service.NewGoogleManager()
+	tm := service.NewTokenManager(c.TokenSecret)
+	gm := service.NewGoogleManager(c.GoogleClientID)
 	pm := service.NewPasswordManager()
 	as := service.NewAuthService(dao)
 
-	addr := "0.0.0.0:8081"
-	conn, err := net.Listen("tcp", addr)
+	var sb strings.Builder
+	sb.WriteString("0.0.0.0:")
+	sb.WriteString(c.Port)
+	log.Println(sb)
+	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -49,7 +53,7 @@ func main() {
 
 	ag.RegisterAuthServiceServer(grpcServer, uServer)
 
-	fmt.Println("Starting gRPC Server at: ", addr)
+	fmt.Println("Starting gRPC Server at: ", sb.String())
 	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}

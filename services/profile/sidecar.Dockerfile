@@ -1,7 +1,7 @@
 FROM envoyproxy/envoy:v1.20-latest
 
-COPY ./services/user/sidecar.envoy.yaml /etc/envoy/envoy.yaml
-COPY ./services/user/descriptor.pb /tmp/envoy/descriptor.pb
+COPY ./services/profile/sidecar.envoy.yaml /etc/envoy/envoy.yaml
+COPY ./services/profile/descriptor.pb /tmp/envoy/descriptor.pb
 
 EXPOSE 8080
 

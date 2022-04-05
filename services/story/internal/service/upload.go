@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"log"
-	"os"
 	"strings"
 	"time"
 
@@ -21,24 +20,12 @@ type uploadService struct {
 	awsSess *session.Session
 }
 
-func NewUploadService() UploadService {
-	key, exists := os.LookupEnv("DO_KEY")
-	if !exists {
-		log.Fatal("DigitalOcean spaces key not defined")
-	}
-	secret, exists := os.LookupEnv("DO_SECRET")
-	if !exists {
-		log.Fatal("DigitalOcean spaces secret not defined")
-	}
-	endpoint, exists := os.LookupEnv("DO_ENDPOINT")
-	if !exists {
-		log.Fatal("DigitalOcean spaces endpoint not defined")
-	}
-	region := strings.Split(endpoint, ".")[0]
+func NewUploadService(spaceskey, spacesEndpoint, spacesSecret string) UploadService {
+	region := strings.Split(spacesEndpoint, ".")[0]
 
 	s3Config := &aws.Config{
-		Credentials: credentials.NewStaticCredentials(key, secret, ""),
-		Endpoint:    aws.String(endpoint),
+		Credentials: credentials.NewStaticCredentials(spaceskey, spacesSecret, ""),
+		Endpoint:    aws.String(spacesEndpoint),
 		Region:      aws.String(region),
 	}
 

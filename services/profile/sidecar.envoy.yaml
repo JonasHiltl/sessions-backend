@@ -22,12 +22,12 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-            - name: user_service
+            - name: profile_service
               domains: ["*"]
               routes:
-              - match: { prefix: "/user.UserService", grpc: {} }
+              - match: { prefix: "/profile.ProfileService", grpc: {} }
                 route:
-                  cluster: user
+                  cluster: profile
                   max_stream_duration:
                     grpc_timeout_header_max: 0s
           http_filters:
@@ -35,7 +35,7 @@ static_resources:
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
               proto_descriptor: "/tmp/envoy/descriptor.pb"
-              services: ["user.UserService"]
+              services: ["profile.ProfileService"]
               print_options:
                 add_whitespace: true
                 always_print_primitive_fields: true
@@ -45,14 +45,14 @@ static_resources:
           - name: envoy.filters.http.router
 
   clusters:
-  - name: user
+  - name: profile
     connect_timeout: 0.25s
     type: logical_dns
     lb_policy: round_robin
     dns_lookup_family: V4_ONLY
     http2_protocol_options: {}
     load_assignment:
-      cluster_name: user
+      cluster_name: profile
       endpoints:
       - lb_endpoints:
         - endpoint:

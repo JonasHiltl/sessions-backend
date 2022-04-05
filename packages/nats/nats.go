@@ -1,22 +1,14 @@
 package nats
 
 import (
-	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/encoders/protobuf"
 )
 
-func Connect(opts []nats.Option) (*nats.EncodedConn, error) {
-	cluster, exists := os.LookupEnv("NATS_CLUSTER")
-	if !exists {
-		fmt.Println("No Nats connection url defined using default url: nats://0.0.0.0:4222 ")
-		cluster = "nats://0.0.0.0:4222"
-	}
-
+func Connect(cluster string, opts []nats.Option) (*nats.EncodedConn, error) {
 	opts = setupConnOptions(opts)
 
 	nc, err := nats.Connect(cluster, opts...)

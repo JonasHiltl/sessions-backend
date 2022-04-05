@@ -19,6 +19,8 @@ spec:
           value: host.docker.internal
         - name: NATS_CLUSTER
           value: nats://host.docker.internal:4222
+        - name: PORT
+          value: "8081"
       ports:
         - containerPort: 8080
 

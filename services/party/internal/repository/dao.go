@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-	"os"
 	"strings"
 
 	"github.com/jonashiltl/sessions-backend/packages/scylla"
@@ -17,15 +15,7 @@ type dao struct {
 	sess *gocqlx.Session
 }
 
-func NewDB() (gocqlx.Session, error) {
-	keyspace, exists := os.LookupEnv("SCYLLA_KEYSPACE")
-	if !exists {
-		return gocqlx.Session{}, errors.New("scylla keyspace not defined")
-	}
-	hosts, exists := os.LookupEnv("SCYLLA_HOSTS")
-	if !exists {
-		return gocqlx.Session{}, errors.New("scylla hosts not defined")
-	}
+func NewDB(keyspace, hosts string) (gocqlx.Session, error) {
 	h := strings.Split(hosts, ",")
 
 	manager := scylla.NewManager(keyspace, h)

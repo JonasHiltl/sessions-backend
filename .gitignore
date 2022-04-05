@@ -23,7 +23,6 @@ go.work
 /vendor/
 /Godeps/
 
-config/
 cmd
 _data/
 

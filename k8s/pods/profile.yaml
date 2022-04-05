@@ -21,6 +21,8 @@ spec:
           value: https://example.comn
         - name: DO_TOKEN
           value: gaww12t2tawdawgt12
+        - name: PORT
+          value: "8081"
 
     - name: profile-sidecar
       image: jonashiltl/profile-service-sidecar
