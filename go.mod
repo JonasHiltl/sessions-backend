@@ -16,16 +16,18 @@ require (
 
 require (
 	github.com/digitalocean/godo v1.77.0
+	github.com/gofiber/fiber/v2 v2.31.0
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/spf13/viper v1.10.1
 	go.mongodb.org/mongo-driver v1.8.4
 	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106
 	google.golang.org/grpc v1.45.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
+	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -35,7 +37,7 @@ require (
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/klauspost/compress v1.15.0 // indirect
+	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -54,7 +56,9 @@ require (
 	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.35.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
+	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
@@ -75,5 +79,5 @@ require (
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/nats-io/nats-server/v2 v2.7.3 // indirect
 	github.com/nats-io/nats.go v1.13.1-0.20220121202836-972a071d373d
-	golang.org/x/sys v0.0.0-20220317061510-51cd9980dadf // indirect
+	golang.org/x/sys v0.0.0-20220405052023-b1e9470b6e64 // indirect
 )
