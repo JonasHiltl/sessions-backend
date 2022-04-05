@@ -17,7 +17,7 @@ import (
 func main() {
 	c, err := config.LoadConfig()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Fatalln(err)
 	}
 
 	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)

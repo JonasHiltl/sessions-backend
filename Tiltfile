@@ -17,12 +17,17 @@ docker_build(
     'jonashiltl/profile-service', 
     '.', 
     dockerfile='services/profile/Dockerfile', 
-    # entrypoint=['/app/services/profile/profile-service'],
-    only=['./services/profile', './packages', './go.mod', './go.sum', './tools.go'],
+    entrypoint=['/app/services/profile/profile-service'],
+    only=[
+        './services/profile', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
     live_update=[
         # Sync files from host to container
         sync('./services/profile/internal', '/app/services/profile/internal'),
-        sync('./services/profile/ent', '/app/services/profile/ent'),
         sync('./services/profile/main.go', '/app/services/profile/main.go'),
         sync('./packages', '/app/packages'),
     ]
@@ -38,7 +43,13 @@ docker_build_with_restart(
     '.', 
     dockerfile='services/party/Dockerfile', 
     entrypoint=['/app/services/party/party-service'],
-    only=['./services/party', './packages', './go.mod', './go.sum', './tools.go'],
+    only=[
+        './services/party', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
     live_update=[
         sync('./services/party/internal', '/app/services/party/internal'),
         sync('./services/party/main.go', '/app/services/party/main.go'),
@@ -56,7 +67,13 @@ docker_build_with_restart(
     '.', 
     dockerfile='services/story/Dockerfile', 
     entrypoint=['/app/services/story/story-service'],
-    only=['./services/story', './packages', './go.mod', './go.sum', './tools.go'],
+    only=[
+        './services/story', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
     live_update=[
         sync('./services/story/internal', '/app/services/story/internal'),
         sync('./services/story/main.go', '/app/services/story/main.go'),
@@ -74,7 +91,13 @@ docker_build_with_restart(
     '.', 
     dockerfile='services/comment/Dockerfile', 
     entrypoint=['/app/services/comment/comment-service'],
-    only=['./services/comment', './packages', './go.mod', './go.sum', './tools.go'],
+    only=[
+        './services/comment', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
     live_update=[
         sync('./services/comment/internal', '/app/services/comment/internal'),
         sync('./services/comment/main.go', '/app/services/comment/main.go'),
@@ -92,7 +115,13 @@ docker_build_with_restart(
     '.', 
     dockerfile='services/notification/Dockerfile', 
     entrypoint=['/app/services/notification/notification-service'],
-    only=['./services/notification', './packages', './go.mod', './go.sum', './tools.go'],
+    only=[
+        './services/notification', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
     live_update=[
         sync('./services/notification/internal', '/app/services/notification/internal'),
         sync('./services/notification/main.go', '/app/services/notification/main.go'),

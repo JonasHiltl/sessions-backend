@@ -12,15 +12,6 @@ spec:
         limits:
           memory: "128Mi"
           cpu: "500m"
-      env:
-        - name: SCYLLA_KEYSPACE
-          value: sessions
-        - name: SCYLLA_HOSTS
-          value: host.docker.internal
-        - name: NATS_CLUSTER
-          value: nats://host.docker.internal:4222
-        - name: PORT
-          value: "8081"
       ports:
         - containerPort: 8080
 

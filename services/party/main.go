@@ -19,7 +19,7 @@ import (
 func main() {
 	c, err := config.LoadConfig()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Fatalln(err)
 	}
 
 	opts := []gonats.Option{gonats.Name("Party Service")}
