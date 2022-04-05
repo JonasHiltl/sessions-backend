@@ -4,20 +4,20 @@ import (
 	"log"
 	"sync"
 
-	"github.com/joho/godotenv"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/services/notification/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/notification/internal/handler"
 	gonats "github.com/nats-io/nats.go"
 )
 
 func main() {
-	err := godotenv.Load()
+	c, err := config.LoadConfig()
 	if err != nil {
 		log.Println("No .env file found")
 	}
 
 	opts := []gonats.Option{gonats.Name("Notification Service")}
-	nc, err := nats.Connect(opts)
+	nc, err := nats.Connect(c.NatsCluster, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
