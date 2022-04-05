@@ -34,7 +34,6 @@ func main() {
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
 	sb.WriteString(c.PORT)
-	log.Println(sb)
 	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)

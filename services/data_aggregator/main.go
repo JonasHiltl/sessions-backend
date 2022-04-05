@@ -38,6 +38,5 @@ func main() {
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
 	sb.WriteString(c.PORT)
-	log.Println(sb)
 	app.Listen(sb.String())
 }
