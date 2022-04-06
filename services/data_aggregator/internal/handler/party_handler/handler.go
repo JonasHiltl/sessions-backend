@@ -1,6 +1,8 @@
 package partyhandler
 
-import "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+import (
+	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
+)
 
 type partyGatewayHandler struct {
 	c party.PartyServiceClient

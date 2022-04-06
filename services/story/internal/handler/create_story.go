@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
-	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/dto"
 )
@@ -18,14 +17,9 @@ type StoryCreateRequest struct {
 }
 
 func (s *storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest) (*sg.PublicStory, error) {
-	me, err := middleware.ParseUser(c)
-	if err != nil {
-		return nil, comutils.HandleError(err)
-	}
-
 	d := dto.Story{
 		PId:           req.PId,
-		UId:           me.Sub,
+		UId:           req.RequesterId,
 		Lat:           float64(req.GetLat()),
 		Long:          float64(req.GetLong()),
 		Url:           req.Url,

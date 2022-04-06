@@ -22,7 +22,7 @@ type PartyServiceClient interface {
 	CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
 	GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
 	UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
-	DeleteParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetByUser(ctx context.Context, in *GetByUserRequest, opts ...grpc.CallOption) (*PagedParties, error)
 	GeoSearch(ctx context.Context, in *GeoSearchRequest, opts ...grpc.CallOption) (*PagedParties, error)
 }
@@ -62,7 +62,7 @@ func (c *partyServiceClient) UpdateParty(ctx context.Context, in *UpdatePartyReq
 	return out, nil
 }
 
-func (c *partyServiceClient) DeleteParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+func (c *partyServiceClient) DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
 	out := new(common.MessageResponse)
 	err := c.cc.Invoke(ctx, "/party.PartyService/DeleteParty", in, out, opts...)
 	if err != nil {
@@ -96,7 +96,7 @@ type PartyServiceServer interface {
 	CreateParty(context.Context, *CreatePartyRequest) (*PublicParty, error)
 	GetParty(context.Context, *GetPartyRequest) (*PublicParty, error)
 	UpdateParty(context.Context, *UpdatePartyRequest) (*PublicParty, error)
-	DeleteParty(context.Context, *GetPartyRequest) (*common.MessageResponse, error)
+	DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error)
 	GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error)
 	GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error)
 	mustEmbedUnimplementedPartyServiceServer()
@@ -115,7 +115,7 @@ func (UnimplementedPartyServiceServer) GetParty(context.Context, *GetPartyReques
 func (UnimplementedPartyServiceServer) UpdateParty(context.Context, *UpdatePartyRequest) (*PublicParty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParty not implemented")
 }
-func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *GetPartyRequest) (*common.MessageResponse, error) {
+func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteParty not implemented")
 }
 func (UnimplementedPartyServiceServer) GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error) {
@@ -192,7 +192,7 @@ func _PartyService_UpdateParty_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _PartyService_DeleteParty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPartyRequest)
+	in := new(DeletePartyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func _PartyService_DeleteParty_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/party.PartyService/DeleteParty",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PartyServiceServer).DeleteParty(ctx, req.(*GetPartyRequest))
+		return srv.(PartyServiceServer).DeleteParty(ctx, req.(*DeletePartyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -22,9 +22,9 @@ type ProfileServiceClient interface {
 	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error)
-	GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error)
+	GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*Profile, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
-	DeleteProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error)
 }
 
@@ -63,7 +63,7 @@ func (c *profileServiceClient) GetProfileByProfilename(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *profileServiceClient) GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error) {
+func (c *profileServiceClient) GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*Profile, error) {
 	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetMe", in, out, opts...)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c *profileServiceClient) UpdateProfile(ctx context.Context, in *UpdateProf
 	return out, nil
 }
 
-func (c *profileServiceClient) DeleteProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+func (c *profileServiceClient) DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
 	out := new(common.MessageResponse)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/DeleteProfile", in, out, opts...)
 	if err != nil {
@@ -106,9 +106,9 @@ type ProfileServiceServer interface {
 	CreateProfile(context.Context, *CreateProfileRequest) (*Profile, error)
 	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
 	GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error)
-	GetMe(context.Context, *Empty) (*Profile, error)
+	GetMe(context.Context, *GetMeRequest) (*Profile, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error)
-	DeleteProfile(context.Context, *GetProfileRequest) (*common.MessageResponse, error)
+	DeleteProfile(context.Context, *DeleteProfileRequest) (*common.MessageResponse, error)
 	UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error)
 	mustEmbedUnimplementedProfileServiceServer()
 }
@@ -126,13 +126,13 @@ func (UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfile
 func (UnimplementedProfileServiceServer) GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfileByProfilename not implemented")
 }
-func (UnimplementedProfileServiceServer) GetMe(context.Context, *Empty) (*Profile, error) {
+func (UnimplementedProfileServiceServer) GetMe(context.Context, *GetMeRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMe not implemented")
 }
 func (UnimplementedProfileServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
 }
-func (UnimplementedProfileServiceServer) DeleteProfile(context.Context, *GetProfileRequest) (*common.MessageResponse, error) {
+func (UnimplementedProfileServiceServer) DeleteProfile(context.Context, *DeleteProfileRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProfile not implemented")
 }
 func (UnimplementedProfileServiceServer) UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error) {
@@ -206,7 +206,7 @@ func _ProfileService_GetProfileByProfilename_Handler(srv interface{}, ctx contex
 }
 
 func _ProfileService_GetMe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetMeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func _ProfileService_GetMe_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/profile.ProfileService/GetMe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).GetMe(ctx, req.(*Empty))
+		return srv.(ProfileServiceServer).GetMe(ctx, req.(*GetMeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -242,7 +242,7 @@ func _ProfileService_UpdateProfile_Handler(srv interface{}, ctx context.Context,
 }
 
 func _ProfileService_DeleteProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProfileRequest)
+	in := new(DeleteProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -254,7 +254,7 @@ func _ProfileService_DeleteProfile_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/profile.ProfileService/DeleteProfile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).DeleteProfile(ctx, req.(*GetProfileRequest))
+		return srv.(ProfileServiceServer).DeleteProfile(ctx, req.(*DeleteProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -18,7 +18,7 @@ service StoryService {
 			get: "/{s_id}"
         };
     };
-    rpc DeleteStory (GetStoryRequest) returns (common.MessageResponse) {
+    rpc DeleteStory (DeleteStoryRequest) returns (common.MessageResponse) {
         option (google.api.http) = {
 			delete: "/{s_id}"
         };
@@ -52,15 +52,21 @@ message PublicStory {
 }
 
 message CreateStoryRequest {
-    string p_id = 1;
-    string url = 2;
-    float lat = 3;
-    float long = 4;
-    repeated string tagged_friends = 5;
+    string requester_id = 1;
+    string p_id = 2;
+    string url = 3;
+    float lat = 4;
+    float long = 5;
+    repeated string tagged_friends = 6;
 }
 
 message GetStoryRequest {
     string s_id = 1;
+}
+
+message DeleteStoryRequest {
+    string requester_id = 1;
+    string s_id = 2;
 }
 
 message GetByUserRequest {

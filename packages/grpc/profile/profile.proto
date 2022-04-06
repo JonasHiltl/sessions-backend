@@ -23,7 +23,7 @@ service ProfileService {
 			get: "/{username}"
         };
     };
-    rpc GetMe (Empty) returns (Profile) {
+    rpc GetMe (GetMeRequest) returns (Profile) {
         option (google.api.http) = {
 			get: "/me"
         };
@@ -34,9 +34,9 @@ service ProfileService {
             body: "*"
         };
     };
-    rpc DeleteProfile (GetProfileRequest) returns (common.MessageResponse) {
+    rpc DeleteProfile (DeleteProfileRequest) returns (common.MessageResponse) {
         option (google.api.http) = {
-			delete: "/{u_id}"
+			delete: "/{p_id}"
         };
     };
     rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {
@@ -64,15 +64,25 @@ message CreateProfileRequest {
 }
 
 message UpdateProfileRequest {
-    string id = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+    string requester_id = 1;
+    string id = 2;
+    string username = 3;
+    string firstname = 4;
+    string lastname = 5;
+    string avatar = 6;
 }
 
 message GetProfileRequest {
-    string u_id = 1;
+    string p_id = 1;
+}
+
+message DeleteProfileRequest {
+    string requester_id = 1;
+    string p_id = 2;
+}
+
+message GetMeRequest {
+    string id = 1;
 }
 
 message GetProfileByUsernameRequest {

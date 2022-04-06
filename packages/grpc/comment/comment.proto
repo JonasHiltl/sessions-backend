@@ -13,7 +13,7 @@ service CommentService {
             body: "*"
         };
     };
-    rpc DeleteComment (GetCommentRequest) returns (common.MessageResponse){
+    rpc DeleteComment (DeleteCommentRequest) returns (common.MessageResponse){
         option (google.api.http) = {
 			delete: "/{p_id}/{c_id}"
         };
@@ -21,8 +21,9 @@ service CommentService {
 }
 
 message CreateCommentRequest {
-    string p_id = 1;
-    string body = 2;
+    string requester_id = 1;
+    string p_id = 2;
+    string body = 3;
 }
 
 message Comment {
@@ -34,6 +35,13 @@ message Comment {
 }
 
 message GetCommentRequest {
-    string p_id = 1;
-    string c_id = 2;
+    string requester_id = 1;
+    string p_id = 2;
+    string c_id = 3;
+}
+
+message DeleteCommentRequest {
+    string requester_id = 1;
+    string p_id = 2;
+    string c_id = 3;
 }

@@ -24,7 +24,7 @@ service PartyService {
             body: "*"
         };
     };
-    rpc DeleteParty (GetPartyRequest) returns (common.MessageResponse) {
+    rpc DeleteParty (DeletePartyRequest) returns (common.MessageResponse) {
         option (google.api.http) = {
 			delete: "/{p_id}"
         };
@@ -42,17 +42,24 @@ service PartyService {
 }
 
 message CreatePartyRequest {
-    string title = 1;
-    float lat = 2;
-    float long = 3;
-    bool is_public = 4;
-}
-
-message UpdatePartyRequest {
-    string p_id = 1;
+    string requester_id = 1;
     string title = 2;
     float lat = 3;
     float long = 4;
+    bool is_public = 5;
+}
+
+message UpdatePartyRequest {
+    string requester_id = 1;
+    string p_id = 2;
+    string title = 3;
+    float lat = 4;
+    float long = 5;
+}
+
+message DeletePartyRequest {
+    string requester_id = 1;
+    string p_id = 2;
 }
 
 message GeoSearchRequest {

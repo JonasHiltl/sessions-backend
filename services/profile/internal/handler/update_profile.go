@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
-	"github.com/jonashiltl/sessions-backend/packages/comutils/middleware"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/dto"
 	"google.golang.org/grpc/codes"
@@ -12,13 +11,8 @@ import (
 )
 
 func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRequest) (*pg.Profile, error) {
-	me, err := middleware.ParseUser(c)
-	if err != nil {
-		return nil, comutils.HandleError(err)
-	}
-
-	if req.Id != me.Sub {
-		return nil, status.Error(codes.Unauthenticated, "You can only update your own information")
+	if req.Id != req.RequesterId {
+		return nil, status.Error(codes.Unauthenticated, "You can only update your own profile")
 	}
 
 	dp := dto.Profile{
@@ -30,7 +24,7 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 	}
 
 	if dp.Avatar != "" {
-		loc, err := s.uploadS.Upload(c, me.Sub, dp.Avatar)
+		loc, err := s.uploadS.Upload(c, req.RequesterId, dp.Avatar)
 		if err != nil {
 			return nil, comutils.HandleError(err)
 		}

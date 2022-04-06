@@ -35,6 +35,8 @@ func main() {
 	auth.Post("/register", ah.Register)
 	auth.Post("/google-login", ah.GoogleLogin)
 
+	auth := app.Group("/profile")
+
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
 	sb.WriteString(c.PORT)

@@ -10,11 +10,11 @@ import (
 )
 
 func (s *profileServer) GetProfile(c context.Context, req *pg.GetProfileRequest) (*pg.Profile, error) {
-	if req.UId == "" {
-		return nil, status.Error(codes.InvalidArgument, "invalid User id")
+	if req.PId == "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid Profile id")
 	}
 
-	p, err := s.us.GetById(c, req.UId)
+	p, err := s.us.GetById(c, req.PId)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}

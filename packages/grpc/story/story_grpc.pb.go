@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type StoryServiceClient interface {
 	CreateStory(ctx context.Context, in *CreateStoryRequest, opts ...grpc.CallOption) (*PublicStory, error)
 	GetStory(ctx context.Context, in *GetStoryRequest, opts ...grpc.CallOption) (*PublicStory, error)
-	DeleteStory(ctx context.Context, in *GetStoryRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	DeleteStory(ctx context.Context, in *DeleteStoryRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetByUser(ctx context.Context, in *GetByUserRequest, opts ...grpc.CallOption) (*PagedStories, error)
 	GetByParty(ctx context.Context, in *GetByPartyRequest, opts ...grpc.CallOption) (*PagedStories, error)
 	PresignURL(ctx context.Context, in *PresignURLRequest, opts ...grpc.CallOption) (*PresignURLResponse, error)
@@ -53,7 +53,7 @@ func (c *storyServiceClient) GetStory(ctx context.Context, in *GetStoryRequest, 
 	return out, nil
 }
 
-func (c *storyServiceClient) DeleteStory(ctx context.Context, in *GetStoryRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+func (c *storyServiceClient) DeleteStory(ctx context.Context, in *DeleteStoryRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
 	out := new(common.MessageResponse)
 	err := c.cc.Invoke(ctx, "/story.StoryService/DeleteStory", in, out, opts...)
 	if err != nil {
@@ -95,7 +95,7 @@ func (c *storyServiceClient) PresignURL(ctx context.Context, in *PresignURLReque
 type StoryServiceServer interface {
 	CreateStory(context.Context, *CreateStoryRequest) (*PublicStory, error)
 	GetStory(context.Context, *GetStoryRequest) (*PublicStory, error)
-	DeleteStory(context.Context, *GetStoryRequest) (*common.MessageResponse, error)
+	DeleteStory(context.Context, *DeleteStoryRequest) (*common.MessageResponse, error)
 	GetByUser(context.Context, *GetByUserRequest) (*PagedStories, error)
 	GetByParty(context.Context, *GetByPartyRequest) (*PagedStories, error)
 	PresignURL(context.Context, *PresignURLRequest) (*PresignURLResponse, error)
@@ -112,7 +112,7 @@ func (UnimplementedStoryServiceServer) CreateStory(context.Context, *CreateStory
 func (UnimplementedStoryServiceServer) GetStory(context.Context, *GetStoryRequest) (*PublicStory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStory not implemented")
 }
-func (UnimplementedStoryServiceServer) DeleteStory(context.Context, *GetStoryRequest) (*common.MessageResponse, error) {
+func (UnimplementedStoryServiceServer) DeleteStory(context.Context, *DeleteStoryRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStory not implemented")
 }
 func (UnimplementedStoryServiceServer) GetByUser(context.Context, *GetByUserRequest) (*PagedStories, error) {
@@ -174,7 +174,7 @@ func _StoryService_GetStory_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 func _StoryService_DeleteStory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetStoryRequest)
+	in := new(DeleteStoryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -186,7 +186,7 @@ func _StoryService_DeleteStory_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/story.StoryService/DeleteStory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoryServiceServer).DeleteStory(ctx, req.(*GetStoryRequest))
+		return srv.(StoryServiceServer).DeleteStory(ctx, req.(*DeleteStoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

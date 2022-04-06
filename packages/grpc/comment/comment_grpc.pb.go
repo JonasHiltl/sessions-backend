@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommentServiceClient interface {
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*Comment, error)
-	DeleteComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 }
 
 type commentServiceClient struct {
@@ -40,7 +40,7 @@ func (c *commentServiceClient) CreateComment(ctx context.Context, in *CreateComm
 	return out, nil
 }
 
-func (c *commentServiceClient) DeleteComment(ctx context.Context, in *GetCommentRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+func (c *commentServiceClient) DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
 	out := new(common.MessageResponse)
 	err := c.cc.Invoke(ctx, "/comment.CommentService/DeleteComment", in, out, opts...)
 	if err != nil {
@@ -54,7 +54,7 @@ func (c *commentServiceClient) DeleteComment(ctx context.Context, in *GetComment
 // for forward compatibility
 type CommentServiceServer interface {
 	CreateComment(context.Context, *CreateCommentRequest) (*Comment, error)
-	DeleteComment(context.Context, *GetCommentRequest) (*common.MessageResponse, error)
+	DeleteComment(context.Context, *DeleteCommentRequest) (*common.MessageResponse, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
 
@@ -65,7 +65,7 @@ type UnimplementedCommentServiceServer struct {
 func (UnimplementedCommentServiceServer) CreateComment(context.Context, *CreateCommentRequest) (*Comment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateComment not implemented")
 }
-func (UnimplementedCommentServiceServer) DeleteComment(context.Context, *GetCommentRequest) (*common.MessageResponse, error) {
+func (UnimplementedCommentServiceServer) DeleteComment(context.Context, *DeleteCommentRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
 }
 func (UnimplementedCommentServiceServer) mustEmbedUnimplementedCommentServiceServer() {}
@@ -100,7 +100,7 @@ func _CommentService_CreateComment_Handler(srv interface{}, ctx context.Context,
 }
 
 func _CommentService_DeleteComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCommentRequest)
+	in := new(DeleteCommentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func _CommentService_DeleteComment_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/comment.CommentService/DeleteComment",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommentServiceServer).DeleteComment(ctx, req.(*GetCommentRequest))
+		return srv.(CommentServiceServer).DeleteComment(ctx, req.(*DeleteCommentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
