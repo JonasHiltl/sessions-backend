@@ -20,27 +20,34 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	ac, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
-	pc, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
-	pac, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
+	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
+	profileClientc, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
+	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
 
-	ah := authhandler.NewAuthGatewayHandler(ac)
-	ph := profilehandler.NewProfileGatewayHandler(pc)
-	pah := partyhandler.NewPartyGatewayHandler(pac)
+	authHandler := authhandler.NewAuthGatewayHandler(authClient)
+	profileHandler := profilehandler.NewProfileGatewayHandler(profileClientc)
+	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient)
 
 	app := fiber.New()
 
 	auth := app.Group("/auth")
-	auth.Post("/login", ah.Login)
-	auth.Post("/register", ah.Register)
-	auth.Post("/google-login", ah.GoogleLogin)
+	auth.Post("/login", authHandler.Login)
+	auth.Post("/register", authHandler.Register)
+	auth.Post("/google-login", authHandler.GoogleLogin)
 
 	profile := app.Group("/profile")
-	profile.Get("/me", ph.GetMe)
-	profile.Get("/:id", ph.GetProfile)
-	profile.Get("/:username", ph.GetProfileByUsername)
-	profile.Get("/:username", ph.UsernameTaken)
-	profile.Patch("/", ph.UpdateProfile)
+	profile.Get("/me", profileHandler.GetMe)
+	profile.Get("/:id", profileHandler.GetProfile)
+	profile.Get("/:username", profileHandler.GetProfileByUsername)
+	profile.Get("/:username", profileHandler.UsernameTaken)
+	profile.Patch("/", profileHandler.UpdateProfile)
+
+	party := app.Group("/party")
+	party.Post("/", partyHandler.CreateParty)
+	party.Delete("/:id", partyHandler.DeleteParty)
+	party.Get("/:id", partyHandler.GetParty)
+	party.Get("/user/:id", partyHandler.GetPartyByUser)
+	profile.Patch("/", partyHandler.UpdateParty)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
