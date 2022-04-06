@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRequest) (*pg.PublicProfile, error) {
+func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRequest) (*pg.Profile, error) {
 	me, err := middleware.ParseUser(c)
 	if err != nil {
 		return nil, comutils.HandleError(err)
@@ -21,7 +21,7 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 		return nil, status.Error(codes.Unauthenticated, "You can only update your own information")
 	}
 
-	du := dto.Profile{
+	dp := dto.Profile{
 		Id:        req.Id,
 		Username:  req.Username,
 		Firstname: req.Firstname,
@@ -29,18 +29,18 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 		Avatar:    req.Avatar,
 	}
 
-	if du.Avatar != "" {
-		loc, err := s.uploadS.Upload(c, me.Sub, du.Avatar)
+	if dp.Avatar != "" {
+		loc, err := s.uploadS.Upload(c, me.Sub, dp.Avatar)
 		if err != nil {
 			return nil, comutils.HandleError(err)
 		}
-		du.Avatar = loc
+		dp.Avatar = loc
 	}
 
-	u, err := s.us.Update(c, du)
+	p, err := s.us.Update(c, dp)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}
 
-	return u.ToPublicProfile(), nil
+	return p.ToGRPCProfile(), nil
 }

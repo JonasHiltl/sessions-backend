@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/dto"
 )
 
-func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRequest) (*pg.PublicProfile, error) {
+func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRequest) (*pg.Profile, error) {
 	du := dto.Profile{
 		Username:  req.Username,
 		Firstname: req.Firstname,
@@ -16,9 +16,9 @@ func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRe
 		Avatar:    req.Avatar,
 	}
 
-	u, err := s.us.Create(c, du)
+	p, err := s.us.Create(c, du)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}
-	return u.ToPublicProfile(), nil
+	return p.ToGRPCProfile(), nil
 }

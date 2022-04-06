@@ -7,28 +7,28 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service ProfileService {
-    rpc CreateProfile (CreateProfileRequest) returns (PublicProfile) {
+    rpc CreateProfile (CreateProfileRequest) returns (Profile) {
         option (google.api.http) = {
             post: "/"
             body: "*"
         };
     };
-    rpc GetProfile (GetProfileRequest) returns (PublicProfile) {
+    rpc GetProfile (GetProfileRequest) returns (Profile) {
         option (google.api.http) = {
 			get: "/{id}"
         };
     };
-    rpc GetProfileByProfilename (GetProfileByUsernameRequest) returns (PublicProfile) {
+    rpc GetProfileByProfilename (GetProfileByUsernameRequest) returns (Profile) {
         option (google.api.http) = {
 			get: "/{username}"
         };
     };
-    rpc GetMe (Empty) returns (PublicProfile) {
+    rpc GetMe (Empty) returns (Profile) {
         option (google.api.http) = {
 			get: "/me"
         };
     };
-    rpc UpdateProfile (UpdateProfileRequest) returns (PublicProfile) {
+    rpc UpdateProfile (UpdateProfileRequest) returns (Profile) {
         option (google.api.http) = {
 			patch: "/{id}"
             body: "*"
@@ -46,7 +46,7 @@ service ProfileService {
     };
 }
 
-message PublicProfile {
+message Profile {
     string id = 1;
     string username = 2;
     string firstname = 3;

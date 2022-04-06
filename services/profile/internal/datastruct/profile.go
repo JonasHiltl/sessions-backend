@@ -15,8 +15,8 @@ type Profile struct {
 	Avatar    string             `json:"avatar,omitempty"   bson:"avatar,omitempty"`
 }
 
-func (p Profile) ToPublicProfile() *pg.PublicProfile {
-	return &pg.PublicProfile{
+func (p Profile) ToGRPCProfile() *pg.Profile {
+	return &pg.Profile{
 		Id:        p.Id.Hex(),
 		Username:  p.Username,
 		Firstname: p.Firstname,

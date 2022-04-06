@@ -9,15 +9,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *profileServer) GetProfile(c context.Context, req *pg.GetProfileRequest) (*pg.PublicProfile, error) {
+func (s *profileServer) GetProfile(c context.Context, req *pg.GetProfileRequest) (*pg.Profile, error) {
 	if req.UId == "" {
 		return nil, status.Error(codes.InvalidArgument, "invalid User id")
 	}
 
-	u, err := s.us.GetById(c, req.UId)
+	p, err := s.us.GetById(c, req.UId)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}
 
-	return u.ToPublicProfile(), nil
+	return p.ToGRPCProfile(), nil
 }

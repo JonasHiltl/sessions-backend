@@ -19,11 +19,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProfileServiceClient interface {
-	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error)
-	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error)
-	GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*PublicProfile, error)
-	GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PublicProfile, error)
-	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error)
+	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
+	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
+	GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error)
+	GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error)
+	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	DeleteProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error)
 }
@@ -36,8 +36,8 @@ func NewProfileServiceClient(cc grpc.ClientConnInterface) ProfileServiceClient {
 	return &profileServiceClient{cc}
 }
 
-func (c *profileServiceClient) CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error) {
-	out := new(PublicProfile)
+func (c *profileServiceClient) CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/CreateProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,8 @@ func (c *profileServiceClient) CreateProfile(ctx context.Context, in *CreateProf
 	return out, nil
 }
 
-func (c *profileServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error) {
-	out := new(PublicProfile)
+func (c *profileServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -54,8 +54,8 @@ func (c *profileServiceClient) GetProfile(ctx context.Context, in *GetProfileReq
 	return out, nil
 }
 
-func (c *profileServiceClient) GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*PublicProfile, error) {
-	out := new(PublicProfile)
+func (c *profileServiceClient) GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetProfileByProfilename", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -63,8 +63,8 @@ func (c *profileServiceClient) GetProfileByProfilename(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *profileServiceClient) GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PublicProfile, error) {
-	out := new(PublicProfile)
+func (c *profileServiceClient) GetMe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetMe", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,8 +72,8 @@ func (c *profileServiceClient) GetMe(ctx context.Context, in *Empty, opts ...grp
 	return out, nil
 }
 
-func (c *profileServiceClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*PublicProfile, error) {
-	out := new(PublicProfile)
+func (c *profileServiceClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*Profile, error) {
+	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/UpdateProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -103,11 +103,11 @@ func (c *profileServiceClient) UsernameTaken(ctx context.Context, in *UsernameTa
 // All implementations must embed UnimplementedProfileServiceServer
 // for forward compatibility
 type ProfileServiceServer interface {
-	CreateProfile(context.Context, *CreateProfileRequest) (*PublicProfile, error)
-	GetProfile(context.Context, *GetProfileRequest) (*PublicProfile, error)
-	GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*PublicProfile, error)
-	GetMe(context.Context, *Empty) (*PublicProfile, error)
-	UpdateProfile(context.Context, *UpdateProfileRequest) (*PublicProfile, error)
+	CreateProfile(context.Context, *CreateProfileRequest) (*Profile, error)
+	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
+	GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error)
+	GetMe(context.Context, *Empty) (*Profile, error)
+	UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error)
 	DeleteProfile(context.Context, *GetProfileRequest) (*common.MessageResponse, error)
 	UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error)
 	mustEmbedUnimplementedProfileServiceServer()
@@ -117,19 +117,19 @@ type ProfileServiceServer interface {
 type UnimplementedProfileServiceServer struct {
 }
 
-func (UnimplementedProfileServiceServer) CreateProfile(context.Context, *CreateProfileRequest) (*PublicProfile, error) {
+func (UnimplementedProfileServiceServer) CreateProfile(context.Context, *CreateProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProfile not implemented")
 }
-func (UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfileRequest) (*PublicProfile, error) {
+func (UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
 }
-func (UnimplementedProfileServiceServer) GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*PublicProfile, error) {
+func (UnimplementedProfileServiceServer) GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfileByProfilename not implemented")
 }
-func (UnimplementedProfileServiceServer) GetMe(context.Context, *Empty) (*PublicProfile, error) {
+func (UnimplementedProfileServiceServer) GetMe(context.Context, *Empty) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMe not implemented")
 }
-func (UnimplementedProfileServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*PublicProfile, error) {
+func (UnimplementedProfileServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
 }
 func (UnimplementedProfileServiceServer) DeleteProfile(context.Context, *GetProfileRequest) (*common.MessageResponse, error) {
