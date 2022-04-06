@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ProfileServiceClient interface {
 	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
-	GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error)
+	GetProfileByUsername(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*Profile, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
@@ -54,9 +54,9 @@ func (c *profileServiceClient) GetProfile(ctx context.Context, in *GetProfileReq
 	return out, nil
 }
 
-func (c *profileServiceClient) GetProfileByProfilename(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error) {
+func (c *profileServiceClient) GetProfileByUsername(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error) {
 	out := new(Profile)
-	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetProfileByProfilename", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetProfileByUsername", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func (c *profileServiceClient) UsernameTaken(ctx context.Context, in *UsernameTa
 type ProfileServiceServer interface {
 	CreateProfile(context.Context, *CreateProfileRequest) (*Profile, error)
 	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
-	GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error)
+	GetProfileByUsername(context.Context, *GetProfileByUsernameRequest) (*Profile, error)
 	GetMe(context.Context, *GetMeRequest) (*Profile, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error)
 	DeleteProfile(context.Context, *DeleteProfileRequest) (*common.MessageResponse, error)
@@ -123,8 +123,8 @@ func (UnimplementedProfileServiceServer) CreateProfile(context.Context, *CreateP
 func (UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
 }
-func (UnimplementedProfileServiceServer) GetProfileByProfilename(context.Context, *GetProfileByUsernameRequest) (*Profile, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProfileByProfilename not implemented")
+func (UnimplementedProfileServiceServer) GetProfileByUsername(context.Context, *GetProfileByUsernameRequest) (*Profile, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfileByUsername not implemented")
 }
 func (UnimplementedProfileServiceServer) GetMe(context.Context, *GetMeRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMe not implemented")
@@ -187,20 +187,20 @@ func _ProfileService_GetProfile_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_GetProfileByProfilename_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ProfileService_GetProfileByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProfileByUsernameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfileServiceServer).GetProfileByProfilename(ctx, in)
+		return srv.(ProfileServiceServer).GetProfileByUsername(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/profile.ProfileService/GetProfileByProfilename",
+		FullMethod: "/profile.ProfileService/GetProfileByUsername",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfileServiceServer).GetProfileByProfilename(ctx, req.(*GetProfileByUsernameRequest))
+		return srv.(ProfileServiceServer).GetProfileByUsername(ctx, req.(*GetProfileByUsernameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -293,8 +293,8 @@ var ProfileService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProfileService_GetProfile_Handler,
 		},
 		{
-			MethodName: "GetProfileByProfilename",
-			Handler:    _ProfileService_GetProfileByProfilename_Handler,
+			MethodName: "GetProfileByUsername",
+			Handler:    _ProfileService_GetProfileByUsername_Handler,
 		},
 		{
 			MethodName: "GetMe",

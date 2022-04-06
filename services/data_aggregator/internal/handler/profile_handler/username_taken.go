@@ -5,11 +5,10 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 )
 
-func (h *profileGatewayHandler) GetMe(c *fiber.Ctx) error {
-	// TODO read id from headers
-	id := "tawtrwa"
+func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
+	uName := c.Params("username")
 
-	res, err := h.c.GetMe(c.Context(), &profile.GetMeRequest{Id: id})
+	res, err := h.c.UsernameTaken(c.Context(), &profile.UsernameTakenRequest{Username: uName})
 	if err != nil {
 		return err
 	}

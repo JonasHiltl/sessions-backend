@@ -35,7 +35,12 @@ func main() {
 	auth.Post("/register", ah.Register)
 	auth.Post("/google-login", ah.GoogleLogin)
 
-	auth := app.Group("/profile")
+	profile := app.Group("/profile")
+	profile.Get("/me", ph.GetMe)
+	profile.Get("/:id", ph.GetProfile)
+	profile.Get("/:username", ph.GetProfileByUsername)
+	profile.Get("/:username", ph.UsernameTaken)
+	profile.Patch("/", ph.UpdateProfile)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
