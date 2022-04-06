@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: profile
 spec:
   selector:
     matchLabels:
-      app: notification
+      app: profile
   template:
     metadata:
       labels:
-        app: notification
+        app: profile
     spec:
       containers:
-        - name: notification
-          image: jonashiltl/notification-service
+        - name: profile
+          image: jonashiltl/profile-service
           resources:
             limits:
               memory: "128Mi"

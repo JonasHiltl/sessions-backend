@@ -32,11 +32,6 @@ docker_build(
         sync('./packages', '/app/packages'),
     ]
 )
-docker_build(
-    'jonashiltl/profile-service-sidecar', 
-    '.', 
-    dockerfile='services/profile/sidecar.Dockerfile',
-)
 
 docker_build_with_restart(
     'jonashiltl/party-service', 
@@ -55,11 +50,6 @@ docker_build_with_restart(
         sync('./services/party/main.go', '/app/services/party/main.go'),
         sync('./packages', '/app/packages'),
     ]
-)
-docker_build(
-    'jonashiltl/party-service-sidecar', 
-    '.', 
-    dockerfile='services/party/sidecar.Dockerfile',
 )
 
 docker_build_with_restart(
@@ -80,11 +70,6 @@ docker_build_with_restart(
         sync('./packages', '/app/packages'),
     ]
 )
-docker_build(
-    'jonashiltl/story-service-sidecar', 
-    '.', 
-    dockerfile='services/story/sidecar.Dockerfile',
-)
 
 docker_build_with_restart(
     'jonashiltl/comment-service', 
@@ -103,11 +88,6 @@ docker_build_with_restart(
         sync('./services/comment/main.go', '/app/services/comment/main.go'),
         sync('./packages', '/app/packages'),
     ]
-)
-docker_build(
-    'jonashiltl/comment-service-sidecar', 
-    '.', 
-    dockerfile='services/comment/sidecar.Dockerfile',
 )
 
 docker_build_with_restart(
@@ -129,6 +109,25 @@ docker_build_with_restart(
     ]
 )
 
+docker_build_with_restart(
+    'jonashiltl/data-aggregator', 
+    '.', 
+    dockerfile='services/data_aggregator/Dockerfile', 
+    entrypoint=['/app/services/data_aggregator/data-aggregator'],
+    only=[
+        './services/data_aggregator', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
+    live_update=[
+        sync('./services/data_aggregator/internal', '/app/services/data_aggregator/internal'),
+        sync('./services/data_aggregator/main.go', '/app/services/data_aggregator/main.go'),
+        sync('./packages', '/app/packages'),
+    ]
+)
+
 #load('ext://helm_remote', 'helm_remote')
 #helm_remote(
 #    "nats",
@@ -142,21 +141,20 @@ docker_build_with_restart(
 #   More info: https://docs.tilt.dev/api.html#api.k8s_yaml
 #
 k8s_yaml([
-    'k8s/pods/comment.yaml', 
-    'k8s/pods/party.yaml', 
-    'k8s/pods/story.yaml', 
-    'k8s/pods/profile.yaml',
+    'k8s/deployments/comment.yaml',
+    'k8s/deployments/notification.yaml',
+    'k8s/deployments/party.yaml',
+    'k8s/deployments/profile.yaml',
+    'k8s/deployments/story.yaml',
+    'k8s/deployments/data-aggregator.yaml',
 ])
 k8s_yaml([
-    'k8s/services/comment.yaml', 
-    'k8s/services/notification.yaml', 
-    'k8s/services/party.yaml', 
-    'k8s/services/story.yaml', 
+    'k8s/services/comment.yaml',
+    'k8s/services/notification.yaml',
+    'k8s/services/party.yaml',
+    'k8s/services/story.yaml',
     'k8s/services/profile.yaml',
     'k8s/services/vespa.yaml',
-])
-k8s_yaml([
-    'k8s/deployments/notification.yaml', 
 ])
 k8s_yaml([
     'k8s/statefulsets/vespa.yaml', 

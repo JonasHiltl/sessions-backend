@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: data-aggregator
 spec:
   selector:
     matchLabels:
-      app: notification
+      app: data-aggregator
   template:
     metadata:
       labels:
-        app: notification
+        app: data-aggregator
     spec:
       containers:
-        - name: notification
-          image: jonashiltl/notification-service
+        - name: data-aggregator
+          image: jonashiltl/data-aggregator
           resources:
             limits:
               memory: "128Mi"

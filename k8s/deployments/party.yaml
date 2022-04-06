@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: party
 spec:
   selector:
     matchLabels:
-      app: notification
+      app: party
   template:
     metadata:
       labels:
-        app: notification
+        app: party
     spec:
       containers:
-        - name: notification
-          image: jonashiltl/notification-service
+        - name: party
+          image: jonashiltl/party-service
           resources:
             limits:
               memory: "128Mi"

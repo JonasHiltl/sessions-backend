@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -52,5 +53,9 @@ func main() {
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
 	sb.WriteString(c.PORT)
-	app.Listen(sb.String())
+
+	fmt.Println("Fiber started at: ", sb.String())
+	if err := app.Listen(sb.String()); err != nil {
+		log.Fatal(err)
+	}
 }

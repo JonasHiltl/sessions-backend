@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+  name: comment
 spec:
   selector:
     matchLabels:
-      app: notification
+      app: comment
   template:
     metadata:
       labels:
-        app: notification
+        app: comment
     spec:
       containers:
-        - name: notification
-          image: jonashiltl/notification-service
+        - name: comment
+          image: jonashiltl/comment-service
           resources:
             limits:
               memory: "128Mi"
