@@ -9,10 +9,12 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
 	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
 	profilehandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/profile_handler"
+	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
 )
 
 func main() {
@@ -24,10 +26,12 @@ func main() {
 	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
 	profileClientc, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
 	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
+	storyClient, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
 
 	authHandler := authhandler.NewAuthGatewayHandler(authClient)
 	profileHandler := profilehandler.NewProfileGatewayHandler(profileClientc)
 	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient)
+	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClientc)
 
 	app := fiber.New()
 
@@ -50,6 +54,14 @@ func main() {
 	party.Get("/:id", partyHandler.GetParty)
 	party.Get("/user/:id", partyHandler.GetPartyByUser)
 	profile.Patch("/", partyHandler.UpdateParty)
+
+	story := app.Group("/story")
+	story.Post("/", storyHandler.CreateStory)
+	story.Delete("/:id", storyHandler.DeleteStory)
+	story.Get("/:id", storyHandler.GetStory)
+	story.Get("/party/:id", storyHandler.GetStoryByParty)
+	story.Get("/user/:id", storyHandler.GetStoryByUser)
+	story.Get("/presign/:key", storyHandler.PresignURL)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

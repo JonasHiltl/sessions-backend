@@ -7,6 +7,7 @@ type Config struct {
 	AUTH_SERVICE_ADDRESS    string `mapstructure:"AUTH_SERVICE_ADDRESS"`
 	PROFILE_SERVICE_ADDRESS string `mapstructure:"PROFILE_SERVICE_ADDRESS"`
 	PARTY_SERVICE_ADDRESS   string `mapstructure:"PARTY_SERVICE_ADDRESS"`
+	STORY_SERVICE_ADDRESS   string `mapstructure:"STORY_SERVICE_ADDRESS"`
 }
 
 func LoadConfig() (config Config, err error) {
