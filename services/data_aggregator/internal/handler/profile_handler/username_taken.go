@@ -8,7 +8,7 @@ import (
 func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
 	uName := c.Params("username")
 
-	res, err := h.c.UsernameTaken(c.Context(), &profile.UsernameTakenRequest{Username: uName})
+	res, err := h.profileClient.UsernameTaken(c.Context(), &profile.UsernameTakenRequest{Username: uName})
 	if err != nil {
 		return err
 	}

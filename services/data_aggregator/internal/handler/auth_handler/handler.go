@@ -6,7 +6,7 @@ import (
 )
 
 type authGatewayHandler struct {
-	c auth.AuthServiceClient
+	authClient auth.AuthServiceClient
 }
 
 type AuthGatewayHandler interface {
@@ -16,8 +16,8 @@ type AuthGatewayHandler interface {
 	VerifyEmail(c *fiber.Ctx) error
 }
 
-func NewAuthGatewayHandler(ac auth.AuthServiceClient) AuthGatewayHandler {
+func NewAuthGatewayHandler(authClient auth.AuthServiceClient) AuthGatewayHandler {
 	return &authGatewayHandler{
-		c: ac,
+		authClient: authClient,
 	}
 }

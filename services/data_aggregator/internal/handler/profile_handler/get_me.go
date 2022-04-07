@@ -9,7 +9,7 @@ func (h *profileGatewayHandler) GetMe(c *fiber.Ctx) error {
 	// TODO read id from headers
 	id := "tawtrwa"
 
-	res, err := h.c.GetMe(c.Context(), &profile.GetMeRequest{Id: id})
+	res, err := h.profileClient.GetMe(c.Context(), &profile.GetMeRequest{Id: id})
 	if err != nil {
 		return err
 	}

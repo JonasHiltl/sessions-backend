@@ -8,7 +8,7 @@ import (
 func (h *authGatewayHandler) Login(c *fiber.Ctx) error {
 	req := new(auth.LoginRequest)
 
-	res, err := h.c.Login(c.Context(), req)
+	res, err := h.authClient.Login(c.Context(), req)
 	if err != nil {
 		return err
 	}

@@ -8,7 +8,7 @@ import (
 func (h *authGatewayHandler) VerifyEmail(c *fiber.Ctx) error {
 	req := new(auth.VerifyEmailRequest)
 
-	res, err := h.c.VerifyEmail(c.Context(), req)
+	res, err := h.authClient.VerifyEmail(c.Context(), req)
 	if err != nil {
 		return err
 	}

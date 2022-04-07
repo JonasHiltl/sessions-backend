@@ -8,7 +8,7 @@ import (
 func (h *profileGatewayHandler) UpdateProfile(c *fiber.Ctx) error {
 	req := new(profile.UpdateProfileRequest)
 
-	res, err := h.c.UpdateProfile(c.Context(), req)
+	res, err := h.profileClient.UpdateProfile(c.Context(), req)
 	if err != nil {
 		return err
 	}

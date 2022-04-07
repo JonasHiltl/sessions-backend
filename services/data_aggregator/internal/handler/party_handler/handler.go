@@ -6,7 +6,7 @@ import (
 )
 
 type partyGatewayHandler struct {
-	c party.PartyServiceClient
+	partyClient party.PartyServiceClient
 }
 
 type PartyGatewayHandler interface {
@@ -17,8 +17,8 @@ type PartyGatewayHandler interface {
 	GetPartyByUser(c *fiber.Ctx) error
 }
 
-func NewPartyGatewayHandler(pc party.PartyServiceClient) PartyGatewayHandler {
+func NewPartyGatewayHandler(partyClient party.PartyServiceClient) PartyGatewayHandler {
 	return &partyGatewayHandler{
-		c: pc,
+		partyClient: partyClient,
 	}
 }

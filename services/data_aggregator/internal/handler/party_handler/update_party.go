@@ -8,7 +8,7 @@ import (
 func (h *partyGatewayHandler) UpdateParty(c *fiber.Ctx) error {
 	req := new(party.UpdatePartyRequest)
 
-	res, err := h.c.UpdateParty(c.Context(), req)
+	res, err := h.partyClient.UpdateParty(c.Context(), req)
 	if err != nil {
 		return err
 	}

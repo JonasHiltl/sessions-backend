@@ -6,7 +6,7 @@ import (
 )
 
 type profileGatewayHandler struct {
-	c profile.ProfileServiceClient
+	profileClient profile.ProfileServiceClient
 }
 
 type ProfileGatewayHandler interface {
@@ -17,8 +17,8 @@ type ProfileGatewayHandler interface {
 	UsernameTaken(c *fiber.Ctx) error
 }
 
-func NewProfileGatewayHandler(pc profile.ProfileServiceClient) ProfileGatewayHandler {
+func NewProfileGatewayHandler(profileClient profile.ProfileServiceClient) ProfileGatewayHandler {
 	return &profileGatewayHandler{
-		c: pc,
+		profileClient: profileClient,
 	}
 }

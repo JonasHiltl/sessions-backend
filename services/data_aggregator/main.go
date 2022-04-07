@@ -42,6 +42,7 @@ func main() {
 	profile.Get("/:username", profileHandler.GetProfileByUsername)
 	profile.Get("/:username", profileHandler.UsernameTaken)
 	profile.Patch("/", profileHandler.UpdateProfile)
+	// TODO: Add endpoint vor Profile Search
 
 	party := app.Group("/party")
 	party.Post("/", partyHandler.CreateParty)

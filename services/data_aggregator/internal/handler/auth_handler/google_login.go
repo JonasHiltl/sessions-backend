@@ -8,7 +8,7 @@ import (
 func (h *authGatewayHandler) GoogleLogin(c *fiber.Ctx) error {
 	req := new(auth.GoogleLoginRequest)
 
-	res, err := h.c.GoogleLogin(c.Context(), req)
+	res, err := h.authClient.GoogleLogin(c.Context(), req)
 	if err != nil {
 		return err
 	}

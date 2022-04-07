@@ -8,7 +8,7 @@ import (
 func (h *authGatewayHandler) Register(c *fiber.Ctx) error {
 	req := new(auth.RegisterRequest)
 
-	res, err := h.c.Register(c.Context(), req)
+	res, err := h.authClient.Register(c.Context(), req)
 	if err != nil {
 		return err
 	}
