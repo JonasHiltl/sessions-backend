@@ -10,6 +10,9 @@ import (
 
 func (h *partyGatewayHandler) UpdateParty(c *fiber.Ctx) error {
 	req := new(party.UpdatePartyRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
 
 	p, err := h.partyClient.UpdateParty(c.Context(), req)
 	if err != nil {

@@ -9,6 +9,9 @@ import (
 
 func (h *storyGatewayHandler) CreateStory(c *fiber.Ctx) error {
 	req := new(story.CreateStoryRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
 
 	s, err := h.storyClient.CreateStory(c.Context(), req)
 	if err != nil {

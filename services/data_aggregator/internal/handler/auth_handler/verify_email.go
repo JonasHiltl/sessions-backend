@@ -7,6 +7,9 @@ import (
 
 func (h *authGatewayHandler) VerifyEmail(c *fiber.Ctx) error {
 	req := new(auth.VerifyEmailRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
 
 	res, err := h.authClient.VerifyEmail(c.Context(), req)
 	if err != nil {

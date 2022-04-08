@@ -7,6 +7,9 @@ import (
 
 func (h *authGatewayHandler) Login(c *fiber.Ctx) error {
 	req := new(auth.LoginRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
 
 	res, err := h.authClient.Login(c.Context(), req)
 	if err != nil {

@@ -35,8 +35,6 @@ func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.T
 		return nil, comutils.HandleError(err)
 	}
 
-	// TODO: create profile through gRPC
-
 	t, err := s.token.NewJWT(u)
 	if err != nil {
 		return nil, comutils.HandleError(err)

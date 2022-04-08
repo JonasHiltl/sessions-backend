@@ -7,38 +7,12 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service AuthService {
-    rpc Register (RegisterRequest) returns (TokenResponse) {
-        option (google.api.http) = {
-            post: "/"
-            body: "*"
-        };
-    }
-    rpc Login (LoginRequest) returns (TokenResponse) {
-        option (google.api.http) = {
-            post: "/"
-            body: "*"
-        };
-    }
-    rpc GoogleLogin (GoogleLoginRequest) returns (TokenResponse) {
-        option (google.api.http) = {
-            put: "/{token}"
-        };
-    }
-    rpc AppleLogin (AppleLoginRequest) returns (TokenResponse) {
-        option (google.api.http) = {
-            put: "/{token}"
-        };
-    }
-    rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {
-        option (google.api.http) = {
-            put: "/{email}"
-        };
-    }
-    rpc ResendVerificationEmail (Empty) returns (common.MessageResponse) {
-        option (google.api.http) = {
-            put: "/{email}"
-        };
-    }
+    rpc Register (RegisterRequest) returns (TokenResponse) {}
+    rpc Login (LoginRequest) returns (TokenResponse) {}
+    rpc GoogleLogin (GoogleLoginRequest) returns (TokenResponse) {}
+    rpc AppleLogin (AppleLoginRequest) returns (TokenResponse) {}
+    rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {}
+    rpc ResendVerificationEmail (Empty) returns (common.MessageResponse) {}
 }
 
 message TokenResponse {
@@ -49,10 +23,6 @@ message TokenResponse {
 message RegisterRequest {
     string email = 1;
     string password = 2;
-    string username = 3;
-    string firstname = 4;
-    string lastname = 5;
-    string avatar = 6;
 }
 
 message LoginRequest {

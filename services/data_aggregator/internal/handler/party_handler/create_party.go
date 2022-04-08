@@ -10,6 +10,9 @@ import (
 
 func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 	req := new(pg.CreatePartyRequest)
+	if err := c.BodyParser(req); err != nil {
+		return err
+	}
 
 	p, err := h.partyClient.CreateParty(c.Context(), req)
 	if err != nil {
