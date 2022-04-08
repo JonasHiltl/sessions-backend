@@ -39,8 +39,8 @@ func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct
 
 	ds := datastruct.Story{
 		Id:            uuid.String(),
-		PId:           s.PId,
-		UId:           s.UId,
+		PartyId:       s.PartyId,
+		UserId:        s.UserId,
 		GHash:         gHash,
 		Url:           s.Url,
 		TaggedFriends: s.TaggedFriends,

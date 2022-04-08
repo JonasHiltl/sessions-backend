@@ -9,12 +9,10 @@ func (h *storyGatewayHandler) GetStoryByParty(c *fiber.Ctx) error {
 	pId := c.Params("id")
 	nextPage := c.Query("nextPage")
 
-	res, err := h.storyClient.GetByParty(c.Context(), &story.GetByPartyRequest{PId: pId, NextPage: nextPage})
+	res, err := h.storyClient.GetByParty(c.Context(), &story.GetByPartyRequest{PartyId: pId, NextPage: nextPage})
 	if err != nil {
 		return err
 	}
-
-	// TODO: if tagged friends exist get profile of friends
 
 	return c.Status(fiber.StatusOK).JSON(res)
 }

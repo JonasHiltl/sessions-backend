@@ -15,7 +15,7 @@ func (s *storyServer) GetByUser(c context.Context, req *sg.GetByUserRequest) (*s
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
-	stories, p, err := s.sService.GetByUser(c, req.UId, p)
+	stories, p, err := s.sService.GetByUser(c, req.UserId, p)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}

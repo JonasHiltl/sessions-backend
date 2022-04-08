@@ -1,8 +1,6 @@
 package datastruct
 
 import (
-	"time"
-
 	"github.com/gofrs/uuid"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/mmcloughlin/geohash"
@@ -10,27 +8,16 @@ import (
 
 type Story struct {
 	Id            string   `json:"id"                       db:"id"             validate:"required"`
-	PId           string   `json:"partyId"                  db:"party_id"       validate:"required"`
-	UId           string   `json:"userId"                   db:"user_id"        validate:"required"`
+	PartyId       string   `json:"partyId"                  db:"party_id"       validate:"required"`
+	UserId        string   `json:"userId"                   db:"user_id"        validate:"required"`
 	GHash         string   `json:"geohash"                  db:"geohash"        validate:"required"`
 	Url           string   `json:"url"                      db:"url"            validate:"required"`
 	TaggedFriends []string `json:"tagged_friends,omitempty" db:"tagged_friends"`
 }
 
-type PublicStory struct {
-	Id            string    `json:"id"`
-	PId           string    `json:"partyId"`
-	UId           string    `json:"userId"`
-	Lat           float32   `json:"lat,omitempty"`
-	Long          float32   `json:"long,omitempty"`
-	Url           string    `json:"url"`
-	TaggedFriends []string  `json:"tagged_friends,omitempty"`
-	CreatedAt     time.Time `json:"createdAt"`
-}
-
 type PagedStories struct {
-	Stories  []PublicStory `json:"stories,omitempty"`
-	NextPage string        `json:"nextPage"`
+	Stories  []sg.PublicStory `json:"stories,omitempty"`
+	NextPage string           `json:"nextPage"`
 }
 
 func (s Story) ToPublicStory() *sg.PublicStory {
@@ -51,8 +38,8 @@ func (s Story) ToPublicStory() *sg.PublicStory {
 
 	return &sg.PublicStory{
 		Id:            s.Id,
-		PId:           s.PId,
-		UId:           s.UId,
+		PartyId:       s.PartyId,
+		UserId:        s.UserId,
 		Lat:           float32(lat),
 		Long:          float32(lon),
 		Url:           s.Url,

@@ -7,43 +7,18 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service StoryService {
-    rpc CreateStory (CreateStoryRequest) returns (PublicStory) {
-        option (google.api.http) = {
-            post: "/"
-            body: "*"
-        };
-    };
-    rpc GetStory (GetStoryRequest) returns (PublicStory) {
-        option (google.api.http) = {
-			get: "/{s_id}"
-        };
-    };
-    rpc DeleteStory (DeleteStoryRequest) returns (common.MessageResponse) {
-        option (google.api.http) = {
-			delete: "/{s_id}"
-        };
-    };
-    rpc GetByUser (GetByUserRequest) returns (PagedStories) {
-        option (google.api.http) = {
-			get: "/user/{u_id}"
-        };
-    };
-    rpc GetByParty (GetByPartyRequest) returns (PagedStories) {
-        option (google.api.http) = {
-			get: "/party/{p_id}"
-        };
-    };
-    rpc PresignURL (PresignURLRequest) returns (PresignURLResponse) {
-        option (google.api.http) = {
-			get: "/presign/{key}"
-        };
-    };
+    rpc CreateStory (CreateStoryRequest) returns (PublicStory) {};
+    rpc GetStory (GetStoryRequest) returns (PublicStory) {};
+    rpc DeleteStory (DeleteStoryRequest) returns (common.MessageResponse) {};
+    rpc GetByUser (GetByUserRequest) returns (PagedStories) {};
+    rpc GetByParty (GetByPartyRequest) returns (PagedStories) {};
+    rpc PresignURL (PresignURLRequest) returns (PresignURLResponse) {};
 }
 
 message PublicStory {
     string id = 1;
-    string p_id = 2;
-    string u_id = 3;
+    string party_id = 2;
+    string user_id = 3;
     float lat = 5;
     float long = 6;
     string url = 4;
@@ -53,7 +28,7 @@ message PublicStory {
 
 message CreateStoryRequest {
     string requester_id = 1;
-    string p_id = 2;
+    string party_id = 2;
     string url = 3;
     float lat = 4;
     float long = 5;
@@ -70,12 +45,12 @@ message DeleteStoryRequest {
 }
 
 message GetByUserRequest {
-    string u_id = 1;
+    string user_id = 1;
     string next_page = 2;
 }
 
 message GetByPartyRequest {
-    string p_id = 1;
+    string party_id = 1;
     string next_page = 2;
 }
 
