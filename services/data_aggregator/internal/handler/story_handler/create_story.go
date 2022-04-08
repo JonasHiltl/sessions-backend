@@ -35,7 +35,7 @@ func (h *storyGatewayHandler) CreateStory(c *fiber.Ctx) error {
 		}
 	}
 
-	res := datastruct.StoryAggregated{
+	res := datastruct.AggregatedStory{
 		Id:            s.Id,
 		PartyId:       s.PartyId,
 		Creator:       profile,
