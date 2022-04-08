@@ -11,11 +11,11 @@ import (
 )
 
 func (s *profileServer) DeleteProfile(c context.Context, req *pg.DeleteProfileRequest) (*common.MessageResponse, error) {
-	if req.PId != req.RequesterId {
+	if req.Id != req.RequesterId {
 		return nil, status.Error(codes.Unauthenticated, "You can only delete your own profile")
 	}
 
-	err := s.us.Delete(c, req.RequesterId)
+	err := s.us.Delete(c, req.Id)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}

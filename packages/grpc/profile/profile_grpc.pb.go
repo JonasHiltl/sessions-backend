@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ProfileServiceClient interface {
 	CreateProfile(ctx context.Context, in *CreateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
+	GetManyProfiles(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesResponse, error)
 	GetProfileByUsername(ctx context.Context, in *GetProfileByUsernameRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*Profile, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*Profile, error)
@@ -48,6 +49,15 @@ func (c *profileServiceClient) CreateProfile(ctx context.Context, in *CreateProf
 func (c *profileServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error) {
 	out := new(Profile)
 	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *profileServiceClient) GetManyProfiles(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesResponse, error) {
+	out := new(GetManyProfilesResponse)
+	err := c.cc.Invoke(ctx, "/profile.ProfileService/GetManyProfiles", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +115,7 @@ func (c *profileServiceClient) UsernameTaken(ctx context.Context, in *UsernameTa
 type ProfileServiceServer interface {
 	CreateProfile(context.Context, *CreateProfileRequest) (*Profile, error)
 	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
+	GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error)
 	GetProfileByUsername(context.Context, *GetProfileByUsernameRequest) (*Profile, error)
 	GetMe(context.Context, *GetMeRequest) (*Profile, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*Profile, error)
@@ -122,6 +133,9 @@ func (UnimplementedProfileServiceServer) CreateProfile(context.Context, *CreateP
 }
 func (UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
+}
+func (UnimplementedProfileServiceServer) GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetManyProfiles not implemented")
 }
 func (UnimplementedProfileServiceServer) GetProfileByUsername(context.Context, *GetProfileByUsernameRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfileByUsername not implemented")
@@ -183,6 +197,24 @@ func _ProfileService_GetProfile_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProfileServiceServer).GetProfile(ctx, req.(*GetProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProfileService_GetManyProfiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetManyProfilesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfileServiceServer).GetManyProfiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/profile.ProfileService/GetManyProfiles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfileServiceServer).GetManyProfiles(ctx, req.(*GetManyProfilesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -291,6 +323,10 @@ var ProfileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProfile",
 			Handler:    _ProfileService_GetProfile_Handler,
+		},
+		{
+			MethodName: "GetManyProfiles",
+			Handler:    _ProfileService_GetManyProfiles_Handler,
 		},
 		{
 			MethodName: "GetProfileByUsername",

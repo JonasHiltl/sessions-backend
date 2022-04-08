@@ -15,6 +15,7 @@ type ProfileService interface {
 	Create(ctx context.Context, u dto.Profile) (datastruct.Profile, error)
 	GetById(ctx context.Context, id string) (datastruct.Profile, error)
 	GetByUsername(ctx context.Context, username string) (datastruct.Profile, error)
+	GetMany(ctx context.Context, ids []string) ([]datastruct.Profile, error)
 	Update(ctx context.Context, u dto.Profile) (datastruct.Profile, error)
 	Delete(ctx context.Context, id string) error
 	UsernameTaken(ctx context.Context, uName string) bool
@@ -28,7 +29,7 @@ func NewProfileService(dao repository.Dao) ProfileService {
 	return &profileService{dao: dao}
 }
 
-func (us *profileService) Create(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
+func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
 	id := primitive.NewObjectID()
 
 	newU := datastruct.Profile{
@@ -39,7 +40,7 @@ func (us *profileService) Create(ctx context.Context, u dto.Profile) (datastruct
 		Avatar:    u.Avatar,
 	}
 
-	res, err := us.dao.NewProfileRepository().Create(ctx, newU)
+	res, err := ps.dao.NewProfileRepository().Create(ctx, newU)
 	if err != nil {
 		if strings.Contains(err.Error(), "dup key: { username:") {
 			return datastruct.Profile{}, errors.New("username 2 already taken")
@@ -49,14 +50,17 @@ func (us *profileService) Create(ctx context.Context, u dto.Profile) (datastruct
 	return res, err
 }
 
-func (us *profileService) GetById(ctx context.Context, id string) (datastruct.Profile, error) {
-	return us.dao.NewProfileRepository().GetById(ctx, id)
+func (ps *profileService) GetById(ctx context.Context, id string) (datastruct.Profile, error) {
+	return ps.dao.NewProfileRepository().GetById(ctx, id)
 }
-func (us *profileService) GetByUsername(ctx context.Context, username string) (datastruct.Profile, error) {
-	return us.dao.NewProfileRepository().GetByUsername(ctx, username)
+func (ps *profileService) GetByUsername(ctx context.Context, username string) (datastruct.Profile, error) {
+	return ps.dao.NewProfileRepository().GetByUsername(ctx, username)
+}
+func (ps *profileService) GetMany(ctx context.Context, ids []string) ([]datastruct.Profile, error) {
+	return ps.dao.NewProfileRepository().GetMany(ctx, ids)
 }
 
-func (us *profileService) Update(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
+func (ps *profileService) Update(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
 	id, err := primitive.ObjectIDFromHex(u.Id)
 	if err != nil {
 		return datastruct.Profile{}, err
@@ -70,13 +74,13 @@ func (us *profileService) Update(ctx context.Context, u dto.Profile) (datastruct
 		Avatar:    u.Avatar,
 	}
 
-	return us.dao.NewProfileRepository().Update(ctx, newU)
+	return ps.dao.NewProfileRepository().Update(ctx, newU)
 }
 
-func (us *profileService) Delete(ctx context.Context, id string) error {
-	return us.dao.NewProfileRepository().Delete(ctx, id)
+func (ps *profileService) Delete(ctx context.Context, id string) error {
+	return ps.dao.NewProfileRepository().Delete(ctx, id)
 }
 
-func (us *profileService) UsernameTaken(ctx context.Context, uName string) bool {
-	return us.dao.NewProfileRepository().UsernameTaken(ctx, uName)
+func (ps *profileService) UsernameTaken(ctx context.Context, uName string) bool {
+	return ps.dao.NewProfileRepository().UsernameTaken(ctx, uName)
 }

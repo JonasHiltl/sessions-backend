@@ -18,6 +18,11 @@ service ProfileService {
 			get: "/{id}"
         };
     };
+    rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {
+        option (google.api.http) = {
+			get: "/{id}"
+        };
+    };
     rpc GetProfileByUsername (GetProfileByUsernameRequest) returns (Profile) {
         option (google.api.http) = {
 			get: "/{username}"
@@ -36,7 +41,7 @@ service ProfileService {
     };
     rpc DeleteProfile (DeleteProfileRequest) returns (common.MessageResponse) {
         option (google.api.http) = {
-			delete: "/{p_id}"
+			delete: "/{id}"
         };
     };
     rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {
@@ -73,12 +78,20 @@ message UpdateProfileRequest {
 }
 
 message GetProfileRequest {
-    string p_id = 1;
+    string id = 1;
+}
+
+message GetManyProfilesRequest {
+    repeated string ids = 1;
+}
+
+message GetManyProfilesResponse {
+    repeated Profile profiles = 1;
 }
 
 message DeleteProfileRequest {
     string requester_id = 1;
-    string p_id = 2;
+    string id = 2;
 }
 
 message GetMeRequest {
