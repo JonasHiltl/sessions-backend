@@ -10,11 +10,11 @@ import (
 
 func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.PublicParty, error) {
 	d := dto.Party{
-		Id:    req.PId,
-		UId:   req.RequesterId,
-		Title: req.Title,
-		Lat:   float64(req.Lat),
-		Long:  float64(req.Long),
+		Id:     req.PartyId,
+		UserId: req.RequesterId,
+		Title:  req.Title,
+		Lat:    float64(req.Lat),
+		Long:   float64(req.Long),
 	}
 
 	p, err := s.ps.Update(c, d)

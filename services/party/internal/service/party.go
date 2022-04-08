@@ -19,9 +19,9 @@ const GEOHASH_PRECISION uint = 9
 type PartyService interface {
 	Create(ctx context.Context, p dto.Party) (datastruct.Party, error)
 	Update(ctx context.Context, p dto.Party) (datastruct.Party, error)
-	Delete(ctx context.Context, uId, pId string) error
+	Delete(ctx context.Context, UserId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
-	GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error)
+	GetByUser(ctx context.Context, UserId string, page []byte) ([]datastruct.Party, []byte, error)
 	GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error)
 }
 
@@ -35,7 +35,7 @@ func NewPartyServie(dao repository.Dao, nc *nats.EncodedConn) PartyService {
 }
 
 func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
-	uuid, err := uuid.NewV1()
+	uUserId, err := uuid.NewV1()
 	if err != nil {
 		return datastruct.Party{}, errors.New("failed generate Party id")
 	}
@@ -43,8 +43,8 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
-		Id:       uuid.String(),
-		UId:      p.UId,
+		Id:       uUserId.String(),
+		UserId:   p.UserId,
 		Title:    p.Title,
 		GHash:    gHash,
 		IsPublic: p.IsPublic,
@@ -64,7 +64,7 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 
 	dp := datastruct.Party{
 		Id:       p.Id,
-		UId:      p.UId,
+		UserId:   p.UserId,
 		Title:    p.Title,
 		GHash:    gHash,
 		IsPublic: p.IsPublic,
@@ -89,16 +89,16 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 	return newP, err
 }
 
-func (ps *partyService) Delete(ctx context.Context, uId, pId string) error {
-	return ps.dao.NewPartyQuery().Delete(ctx, uId, pId)
+func (ps *partyService) Delete(ctx context.Context, UserId, pId string) error {
+	return ps.dao.NewPartyQuery().Delete(ctx, UserId, pId)
 }
 
 func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {
 	return ps.dao.NewPartyQuery().Get(ctx, pId)
 }
 
-func (ps *partyService) GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error) {
-	return ps.dao.NewPartyQuery().GetByUser(ctx, uId, page)
+func (ps *partyService) GetByUser(ctx context.Context, UserId string, page []byte) ([]datastruct.Party, []byte, error) {
+	return ps.dao.NewPartyQuery().GetByUser(ctx, UserId, page)
 }
 
 func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {

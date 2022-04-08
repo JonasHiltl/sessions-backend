@@ -11,7 +11,7 @@ import (
 func (s *partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) (*pg.PublicParty, error) {
 	d := dto.Party{
 		Title:    req.Title,
-		UId:      req.RequesterId,
+		UserId:   req.RequesterId,
 		Lat:      float64(req.Lat),
 		Long:     float64(req.Long),
 		IsPublic: req.IsPublic,

@@ -5,7 +5,7 @@ import (
 )
 
 type Party struct {
-	UId      string    `json:"userId"`
+	UserId   string    `json:"userId"`
 	Id       string    `json:"id"`
 	IsPublic bool      `json:"isPublic"`
 	Lat      float64   `json:"lat"`

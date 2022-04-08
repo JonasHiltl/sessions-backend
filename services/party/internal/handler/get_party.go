@@ -10,11 +10,11 @@ import (
 )
 
 func (s *partyServer) GetParty(c context.Context, req *pg.GetPartyRequest) (*pg.PublicParty, error) {
-	if req.PId == "" {
+	if req.PartyId == "" {
 		return nil, status.Error(codes.InvalidArgument, "invalid Party id")
 	}
 
-	p, err := s.ps.Get(c, req.PId)
+	p, err := s.ps.Get(c, req.PartyId)
 	if err != nil {
 		return nil, comutils.HandleError(err)
 	}

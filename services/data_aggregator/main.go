@@ -24,14 +24,14 @@ func main() {
 	}
 
 	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
-	profileClientc, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
+	profileClient, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
 	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
 	storyClient, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
 
 	authHandler := authhandler.NewAuthGatewayHandler(authClient)
-	profileHandler := profilehandler.NewProfileGatewayHandler(profileClientc)
-	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient)
-	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClientc)
+	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient)
+	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
+	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)
 
 	app := fiber.New()
 

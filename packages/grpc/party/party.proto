@@ -7,38 +7,12 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service PartyService {
-    rpc CreateParty (CreatePartyRequest) returns (PublicParty) {
-        option (google.api.http) = {
-            post: "/"
-            body: "*"
-        };
-    };
-    rpc GetParty (GetPartyRequest) returns (PublicParty) {
-        option (google.api.http) = {
-			get: "/{p_id}"
-        };
-    };
-    rpc UpdateParty (UpdatePartyRequest) returns (PublicParty) {
-        option (google.api.http) = {
-			patch: "/{p_id}"
-            body: "*"
-        };
-    };
-    rpc DeleteParty (DeletePartyRequest) returns (common.MessageResponse) {
-        option (google.api.http) = {
-			delete: "/{p_id}"
-        };
-    };
-    rpc GetByUser (GetByUserRequest) returns (PagedParties) {
-        option (google.api.http) = {
-			get: "/user/{u_id}"
-        };
-    };
-    rpc GeoSearch (GeoSearchRequest) returns (PagedParties) {
-        option (google.api.http) = {
-			get: "/near"
-        };
-    };
+    rpc CreateParty (CreatePartyRequest) returns (PublicParty) {};
+    rpc GetParty (GetPartyRequest) returns (PublicParty) {};
+    rpc UpdateParty (UpdatePartyRequest) returns (PublicParty) {};
+    rpc DeleteParty (DeletePartyRequest) returns (common.MessageResponse) {};
+    rpc GetByUser (GetByUserRequest) returns (PagedParties) {};
+    rpc GeoSearch (GeoSearchRequest) returns (PagedParties) {};
 }
 
 message CreatePartyRequest {
@@ -51,7 +25,7 @@ message CreatePartyRequest {
 
 message UpdatePartyRequest {
     string requester_id = 1;
-    string p_id = 2;
+    string party_id = 2;
     string title = 3;
     float lat = 4;
     float long = 5;
@@ -59,7 +33,7 @@ message UpdatePartyRequest {
 
 message DeletePartyRequest {
     string requester_id = 1;
-    string p_id = 2;
+    string party_id = 2;
 }
 
 message GeoSearchRequest {
@@ -70,11 +44,11 @@ message GeoSearchRequest {
 }
 
 message GetPartyRequest {
-    string p_id = 1;
+    string party_id = 1;
 }
 
 message GetByUserRequest {
-    string u_id = 1;
+    string user_id = 1;
     string next_page = 2;
 }
 
@@ -85,11 +59,10 @@ message PagedParties {
 
 message PublicParty {
     string id = 1;
-    string u_id = 2;
+    string user_id = 2;
     string title = 3;
     bool is_public = 4;
     float lat = 5;
     float long = 6;
-    repeated string stories = 7;
     string created_at = 8;
 }

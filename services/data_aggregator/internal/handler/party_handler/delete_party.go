@@ -11,7 +11,7 @@ func (h *partyGatewayHandler) DeleteParty(c *fiber.Ctx) error {
 
 	pId := c.Params("id")
 
-	res, err := h.partyClient.DeleteParty(c.Context(), &party.DeletePartyRequest{RequesterId: u_id, PId: pId})
+	res, err := h.partyClient.DeleteParty(c.Context(), &party.DeletePartyRequest{RequesterId: u_id, PartyId: pId})
 	if err != nil {
 		return err
 	}

@@ -93,7 +93,7 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 	stmt, names := b.ToCql()
 
 	err := pq.sess.Query(stmt, names).
-		BindMap((qb.M{"id": p.Id, "title": p.Title, "geohash": p.GHash, "user_id": p.UId})).
+		BindMap((qb.M{"id": p.Id, "title": p.Title, "geohash": p.GHash, "user_id": p.UserId})).
 		ExecRelease()
 	if err != nil {
 		return err
