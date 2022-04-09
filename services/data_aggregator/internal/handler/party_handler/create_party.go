@@ -37,6 +37,7 @@ func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 		Lat:       p.Lat,
 		Long:      p.Long,
 		Stories:   storyRes.Stories,
+		StartDate: p.StartDate,
 		CreatedAt: p.CreatedAt,
 	}
 

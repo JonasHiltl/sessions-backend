@@ -13,6 +13,7 @@ type AggregatedParty struct {
 	Lat       float32           `json:"lat,omitempty"`
 	Long      float32           `json:"long,omitempty"`
 	Stories   []*sg.PublicStory `json:"stories,omitempty"`
+	StartDate string            `json:"start_date,omitempty"`
 	CreatedAt string            `json:"created_at,omitempty"`
 }
 
