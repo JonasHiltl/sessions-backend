@@ -30,15 +30,19 @@ func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 	}
 
 	res := datastruct.AggregatedParty{
-		Id:        p.Id,
-		Creator:   profileRes,
-		Title:     p.Title,
-		IsPublic:  p.IsPublic,
-		Lat:       p.Lat,
-		Long:      p.Long,
-		Stories:   storyRes.Stories,
-		StartDate: p.StartDate,
-		CreatedAt: p.CreatedAt,
+		Id:            p.Id,
+		Creator:       profileRes,
+		Title:         p.Title,
+		IsPublic:      p.IsPublic,
+		Lat:           p.Lat,
+		Long:          p.Long,
+		StreetAddress: p.StreetAddress,
+		PostalCode:    p.PostalCode,
+		State:         p.State,
+		Country:       p.Country,
+		Stories:       storyRes.Stories,
+		StartDate:     p.StartDate,
+		CreatedAt:     p.CreatedAt,
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
