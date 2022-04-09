@@ -6,7 +6,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
-	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/dto"
 )
 
@@ -17,7 +16,7 @@ func (s *authServer) GoogleLogin(c context.Context, req *ag.GoogleLoginRequest) 
 	}
 
 	du := dto.AuthUser{
-		Provider:      datastruct.Google,
+		Provider:      comtypes.Google,
 		Email:         claims.Email,
 		EmailVerified: claims.EmailVerified,
 		Role:          comtypes.UserRole,

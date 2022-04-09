@@ -10,7 +10,7 @@ import (
 // Password is required if Provider does not exists
 type AuthUser struct {
 	Id            primitive.ObjectID `json:"id"                      bson:"_id"`
-	Provider      Provider           `json:"provider"                bson:"provider,omitempty"      validate:"required_without=PasswordHash"`
+	Provider      comtypes.Provider  `json:"provider"                bson:"provider,omitempty"      validate:"required_without=PasswordHash"`
 	Email         string             `json:"email,omitempty"         bson:"email,omitempty"         validate:"email,required_with=PasswordHash"`
 	EmailVerified bool               `json:"email_verified"          bson:"email_verified"`
 	EmailCode     string             `json:"email_code"              bson:"email_code,omitempty"`
