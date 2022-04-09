@@ -7,11 +7,12 @@ import (
 )
 
 type Party struct {
-	Id       string `json:"id"        db:"id"         validate:"required"`
-	UserId   string `json:"userId"    db:"user_id"    validate:"required"`
-	Title    string `json:"title"     db:"title"      validate:"required"`
-	IsPublic bool   `json:"isPublic"  db:"is_public"`
-	GHash    string `json:"geohash"   db:"geohash"    validate:"required"`
+	Id        string `json:"id"         db:"id"         validate:"required"`
+	UserId    string `json:"user_id"    db:"user_id"    validate:"required"`
+	Title     string `json:"title"      db:"title"      validate:"required"`
+	IsPublic  bool   `json:"is_public"  db:"is_public"`
+	GHash     string `json:"geohash"    db:"geohash"    validate:"required"`
+	StartDate string `json:"start_date" db:"start_date"  validate:"required"`
 }
 
 func (p Party) ToPublicParty() *pg.PublicParty {

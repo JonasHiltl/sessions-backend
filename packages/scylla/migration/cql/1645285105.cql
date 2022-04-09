@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS party (
   title text,
   is_public boolean,
   geohash text,
+  start_date timestamp,
 ) WITH default_time_to_live = 86400;
 
 CREATE INDEX party_by_user_test ON sessions.party (user_id);
