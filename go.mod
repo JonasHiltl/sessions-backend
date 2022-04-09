@@ -79,5 +79,5 @@ require (
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/nats-io/nats-server/v2 v2.7.3 // indirect
 	github.com/nats-io/nats.go v1.13.1-0.20220121202836-972a071d373d
-	golang.org/x/sys v0.0.0-20220405052023-b1e9470b6e64 // indirect
+	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
 )

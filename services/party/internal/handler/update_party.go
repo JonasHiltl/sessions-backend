@@ -18,12 +18,16 @@ func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest)
 	}
 
 	d := dto.Party{
-		Id:        req.PartyId,
-		UserId:    req.RequesterId,
-		Title:     req.Title,
-		Lat:       req.Lat,
-		Long:      req.Long,
-		StartDate: start,
+		Id:            req.PartyId,
+		UserId:        req.RequesterId,
+		Title:         req.Title,
+		Lat:           req.Lat,
+		Long:          req.Long,
+		StreetAddress: req.StreetAddress,
+		PostalCode:    req.PostalCode,
+		State:         req.State,
+		Country:       req.Country,
+		StartDate:     start,
 	}
 
 	p, err := s.ps.Update(c, d)

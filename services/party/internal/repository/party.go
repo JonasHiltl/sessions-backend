@@ -97,17 +97,37 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 		b.Set("start_date")
 	}
 
+	if p.StreetAddress != "" {
+		b.Set("street_address")
+	}
+
+	if p.PostalCode != "" {
+		b.Set("postal_code")
+	}
+
+	if p.State != "" {
+		b.Set("state")
+	}
+
+	if p.Country != "" {
+		b.Set("country")
+	}
+
 	b.If(qb.Eq("user_id"))
 	stmt, names := b.ToCql()
 
 	err := pq.sess.Query(stmt, names).
 		BindMap((qb.M{
-			"user_id":    p.UserId,
-			"id":         p.Id,
-			"title":      p.Title,
-			"geohash":    p.GHash,
-			"position":   p.Position,
-			"start_date": p.StartDate,
+			"user_id":        p.UserId,
+			"id":             p.Id,
+			"title":          p.Title,
+			"geohash":        p.GHash,
+			"position":       p.Position,
+			"start_date":     p.StartDate,
+			"street_address": p.StreetAddress,
+			"postal_code":    p.PostalCode,
+			"state":          p.State,
+			"country":        p.Country,
 		})).
 		ExecRelease()
 	if err != nil {

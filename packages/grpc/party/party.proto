@@ -21,7 +21,11 @@ message CreatePartyRequest {
     float lat = 3;
     float long = 4;
     bool is_public = 5;
-    string start_date = 6;
+    string street_address = 6;
+    string postal_code = 7;
+    string state = 8;
+    string country = 9;
+    string start_date = 10;
 }
 
 message UpdatePartyRequest {
@@ -30,7 +34,11 @@ message UpdatePartyRequest {
     string title = 3;
     float lat = 4;
     float long = 5;
-    string start_date = 6;
+    string street_address = 6;
+    string postal_code = 7;
+    string state = 8;
+    string country = 9;
+    string start_date = 10;
 }
 
 message DeletePartyRequest {
@@ -66,6 +74,10 @@ message PublicParty {
     bool is_public = 4;
     float lat = 5;
     float long = 6;
-    string created_at = 7;
-    string start_date = 8;
+    string street_address = 7;
+    string postal_code = 8;
+    string state = 9;
+    string country = 10;
+    string start_date = 11;
+    string created_at = 12;
 }

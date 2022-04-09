@@ -43,13 +43,17 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	gHash := geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
-		Id:        uUserId.String(),
-		UserId:    p.UserId,
-		Title:     p.Title,
-		GHash:     gHash,
-		Position:  []float32{p.Lat, p.Long},
-		IsPublic:  p.IsPublic,
-		StartDate: p.StartDate.Format(time.RFC3339),
+		Id:            uUserId.String(),
+		UserId:        p.UserId,
+		Title:         p.Title,
+		GHash:         gHash,
+		Position:      []float32{p.Lat, p.Long},
+		IsPublic:      p.IsPublic,
+		StreetAddress: p.StreetAddress,
+		PostalCode:    p.PostalCode,
+		State:         p.State,
+		Country:       p.Country,
+		StartDate:     p.StartDate.Format(time.RFC3339),
 	}
 	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
 	if err == nil {
@@ -67,13 +71,17 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 	startDateStr := p.StartDate.Format(time.RFC3339)
 
 	dp := datastruct.Party{
-		Id:        p.Id,
-		UserId:    p.UserId,
-		Title:     p.Title,
-		GHash:     gHash,
-		Position:  []float32{p.Lat, p.Long},
-		IsPublic:  p.IsPublic,
-		StartDate: startDateStr,
+		Id:            p.Id,
+		UserId:        p.UserId,
+		Title:         p.Title,
+		GHash:         gHash,
+		Position:      []float32{p.Lat, p.Long},
+		IsPublic:      p.IsPublic,
+		StreetAddress: p.StreetAddress,
+		PostalCode:    p.PostalCode,
+		State:         p.State,
+		Country:       p.Country,
+		StartDate:     startDateStr,
 	}
 
 	err := ps.dao.NewPartyQuery().Update(ctx, dp)
@@ -94,6 +102,22 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 
 	if startDateStr != "" && startDateStr != newP.StartDate {
 		newP.StartDate = startDateStr
+	}
+
+	if p.StreetAddress != "" && p.StreetAddress != newP.StreetAddress {
+		newP.StreetAddress = p.StreetAddress
+	}
+
+	if p.PostalCode != "" && p.PostalCode != newP.PostalCode {
+		newP.PostalCode = p.PostalCode
+	}
+
+	if p.State != "" && p.State != newP.State {
+		newP.State = p.State
+	}
+
+	if p.Country != "" && p.Country != newP.Country {
+		newP.Country = p.Country
 	}
 
 	return newP, err

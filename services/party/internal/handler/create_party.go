@@ -18,12 +18,16 @@ func (s *partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest)
 	}
 
 	d := dto.Party{
-		Title:     req.Title,
-		UserId:    req.RequesterId,
-		Lat:       req.Lat,
-		Long:      req.Long,
-		IsPublic:  req.IsPublic,
-		StartDate: start,
+		Title:         req.Title,
+		UserId:        req.RequesterId,
+		Lat:           req.Lat,
+		Long:          req.Long,
+		IsPublic:      req.IsPublic,
+		StreetAddress: req.StreetAddress,
+		PostalCode:    req.PostalCode,
+		State:         req.State,
+		Country:       req.Country,
+		StartDate:     start,
 	}
 
 	p, err := s.ps.Create(c, d)

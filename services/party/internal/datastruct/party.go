@@ -6,13 +6,17 @@ import (
 )
 
 type Party struct {
-	Id        string    `json:"id"         db:"id"         validate:"required"`
-	UserId    string    `json:"user_id"    db:"user_id"    validate:"required"`
-	Title     string    `json:"title"      db:"title"      validate:"required"`
-	IsPublic  bool      `json:"is_public"  db:"is_public"`
-	GHash     string    `json:"geohash"    db:"geohash"    validate:"required"`
-	Position  []float32 `json:"position"   db:"position"   validate:"required"` // [lat, long]
-	StartDate string    `json:"start_date" db:"start_date" validate:"required"`
+	Id            string    `json:"id"             db:"id"             validate:"required"`
+	UserId        string    `json:"user_id"        db:"user_id"        validate:"required"`
+	Title         string    `json:"title"          db:"title"          validate:"required"`
+	IsPublic      bool      `json:"is_public"      db:"is_public"`
+	GHash         string    `json:"geohash"        db:"geohash"        validate:"required"`
+	Position      []float32 `json:"position"       db:"position"       validate:"required"` // [lat, long]
+	StreetAddress string    `json:"street_address" db:"street_address" validate:"required"`
+	PostalCode    string    `json:"postal_code"    db:"postal_code"    validate:"required"`
+	State         string    `json:"state"          db:"state"          validate:"required"`
+	Country       string    `json:"country"        db:"country"        validate:"required"`
+	StartDate     string    `json:"start_date"     db:"start_date"     validate:"required"`
 }
 
 func (p Party) ToPublicParty() *pg.PublicParty {
