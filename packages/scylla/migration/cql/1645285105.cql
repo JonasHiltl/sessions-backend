@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS party (
   title text,
   is_public boolean,
   geohash text,
+  position list<float>,
   start_date timestamp,
 ) WITH default_time_to_live = 86400;
 

@@ -40,13 +40,14 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		return datastruct.Party{}, errors.New("failed generate Party id")
 	}
 
-	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
+	gHash := geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
 		Id:        uUserId.String(),
 		UserId:    p.UserId,
 		Title:     p.Title,
 		GHash:     gHash,
+		Position:  []float32{p.Lat, p.Long},
 		IsPublic:  p.IsPublic,
 		StartDate: p.StartDate.Format(time.RFC3339),
 	}
@@ -60,7 +61,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Party, error) {
 	var gHash string
 	if p.Lat != 0 && p.Long != 0 {
-		gHash = geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
+		gHash = geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
 	}
 
 	startDateStr := p.StartDate.Format(time.RFC3339)

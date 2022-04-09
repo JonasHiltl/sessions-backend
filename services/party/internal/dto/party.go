@@ -8,8 +8,8 @@ type Party struct {
 	UserId    string
 	Id        string
 	IsPublic  bool
-	Lat       float64
-	Long      float64
+	Lat       float32
+	Long      float32
 	Title     string
 	StartDate time.Time
 	Ttl       time.Time

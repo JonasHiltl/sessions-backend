@@ -20,8 +20,8 @@ func (s *partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest)
 	d := dto.Party{
 		Title:     req.Title,
 		UserId:    req.RequesterId,
-		Lat:       float64(req.Lat),
-		Long:      float64(req.Long),
+		Lat:       req.Lat,
+		Long:      req.Long,
 		IsPublic:  req.IsPublic,
 		StartDate: start,
 	}
