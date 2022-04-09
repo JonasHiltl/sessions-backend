@@ -43,11 +43,12 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	gHash := geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
-		Id:       uUserId.String(),
-		UserId:   p.UserId,
-		Title:    p.Title,
-		GHash:    gHash,
-		IsPublic: p.IsPublic,
+		Id:        uUserId.String(),
+		UserId:    p.UserId,
+		Title:     p.Title,
+		GHash:     gHash,
+		IsPublic:  p.IsPublic,
+		StartDate: p.StartDate.Format(time.RFC3339),
 	}
 	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
 	if err == nil {
@@ -62,12 +63,15 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		gHash = geohash.EncodeWithPrecision(p.Lat, p.Long, GEOHASH_PRECISION)
 	}
 
+	startDateStr := p.StartDate.Format(time.RFC3339)
+
 	dp := datastruct.Party{
-		Id:       p.Id,
-		UserId:   p.UserId,
-		Title:    p.Title,
-		GHash:    gHash,
-		IsPublic: p.IsPublic,
+		Id:        p.Id,
+		UserId:    p.UserId,
+		Title:     p.Title,
+		GHash:     gHash,
+		IsPublic:  p.IsPublic,
+		StartDate: startDateStr,
 	}
 
 	err := ps.dao.NewPartyQuery().Update(ctx, dp)
@@ -84,6 +88,10 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 
 	if gHash != "" && gHash != newP.GHash {
 		newP.GHash = gHash
+	}
+
+	if startDateStr != "" && startDateStr != newP.StartDate {
+		newP.StartDate = startDateStr
 	}
 
 	return newP, err

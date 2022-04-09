@@ -5,11 +5,12 @@ import (
 )
 
 type Party struct {
-	UserId   string    `json:"userId"`
-	Id       string    `json:"id"`
-	IsPublic bool      `json:"isPublic"`
-	Lat      float64   `json:"lat"`
-	Long     float64   `json:"long"`
-	Title    string    `json:"title"`
-	Ttl      time.Time `json:"ttl"`
+	UserId    string
+	Id        string
+	IsPublic  bool
+	Lat       float64
+	Long      float64
+	Title     string
+	StartDate time.Time
+	Ttl       time.Time
 }

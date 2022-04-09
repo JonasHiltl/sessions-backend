@@ -16,16 +16,6 @@ type GeoSearchBody struct {
 	Precision uint    `json:"precision"`
 }
 
-// @Summary Search by location
-// @Description Get a list of parties near a location
-// @Tags GEO
-// @Produce json
-// @Param lat query float32 true "Latitude"
-// @Param long query float32 true "Longitude"
-// @Param precision query uint true "Geohash precision"
-// @Success 200 {object} datastruct.PagedParties
-// @Failure 400 {object} echo.HTTPError
-// @Router /near [get]
 func (s *partyServer) GeoSearch(c context.Context, req *pg.GeoSearchRequest) (*pg.PagedParties, error) {
 	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {

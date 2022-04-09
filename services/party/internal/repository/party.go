@@ -89,11 +89,15 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 		b.Set("geohash")
 	}
 
+	if p.StartDate != "" {
+		b.Set("start_date")
+	}
+
 	b.If(qb.Eq("user_id"))
 	stmt, names := b.ToCql()
 
 	err := pq.sess.Query(stmt, names).
-		BindMap((qb.M{"id": p.Id, "title": p.Title, "geohash": p.GHash, "user_id": p.UserId})).
+		BindMap((qb.M{"id": p.Id, "title": p.Title, "geohash": p.GHash, "user_id": p.UserId, "start_date": p.StartDate})).
 		ExecRelease()
 	if err != nil {
 		return err
