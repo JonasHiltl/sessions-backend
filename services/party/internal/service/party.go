@@ -71,6 +71,7 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		UserId:    p.UserId,
 		Title:     p.Title,
 		GHash:     gHash,
+		Position:  []float32{p.Lat, p.Long},
 		IsPublic:  p.IsPublic,
 		StartDate: startDateStr,
 	}
