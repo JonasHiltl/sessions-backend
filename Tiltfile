@@ -11,7 +11,6 @@
 #
 #   More info: https://docs.tilt.dev/api.html#api.docker_build
 #
-load('ext://restart_process', 'docker_build_with_restart')
 
 docker_build(
     'jonashiltl/profile-service', 
@@ -33,7 +32,7 @@ docker_build(
     ]
 )
 
-docker_build_with_restart(
+docker_build(
     'jonashiltl/party-service', 
     '.', 
     dockerfile='services/party/Dockerfile', 
@@ -52,7 +51,7 @@ docker_build_with_restart(
     ]
 )
 
-docker_build_with_restart(
+docker_build(
     'jonashiltl/story-service', 
     '.', 
     dockerfile='services/story/Dockerfile', 
@@ -71,7 +70,7 @@ docker_build_with_restart(
     ]
 )
 
-docker_build_with_restart(
+docker_build(
     'jonashiltl/comment-service', 
     '.', 
     dockerfile='services/comment/Dockerfile', 
@@ -90,7 +89,7 @@ docker_build_with_restart(
     ]
 )
 
-docker_build_with_restart(
+docker_build(
     'jonashiltl/notification-service', 
     '.', 
     dockerfile='services/notification/Dockerfile', 
@@ -109,7 +108,7 @@ docker_build_with_restart(
     ]
 )
 
-docker_build_with_restart(
+docker_build(
     'jonashiltl/data-aggregator', 
     '.', 
     dockerfile='services/data_aggregator/Dockerfile', 
