@@ -12,7 +12,7 @@ func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 
 	res, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	// TODO: Decide if it's necessary to always get one/multiple stories of a party to have anything to show in the Frontend when viewing a Party

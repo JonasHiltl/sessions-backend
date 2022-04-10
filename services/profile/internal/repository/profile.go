@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/datastruct"
@@ -49,19 +50,34 @@ func (pq *profileQuery) Create(ctx context.Context, u datastruct.Profile) (datas
 	return u, nil
 }
 
-func (pq *profileQuery) GetById(ctx context.Context, id string) (res datastruct.Profile, err error) {
+func (pq *profileQuery) GetById(ctx context.Context, idStr string) (res datastruct.Profile, err error) {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return res, errors.New("invalid profile id")
+	}
+
 	err = pq.
 		col.
 		FindOne(ctx, bson.M{"_id": id}).
 		Decode(&res)
 	if err != nil {
+		log.Println(err)
 		return res, err
 	}
 
 	return res, err
 }
 
-func (pq *profileQuery) GetMany(ctx context.Context, ids []string) (res []datastruct.Profile, err error) {
+func (pq *profileQuery) GetMany(ctx context.Context, idsStr []string) (res []datastruct.Profile, err error) {
+	var ids []primitive.ObjectID
+	for _, i := range idsStr {
+		id, err := primitive.ObjectIDFromHex(i)
+		if err != nil {
+			return res, errors.New("invalid profile id")
+		}
+		ids = append(ids, id)
+	}
+
 	filter := bson.M{"_id": bson.M{"$in": ids}}
 
 	cur, err := pq.col.Find(ctx, filter)
@@ -77,7 +93,12 @@ func (pq *profileQuery) GetMany(ctx context.Context, ids []string) (res []datast
 	return res, nil
 }
 
-func (pq *profileQuery) Delete(ctx context.Context, id string) error {
+func (pq *profileQuery) Delete(ctx context.Context, idStr string) error {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return errors.New("invalid profile id")
+	}
+
 	res, err := pq.
 		col.
 		DeleteOne(ctx, bson.M{"_id": id})

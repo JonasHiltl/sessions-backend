@@ -14,7 +14,7 @@ func (h *authGatewayHandler) Login(c *fiber.Ctx) error {
 
 	res, err := h.authClient.Login(c.Context(), req)
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

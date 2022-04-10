@@ -44,11 +44,11 @@ func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.R
 		Token: t,
 		AuthUser: &ag.AuthUser{
 			Id:            u.Id.Hex(),
-			Provider:      u.Provider.String(),
+			Provider:      u.Provider,
 			Email:         u.Email,
 			EmailVerified: u.EmailVerified,
 			EmailCode:     u.EmailCode,
-			Role:          u.Role.String(),
+			Role:          u.Role,
 		},
 	}, nil
 }

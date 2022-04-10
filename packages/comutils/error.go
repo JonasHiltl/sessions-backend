@@ -61,9 +61,10 @@ func HTTPStatusFromCode(code codes.Code) int {
 	return http.StatusInternalServerError
 }
 
-func ToHTTPError(c *fiber.Ctx, err error) error {
+func ToHTTPError(err error) *fiber.Error {
 	s := status.Convert(err)
 
 	st := HTTPStatusFromCode(s.Code())
-	return c.Status(st).JSON(s.Message())
+
+	return fiber.NewError(st, s.Message())
 }

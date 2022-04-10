@@ -57,7 +57,12 @@ func (aq *authQuery) Create(ctx context.Context, u datastruct.AuthUser) (datastr
 	return u, nil
 }
 
-func (uq *authQuery) Delete(ctx context.Context, id string) error {
+func (uq *authQuery) Delete(ctx context.Context, idStr string) error {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return errors.New("invalid profile id")
+	}
+
 	res, err := uq.
 		col.
 		DeleteOne(ctx, bson.M{"_id": id})
@@ -79,8 +84,8 @@ func (uq *authQuery) Update(ctx context.Context, u datastruct.AuthUser) (res dat
 	after := options.After
 	opt := options.FindOneAndUpdateOptions{ReturnDocument: &after}
 
-	if !u.Provider.IsNil() {
-		input["provider"] = u.Provider.String()
+	if u.Provider != "" {
+		input["provider"] = u.Provider
 	}
 
 	if u.Email != "" {
@@ -91,8 +96,8 @@ func (uq *authQuery) Update(ctx context.Context, u datastruct.AuthUser) (res dat
 		input["password"] = u.PasswordHash
 	}
 
-	if !u.Role.IsNil() {
-		input["role"] = u.Role.String()
+	if u.Role != "" {
+		input["role"] = u.Role
 	}
 
 	err = uq.
@@ -106,7 +111,12 @@ func (uq *authQuery) Update(ctx context.Context, u datastruct.AuthUser) (res dat
 	return res, nil
 }
 
-func (aq *authQuery) GetById(ctx context.Context, id string) (res datastruct.AuthUser, err error) {
+func (aq *authQuery) GetById(ctx context.Context, idStr string) (res datastruct.AuthUser, err error) {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return res, errors.New("invalid profile id")
+	}
+
 	err = aq.
 		col.
 		FindOne(ctx, bson.M{"_id": id}).

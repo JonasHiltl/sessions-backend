@@ -33,11 +33,11 @@ func (as *authService) Create(ctx context.Context, u dto.AuthUser) (datastruct.A
 
 	newU := datastruct.AuthUser{
 		Id:            id,
-		Provider:      u.Provider,
+		Provider:      u.Provider.String(),
 		Email:         u.Email,
 		EmailVerified: u.EmailVerified,
 		PasswordHash:  u.PasswordHash,
-		Role:          u.Role,
+		Role:          u.Role.String(),
 	}
 
 	res, err := as.dao.NewAuthRepository().Create(ctx, newU)
@@ -62,11 +62,11 @@ func (as *authService) Update(ctx context.Context, u dto.AuthUser) (datastruct.A
 
 	newU := datastruct.AuthUser{
 		Id:            id,
-		Provider:      u.Provider,
+		Provider:      u.Provider.String(),
 		Email:         u.Email,
 		EmailVerified: u.EmailVerified,
 		PasswordHash:  u.PasswordHash,
-		Role:          u.Role,
+		Role:          u.Role.String(),
 	}
 
 	return as.dao.NewAuthRepository().Update(ctx, newU)

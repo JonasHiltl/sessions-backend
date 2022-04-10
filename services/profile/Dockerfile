@@ -13,10 +13,6 @@ EXPOSE 8081
 
 WORKDIR /app/services/profile
 
-RUN ls -la
-
 RUN go build -o ./profile-service
-
-RUN ls -la
 
 ENTRYPOINT profile-service

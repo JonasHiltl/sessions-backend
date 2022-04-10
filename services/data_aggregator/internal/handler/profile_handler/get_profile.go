@@ -11,7 +11,7 @@ func (h *profileGatewayHandler) GetProfile(c *fiber.Ctx) error {
 
 	res, err := h.profileClient.GetProfile(c.Context(), &profile.GetProfileRequest{Id: id})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

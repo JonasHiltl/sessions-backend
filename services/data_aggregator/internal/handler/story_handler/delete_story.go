@@ -14,7 +14,7 @@ func (h *storyGatewayHandler) DeleteStory(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.DeleteStory(c.Context(), &story.DeleteStoryRequest{RequesterId: u_id, SId: sId})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

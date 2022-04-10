@@ -22,11 +22,11 @@ func (t tokenManager) NewJWT(u datastruct.AuthUser) (string, error) {
 		"sub":           u.Id,
 		"iss":           "sessions.com",
 		"emailVerified": u.EmailVerified,
-		"role":          u.Role.String(),
+		"role":          u.Role,
 	}
 
-	if !u.Provider.IsNil() {
-		claims["provider"] = u.Provider.String()
+	if u.Provider != "" {
+		claims["provider"] = u.Provider
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

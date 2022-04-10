@@ -17,17 +17,17 @@ func (h *partyGatewayHandler) UpdateParty(c *fiber.Ctx) error {
 
 	p, err := h.partyClient.UpdateParty(c.Context(), req)
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	profileRes, err := h.profileClient.GetProfile(c.Context(), &pg.GetProfileRequest{Id: p.UserId})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	storyRes, err := h.storyClient.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	res := datastruct.AggregatedParty{

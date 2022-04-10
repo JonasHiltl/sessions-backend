@@ -12,7 +12,7 @@ func (h *storyGatewayHandler) GetStoryByParty(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.GetByParty(c.Context(), &story.GetByPartyRequest{PartyId: pId, NextPage: nextPage})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

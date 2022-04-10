@@ -46,7 +46,20 @@ func main() {
 	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
 	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Status code defaults to 500
+			code := fiber.StatusInternalServerError
+
+			// Retrieve the custom status code if it's an fiber.*Error
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+			}
+
+			// Send custom error in json format
+			return ctx.Status(code).JSON(err)
+		},
+	})
 	app.Use(logger.New())
 	app.Get("/dashboard", monitor.New())
 

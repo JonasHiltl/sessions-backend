@@ -12,7 +12,7 @@ func (h *storyGatewayHandler) GetStoryByUser(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.GetByUser(c.Context(), &story.GetByUserRequest{UserId: userId, NextPage: nextPage})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

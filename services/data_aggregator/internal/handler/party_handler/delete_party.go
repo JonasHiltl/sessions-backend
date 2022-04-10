@@ -14,7 +14,7 @@ func (h *partyGatewayHandler) DeleteParty(c *fiber.Ctx) error {
 
 	res, err := h.partyClient.DeleteParty(c.Context(), &party.DeletePartyRequest{RequesterId: u_id, PartyId: pId})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

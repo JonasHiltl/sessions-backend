@@ -1,6 +1,8 @@
 package authhandler
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
@@ -28,12 +30,13 @@ func (h *authGatewayHandler) Register(c *fiber.Ctx) error {
 
 	u, err := h.authClient.Register(c.Context(), &auth.RegisterRequest{Email: req.Email, Password: req.Password})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		log.Println(err)
+		return comutils.ToHTTPError(err)
 	}
 
 	profileRes, err := h.profileClient.CreateProfile(c.Context(), &profile.CreateProfileRequest{Id: u.AuthUser.Id, Username: req.Username, Firstname: req.Firstname, Lastname: req.Lastname})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(RegisterResponse{Token: u.Token, Profile: profileRes})

@@ -11,7 +11,7 @@ func (h *profileGatewayHandler) GetProfileByUsername(c *fiber.Ctx) error {
 
 	res, err := h.profileClient.GetProfileByUsername(c.Context(), &profile.GetProfileByUsernameRequest{Username: uName})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

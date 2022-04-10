@@ -5,7 +5,8 @@ import "encoding/json"
 type Provider int64
 
 const (
-	Google Provider = iota
+	UndefinedProvider Provider = iota
+	Google
 	Apple
 )
 
@@ -16,7 +17,7 @@ func (p Provider) String() string {
 	case Apple:
 		return "apple"
 	}
-	return "unknown"
+	return ""
 }
 
 func (p Provider) EnumIndex() int {
@@ -24,7 +25,7 @@ func (p Provider) EnumIndex() int {
 }
 
 func (p Provider) IsNil() bool {
-	if p.String() == "unknown" {
+	if p == UndefinedProvider {
 		return true
 	} else {
 		return false
@@ -35,6 +36,7 @@ func (p Provider) FromString(provider string) Provider {
 	return map[string]Provider{
 		"apple":  Apple,
 		"google": Google,
+		"":       UndefinedProvider,
 	}[provider]
 }
 

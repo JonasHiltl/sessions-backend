@@ -11,7 +11,7 @@ func (h *storyGatewayHandler) PresignURL(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.PresignURL(c.Context(), &story.PresignURLRequest{Key: key})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

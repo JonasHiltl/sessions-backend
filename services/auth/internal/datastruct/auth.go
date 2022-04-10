@@ -1,7 +1,6 @@
 package datastruct
 
 import (
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -10,10 +9,10 @@ import (
 // Password is required if Provider does not exists
 type AuthUser struct {
 	Id            primitive.ObjectID `json:"id"                      bson:"_id"`
-	Provider      comtypes.Provider  `json:"provider"                bson:"provider,omitempty"      validate:"required_without=PasswordHash"`
+	Provider      string             `json:"provider"                bson:"provider,omitempty"      validate:"required_without=PasswordHash"`
 	Email         string             `json:"email,omitempty"         bson:"email,omitempty"         validate:"email,required_with=PasswordHash"`
 	EmailVerified bool               `json:"email_verified"          bson:"email_verified"`
 	EmailCode     string             `json:"email_code"              bson:"email_code,omitempty"`
 	PasswordHash  string             `json:"password_hash,omitempty" bson:"password_hash,omitempty" validate:"required_without=Provider"`
-	Role          comtypes.Role      `json:"role,omitempty"          bson:"role,omitempty"          validate:"required"`
+	Role          string             `json:"role,omitempty"          bson:"role,omitempty"          validate:"required"`
 }

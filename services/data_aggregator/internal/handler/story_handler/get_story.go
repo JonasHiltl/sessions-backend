@@ -13,7 +13,7 @@ func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 
 	s, err := h.storyClient.GetStory(c.Context(), &story.GetStoryRequest{SId: sId})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	// Get all profiles of the tagged people and the story creator in one call
@@ -21,7 +21,7 @@ func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 
 	profilesRes, err := h.profileClient.GetManyProfiles(c.Context(), &pg.GetManyProfilesRequest{Ids: ids})
 	if err != nil {
-		return comutils.ToHTTPError(c, err)
+		return comutils.ToHTTPError(err)
 	}
 
 	// Remove the creator of the story from the returned array and create a filtered list with only the profiles of the tagged people.

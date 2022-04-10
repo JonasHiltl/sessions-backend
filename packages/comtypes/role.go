@@ -5,7 +5,8 @@ import "encoding/json"
 type Role int64
 
 const (
-	UserRole Role = iota
+	UndefinedRole Role = iota
+	UserRole
 	AdminRole
 )
 
@@ -16,13 +17,14 @@ func (r Role) String() string {
 	case AdminRole:
 		return "admin"
 	}
-	return "unknown"
+	return ""
 }
 
 func (t *Role) FromString(role string) Role {
 	return map[string]Role{
 		"user":  UserRole,
 		"admin": AdminRole,
+		"":      UndefinedRole,
 	}[role]
 }
 
@@ -31,7 +33,7 @@ func (r Role) EnumIndex() int {
 }
 
 func (r Role) IsNil() bool {
-	if r.String() == "unknown" {
+	if r == UndefinedRole {
 		return true
 	} else {
 		return false

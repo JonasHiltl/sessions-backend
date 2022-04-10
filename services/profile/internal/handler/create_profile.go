@@ -10,6 +10,7 @@ import (
 
 func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRequest) (*pg.Profile, error) {
 	du := dto.Profile{
+		Id:        req.Id,
 		Username:  req.Username,
 		Firstname: req.Firstname,
 		Lastname:  req.Lastname,

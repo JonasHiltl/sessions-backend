@@ -30,7 +30,10 @@ func NewProfileService(dao repository.Dao) ProfileService {
 }
 
 func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
-	id := primitive.NewObjectID()
+	id, err := primitive.ObjectIDFromHex(u.Id)
+	if err != nil {
+		return datastruct.Profile{}, err
+	}
 
 	newU := datastruct.Profile{
 		Id:        id,
