@@ -18,5 +18,7 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "500m"
+          command:
+            - sh -c "cd services/profile && air"
           ports:
             - containerPort: 8081

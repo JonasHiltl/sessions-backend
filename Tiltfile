@@ -127,12 +127,13 @@ docker_build(
     ]
 )
 
-#load('ext://helm_remote', 'helm_remote')
-#helm_remote(
-#    "nats",
-#    repo_name='nats',
-#    repo_url='https://nats-io.github.io/k8s/helm/charts/'
-#)
+load('ext://helm_remote', 'helm_remote')
+helm_remote(
+    "nats",
+    repo_name='nats',
+    repo_url='https://nats-io.github.io/k8s/helm/charts/',
+    set=['nats.jetstream.enabled=true'],
+)
 # Apply Kubernetes manifests
 #   Tilt will build & push any necessary images, re-deploying your
 #   resources as they change.
@@ -154,10 +155,17 @@ k8s_yaml([
     'k8s/services/story.yaml',
     'k8s/services/profile.yaml',
     'k8s/services/vespa.yaml',
+    'k8s/services/data-aggregator.yaml',
+#    'k8s/services/scylla.yaml',
+#    'k8s/services/mongo.yaml',
 ])
 k8s_yaml([
     'k8s/statefulsets/vespa.yaml', 
 ])
+#k8s_yaml([
+#    'k8s/endpoints/mongo.yaml',
+#    'k8s/endpoints/scylla.yaml',
+#])
 
 
 # Customize a Kubernetes resource
@@ -170,7 +178,7 @@ k8s_yaml([
 #
 #   More info: https://docs.tilt.dev/api.html#api.k8s_resource
 #
-k8s_resource('profile', port_forwards=['8080:8080','8081:8081','8180:8180'])
+# k8s_resource('profile', port_forwards=['8080:8080','8081:8081','8180:8180'])
 
 
 # Run local commands

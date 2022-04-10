@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: mongo
+subsets:
+  - addresses:
+      - ip: host.docker.internal
+    ports:
+      - port: 27017

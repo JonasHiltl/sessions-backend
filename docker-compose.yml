@@ -14,12 +14,12 @@ services:
 
   scylla:
     container_name: scylla
-    image: scylladb/scylla:latest
+    image: scylladb/scylla:4.6.dev-0.20210801.3089558f8
     command: --smp 2 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     ports:
       - "9042:9042"
     volumes:
-      - ./_data/scylla1:/var/lib/scylla/data
+      - ./_data/scylla:/var/lib/scylla/data
 
   mongodb:
     container_name: mongo
@@ -31,12 +31,3 @@ services:
       - 27017:27017
     volumes:
       - ./_data/mongo:/data/db
-
-  nats:
-    image: nats
-    container_name: nats
-    expose:
-      - "4222"
-    ports:
-      - "8222:8222"
-      - "4222:4222"

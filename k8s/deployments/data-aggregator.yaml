@@ -18,5 +18,7 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "500m"
+          command:
+            - "cd services/data_aggregator && air"
           ports:
             - containerPort: 8081

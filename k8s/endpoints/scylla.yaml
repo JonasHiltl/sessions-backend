@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: scylla
+subsets:
+  - addresses:
+      - ip: host.docker.internal
+    ports:
+      - port: 9042
