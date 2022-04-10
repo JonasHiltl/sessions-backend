@@ -37,6 +37,26 @@ docker_build(
 )
 
 docker_build(
+    'jonashiltl/auth-service', 
+    '.', 
+    dockerfile='services/auth/Dockerfile', 
+    entrypoint=['/app/services/auth/auth-service'],
+    only=[
+        './services/auth', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+        './tools.go'
+    ],
+    live_update=[
+        # Sync files from host to container
+        sync('./services/auth/internal', '/app/services/auth/internal'),
+        sync('./services/auth/main.go', '/app/services/auth/main.go'),
+        sync('./packages', '/app/packages'),
+    ]
+)
+
+docker_build(
     'jonashiltl/party-service', 
     '.', 
     dockerfile='services/party/Dockerfile', 
@@ -149,6 +169,7 @@ k8s_yaml([
     'k8s/deployments/notification.yaml',
     'k8s/deployments/party.yaml',
     'k8s/deployments/profile.yaml',
+    'k8s/deployments/auth.yaml',
     'k8s/deployments/story.yaml',
     'k8s/deployments/data-aggregator.yaml',
 ])
@@ -158,6 +179,7 @@ k8s_yaml([
     'k8s/services/party.yaml',
     'k8s/services/story.yaml',
     'k8s/services/profile.yaml',
+    'k8s/services/auth.yaml',
     'k8s/services/vespa.yaml',
     'k8s/services/data-aggregator.yaml',
 #    'k8s/services/scylla.yaml',
