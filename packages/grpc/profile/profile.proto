@@ -7,48 +7,14 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service ProfileService {
-    rpc CreateProfile (CreateProfileRequest) returns (Profile) {
-        option (google.api.http) = {
-            post: "/"
-            body: "*"
-        };
-    };
-    rpc GetProfile (GetProfileRequest) returns (Profile) {
-        option (google.api.http) = {
-			get: "/{id}"
-        };
-    };
-    rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {
-        option (google.api.http) = {
-			get: "/{id}"
-        };
-    };
-    rpc GetProfileByUsername (GetProfileByUsernameRequest) returns (Profile) {
-        option (google.api.http) = {
-			get: "/{username}"
-        };
-    };
-    rpc GetMe (GetMeRequest) returns (Profile) {
-        option (google.api.http) = {
-			get: "/me"
-        };
-    };
-    rpc UpdateProfile (UpdateProfileRequest) returns (Profile) {
-        option (google.api.http) = {
-			patch: "/{id}"
-            body: "*"
-        };
-    };
-    rpc DeleteProfile (DeleteProfileRequest) returns (common.MessageResponse) {
-        option (google.api.http) = {
-			delete: "/{id}"
-        };
-    };
-    rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {
-        option (google.api.http) = {
-			get: "/username-taken/{username}"
-        };
-    };
+    rpc CreateProfile (CreateProfileRequest) returns (Profile) {};
+    rpc GetProfile (GetProfileRequest) returns (Profile) {};
+    rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {};
+    rpc GetProfileByUsername (GetProfileByUsernameRequest) returns (Profile) {};
+    rpc GetMe (GetMeRequest) returns (Profile) {};
+    rpc UpdateProfile (UpdateProfileRequest) returns (Profile) {};
+    rpc DeleteProfile (DeleteProfileRequest) returns (common.MessageResponse) {};
+    rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {};
 }
 
 message Profile {

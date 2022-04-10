@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.TokenResponse, error) {
+func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.RegisterResponse, error) {
 	hash, err := s.password.HashPassword(req.Password)
 	if err != nil {
 		return nil, comutils.HandleError(err)
@@ -40,5 +40,15 @@ func (s *authServer) Register(c context.Context, req *ag.RegisterRequest) (*ag.T
 		return nil, comutils.HandleError(err)
 	}
 
-	return &ag.TokenResponse{Jwt: t, Message: "Successfully registered"}, nil
+	return &ag.RegisterResponse{
+		Token: t,
+		AuthUser: &ag.AuthUser{
+			Id:            u.Id.Hex(),
+			Provider:      u.Provider.String(),
+			Email:         u.Email,
+			EmailVerified: u.EmailVerified,
+			EmailCode:     u.EmailCode,
+			Role:          u.Role.String(),
+		},
+	}, nil
 }

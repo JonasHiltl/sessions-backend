@@ -7,17 +7,31 @@ import "google/api/annotations.proto";
 import "common/common.proto";
 
 service AuthService {
-    rpc Register (RegisterRequest) returns (TokenResponse) {}
-    rpc Login (LoginRequest) returns (TokenResponse) {}
-    rpc GoogleLogin (GoogleLoginRequest) returns (TokenResponse) {}
-    rpc AppleLogin (AppleLoginRequest) returns (TokenResponse) {}
+    rpc Register (RegisterRequest) returns (RegisterResponse) {}
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc GoogleLogin (GoogleLoginRequest) returns (LoginResponse) {}
+    rpc AppleLogin (AppleLoginRequest) returns (LoginResponse) {}
     rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {}
     rpc ResendVerificationEmail (Empty) returns (common.MessageResponse) {}
 }
 
-message TokenResponse {
-    string jwt = 1;
-    string message = 2;
+message AuthUser {
+    string id = 1;
+    string provider = 2;
+    string email = 3;
+    bool email_verified = 4;
+    string email_code = 5;
+    string role = 6;
+}
+
+message RegisterResponse {
+    string token = 1;
+    AuthUser authUser = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+    AuthUser authUser = 2;
 }
 
 message RegisterRequest {

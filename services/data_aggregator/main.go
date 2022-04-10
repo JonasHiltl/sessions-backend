@@ -28,7 +28,7 @@ func main() {
 	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
 	storyClient, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
 
-	authHandler := authhandler.NewAuthGatewayHandler(authClient)
+	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient)
 	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient)
 	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
 	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)

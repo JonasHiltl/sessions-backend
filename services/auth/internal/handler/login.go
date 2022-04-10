@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *authServer) Login(c context.Context, req *ag.LoginRequest) (*ag.TokenResponse, error) {
+func (s *authServer) Login(c context.Context, req *ag.LoginRequest) (*ag.LoginResponse, error) {
 	_, err := mail.ParseAddress(req.Email)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Email")
@@ -31,5 +31,15 @@ func (s *authServer) Login(c context.Context, req *ag.LoginRequest) (*ag.TokenRe
 		return nil, comutils.HandleError(err)
 	}
 
-	return &ag.TokenResponse{Jwt: t, Message: "Successfully Logged in"}, nil
+	return &ag.LoginResponse{
+		Token: t,
+		AuthUser: &ag.AuthUser{
+			Id:            u.Id.Hex(),
+			Provider:      u.Provider.String(),
+			Email:         u.Email,
+			EmailVerified: u.EmailVerified,
+			EmailCode:     u.EmailCode,
+			Role:          u.Role.String(),
+		},
+	}, nil
 }
