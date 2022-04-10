@@ -15,4 +15,4 @@ WORKDIR /app/services/auth
 
 RUN go build -o ./auth-service
 
-ENTRYPOINT auth-service
+CMD ["./auth-aggregator"]

@@ -15,4 +15,4 @@ WORKDIR /app/services/story
 
 RUN go build -o ./story-service
 
-ENTRYPOINT story-service
+CMD ["./story-service"]

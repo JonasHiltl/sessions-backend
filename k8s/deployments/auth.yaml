@@ -16,9 +16,9 @@ spec:
           image: jonashiltl/auth-service
           resources:
             limits:
-              memory: "128Mi"
+              memory: "500Mi"
               cpu: "500m"
           command:
-            - sh -c "cd services/auth && air"
+            - air
           ports:
             - containerPort: 8081

@@ -15,4 +15,4 @@ WORKDIR /app/services/profile
 
 RUN go build -o ./profile-service
 
-ENTRYPOINT profile-service
+CMD ["./profile-service"]

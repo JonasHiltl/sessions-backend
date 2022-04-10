@@ -15,4 +15,4 @@ WORKDIR /app/services/notification
 
 RUN go build -o ./notification-service
 
-ENTRYPOINT notification-service
+CMD ["./notification-service"]

@@ -15,4 +15,4 @@ WORKDIR /app/services/comment
 
 RUN go build -o ./comment-service
 
-ENTRYPOINT comment-service
+CMD ["./comment-aggregator"]

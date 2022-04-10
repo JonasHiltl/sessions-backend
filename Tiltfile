@@ -20,7 +20,6 @@ docker_build(
     'jonashiltl/profile-service', 
     '.', 
     dockerfile='services/profile/Dockerfile', 
-    entrypoint=['/app/services/profile/profile-service'],
     only=[
         './services/profile', 
         './packages', 
@@ -40,7 +39,6 @@ docker_build(
     'jonashiltl/auth-service', 
     '.', 
     dockerfile='services/auth/Dockerfile', 
-    entrypoint=['/app/services/auth/auth-service'],
     only=[
         './services/auth', 
         './packages', 
@@ -60,7 +58,6 @@ docker_build(
     'jonashiltl/party-service', 
     '.', 
     dockerfile='services/party/Dockerfile', 
-    entrypoint=['/app/services/party/party-service'],
     only=[
         './services/party', 
         './packages', 
@@ -79,7 +76,6 @@ docker_build(
     'jonashiltl/story-service', 
     '.', 
     dockerfile='services/story/Dockerfile', 
-    entrypoint=['/app/services/story/story-service'],
     only=[
         './services/story', 
         './packages', 
@@ -98,7 +94,6 @@ docker_build(
     'jonashiltl/comment-service', 
     '.', 
     dockerfile='services/comment/Dockerfile', 
-    entrypoint=['/app/services/comment/comment-service'],
     only=[
         './services/comment', 
         './packages', 
@@ -117,7 +112,6 @@ docker_build(
     'jonashiltl/notification-service', 
     '.', 
     dockerfile='services/notification/Dockerfile', 
-    entrypoint=['/app/services/notification/notification-service'],
     only=[
         './services/notification', 
         './packages', 
@@ -136,7 +130,6 @@ docker_build(
     'jonashiltl/data-aggregator', 
     '.', 
     dockerfile='services/data_aggregator/Dockerfile', 
-    entrypoint=['/app/services/data_aggregator/data-aggregator'],
     only=[
         './services/data_aggregator', 
         './packages', 

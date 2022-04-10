@@ -15,4 +15,4 @@ WORKDIR /app/services/party
 
 RUN go build -o ./party-service
 
-ENTRYPOINT party-service
+CMD ["./party-service"]

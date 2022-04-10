@@ -16,9 +16,9 @@ spec:
           image: jonashiltl/data-aggregator
           resources:
             limits:
-              memory: "128Mi"
+              memory: "500Mi"
               cpu: "500m"
           command:
-            - "cd services/data_aggregator && air"
+            - air
           ports:
             - containerPort: 8081

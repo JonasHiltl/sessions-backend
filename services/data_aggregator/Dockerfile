@@ -15,4 +15,4 @@ WORKDIR /app/services/data_aggregator
 
 RUN go build -o ./data-aggregator
 
-ENTRYPOINT data-aggregator
+CMD ["./data-aggregator"]
