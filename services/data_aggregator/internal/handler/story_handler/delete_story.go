@@ -2,6 +2,7 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
 )
 
@@ -13,7 +14,7 @@ func (h *storyGatewayHandler) DeleteStory(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.DeleteStory(c.Context(), &story.DeleteStoryRequest{RequesterId: u_id, SId: sId})
 	if err != nil {
-		return err
+		return comutils.ToHTTPError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -53,7 +52,7 @@ func main() {
 
 	cg.RegisterCommentServiceServer(grpcServer, cServer)
 
-	fmt.Println("Starting gRPC Server at: ", sb.String())
+	log.Println("Starting gRPC Server at: ", sb.String())
 	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}

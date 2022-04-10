@@ -2,6 +2,7 @@ package authhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 )
 
@@ -13,7 +14,7 @@ func (h *authGatewayHandler) VerifyEmail(c *fiber.Ctx) error {
 
 	res, err := h.authClient.VerifyEmail(c.Context(), req)
 	if err != nil {
-		return err
+		return comutils.ToHTTPError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

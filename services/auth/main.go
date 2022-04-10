@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -52,7 +51,7 @@ func main() {
 
 	ag.RegisterAuthServiceServer(grpcServer, uServer)
 
-	fmt.Println("Starting gRPC Server at: ", sb.String())
+	log.Println("Starting gRPC Server at: ", sb.String())
 	if err := grpcServer.Serve(conn); err != nil {
 		log.Fatal(err)
 	}

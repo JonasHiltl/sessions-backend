@@ -1,3 +1,7 @@
+# USER MINKUBE TUNNEL TO ACCESS LOADBALANCER SERVICE FROM LOCALHOST
+# minikube tunnel
+
+
 # Welcome to Tilt!
 #   To get you started as quickly as possible, we have created a
 #   starter Tiltfile for you.

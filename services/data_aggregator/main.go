@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
@@ -24,9 +25,21 @@ func main() {
 	}
 
 	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to auth service: %v", err)
+	}
 	profileClient, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to profile service: %v", err)
+	}
 	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to party service: %v", err)
+	}
 	storyClient, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to story service: %v", err)
+	}
 
 	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient)
 	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient)
@@ -34,6 +47,8 @@ func main() {
 	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)
 
 	app := fiber.New()
+	app.Use(logger.New())
+	app.Get("/dashboard", monitor.New())
 
 	auth := app.Group("/auth")
 	auth.Post("/login", authHandler.Login)
@@ -67,7 +82,6 @@ func main() {
 	sb.WriteString("0.0.0.0:")
 	sb.WriteString(c.PORT)
 
-	fmt.Println("Fiber started at: ", sb.String())
 	if err := app.Listen(sb.String()); err != nil {
 		log.Fatal(err)
 	}

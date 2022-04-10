@@ -2,6 +2,7 @@ package partyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 )
 
@@ -11,7 +12,7 @@ func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 
 	res, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage})
 	if err != nil {
-		return err
+		return comutils.ToHTTPError(c, err)
 	}
 
 	// TODO: Decide if it's necessary to always get one/multiple stories of a party to have anything to show in the Frontend when viewing a Party

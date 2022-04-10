@@ -2,6 +2,7 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
 )
 
@@ -11,7 +12,7 @@ func (h *storyGatewayHandler) GetStoryByParty(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.GetByParty(c.Context(), &story.GetByPartyRequest{PartyId: pId, NextPage: nextPage})
 	if err != nil {
-		return err
+		return comutils.ToHTTPError(c, err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
