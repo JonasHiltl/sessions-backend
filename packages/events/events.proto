@@ -1,21 +1,24 @@
 syntax="proto3";
 
 package events;
-option go_package = "github.com/jonashiltl/sessions-backend/packages/types/events";
+option go_package = "github.com/jonashiltl/sessions-backend/packages/events";
+
+import "packages/grpc/party/party.proto";
+import "packages/grpc/profile/profile.proto";
 
 message ProfileCreated {
-    string id = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+    profile.Profile profile = 1;
 }
 
 // id must always be defined but for the rest just define the properties that got updated
-message ProfileUpdated{
-    string id = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
+message ProfileUpdated {
+    profile.Profile profile = 1;
+}
+
+message PartyCreated {
+    party.PublicParty party = 1;
+}
+
+message PartyUpdated {
+    party.PublicParty party = 1;
 }

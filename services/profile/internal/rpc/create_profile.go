@@ -24,11 +24,7 @@ func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRe
 	}
 
 	s.stream.PublishEvent(events.ProfileCreated{
-		Id:        p.Id.Hex(),
-		Username:  p.Username,
-		Firstname: p.Firstname,
-		Lastname:  p.Lastname,
-		Avatar:    p.Avatar,
+		Profile: p.ToGRPCProfile(),
 	})
 
 	return p.ToGRPCProfile(), nil

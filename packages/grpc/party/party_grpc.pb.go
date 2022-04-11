@@ -278,5 +278,5 @@ var PartyService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "party/party.proto",
+	Metadata: "packages/grpc/party/party.proto",
 }

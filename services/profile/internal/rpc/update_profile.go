@@ -38,11 +38,13 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 	}
 
 	s.stream.PublishEvent(events.ProfileUpdated{
-		Id:        dp.Id,
-		Username:  dp.Username,
-		Firstname: dp.Firstname,
-		Lastname:  dp.Lastname,
-		Avatar:    dp.Avatar,
+		Profile: &pg.Profile{
+			Id:        dp.Id,
+			Username:  dp.Username,
+			Firstname: dp.Firstname,
+			Lastname:  dp.Lastname,
+			Avatar:    dp.Avatar,
+		},
 	})
 
 	return p.ToGRPCProfile(), nil

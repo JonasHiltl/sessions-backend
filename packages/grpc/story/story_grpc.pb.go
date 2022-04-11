@@ -278,5 +278,5 @@ var StoryService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "story/story.proto",
+	Metadata: "packages/grpc/story/story.proto",
 }

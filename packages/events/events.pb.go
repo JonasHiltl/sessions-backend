@@ -2,11 +2,13 @@
 // versions:
 // 	protoc-gen-go v1.28.0
 // 	protoc        v3.6.1
-// source: packages/types/events/events.proto
+// source: packages/events/events.proto
 
 package events
 
 import (
+	party "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	profile "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -25,17 +27,13 @@ type ProfileCreated struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id        string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username  string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Firstname string `protobuf:"bytes,3,opt,name=firstname,proto3" json:"firstname,omitempty"`
-	Lastname  string `protobuf:"bytes,4,opt,name=lastname,proto3" json:"lastname,omitempty"`
-	Avatar    string `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Profile *profile.Profile `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
 }
 
 func (x *ProfileCreated) Reset() {
 	*x = ProfileCreated{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_packages_types_events_events_proto_msgTypes[0]
+		mi := &file_packages_events_events_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -48,7 +46,7 @@ func (x *ProfileCreated) String() string {
 func (*ProfileCreated) ProtoMessage() {}
 
 func (x *ProfileCreated) ProtoReflect() protoreflect.Message {
-	mi := &file_packages_types_events_events_proto_msgTypes[0]
+	mi := &file_packages_events_events_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,42 +59,14 @@ func (x *ProfileCreated) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProfileCreated.ProtoReflect.Descriptor instead.
 func (*ProfileCreated) Descriptor() ([]byte, []int) {
-	return file_packages_types_events_events_proto_rawDescGZIP(), []int{0}
+	return file_packages_events_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ProfileCreated) GetId() string {
+func (x *ProfileCreated) GetProfile() *profile.Profile {
 	if x != nil {
-		return x.Id
+		return x.Profile
 	}
-	return ""
-}
-
-func (x *ProfileCreated) GetUsername() string {
-	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *ProfileCreated) GetFirstname() string {
-	if x != nil {
-		return x.Firstname
-	}
-	return ""
-}
-
-func (x *ProfileCreated) GetLastname() string {
-	if x != nil {
-		return x.Lastname
-	}
-	return ""
-}
-
-func (x *ProfileCreated) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
-	}
-	return ""
+	return nil
 }
 
 // id must always be defined but for the rest just define the properties that got updated
@@ -105,17 +75,13 @@ type ProfileUpdated struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id        string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Username  string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
-	Firstname string `protobuf:"bytes,3,opt,name=firstname,proto3" json:"firstname,omitempty"`
-	Lastname  string `protobuf:"bytes,4,opt,name=lastname,proto3" json:"lastname,omitempty"`
-	Avatar    string `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Profile *profile.Profile `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
 }
 
 func (x *ProfileUpdated) Reset() {
 	*x = ProfileUpdated{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_packages_types_events_events_proto_msgTypes[1]
+		mi := &file_packages_events_events_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -128,7 +94,7 @@ func (x *ProfileUpdated) String() string {
 func (*ProfileUpdated) ProtoMessage() {}
 
 func (x *ProfileUpdated) ProtoReflect() protoreflect.Message {
-	mi := &file_packages_types_events_events_proto_msgTypes[1]
+	mi := &file_packages_events_events_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -141,107 +107,181 @@ func (x *ProfileUpdated) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProfileUpdated.ProtoReflect.Descriptor instead.
 func (*ProfileUpdated) Descriptor() ([]byte, []int) {
-	return file_packages_types_events_events_proto_rawDescGZIP(), []int{1}
+	return file_packages_events_events_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ProfileUpdated) GetId() string {
+func (x *ProfileUpdated) GetProfile() *profile.Profile {
 	if x != nil {
-		return x.Id
+		return x.Profile
 	}
-	return ""
+	return nil
 }
 
-func (x *ProfileUpdated) GetUsername() string {
+type PartyCreated struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Party *party.PublicParty `protobuf:"bytes,1,opt,name=party,proto3" json:"party,omitempty"`
+}
+
+func (x *PartyCreated) Reset() {
+	*x = PartyCreated{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_packages_events_events_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PartyCreated) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PartyCreated) ProtoMessage() {}
+
+func (x *PartyCreated) ProtoReflect() protoreflect.Message {
+	mi := &file_packages_events_events_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PartyCreated.ProtoReflect.Descriptor instead.
+func (*PartyCreated) Descriptor() ([]byte, []int) {
+	return file_packages_events_events_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PartyCreated) GetParty() *party.PublicParty {
 	if x != nil {
-		return x.Username
+		return x.Party
 	}
-	return ""
+	return nil
 }
 
-func (x *ProfileUpdated) GetFirstname() string {
+type PartyUpdated struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Party *party.PublicParty `protobuf:"bytes,1,opt,name=party,proto3" json:"party,omitempty"`
+}
+
+func (x *PartyUpdated) Reset() {
+	*x = PartyUpdated{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_packages_events_events_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PartyUpdated) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PartyUpdated) ProtoMessage() {}
+
+func (x *PartyUpdated) ProtoReflect() protoreflect.Message {
+	mi := &file_packages_events_events_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PartyUpdated.ProtoReflect.Descriptor instead.
+func (*PartyUpdated) Descriptor() ([]byte, []int) {
+	return file_packages_events_events_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PartyUpdated) GetParty() *party.PublicParty {
 	if x != nil {
-		return x.Firstname
+		return x.Party
 	}
-	return ""
+	return nil
 }
 
-func (x *ProfileUpdated) GetLastname() string {
-	if x != nil {
-		return x.Lastname
-	}
-	return ""
-}
+var File_packages_events_events_proto protoreflect.FileDescriptor
 
-func (x *ProfileUpdated) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
-	}
-	return ""
-}
-
-var File_packages_types_events_events_proto protoreflect.FileDescriptor
-
-var file_packages_types_events_events_proto_rawDesc = []byte{
-	0x0a, 0x22, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73,
-	0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x8e, 0x01, 0x0a,
-	0x0e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x12,
-	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12,
-	0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x66,
-	0x69, 0x72, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
-	0x66, 0x69, 0x72, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x6c, 0x61, 0x73,
-	0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6c, 0x61, 0x73,
-	0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72, 0x18,
-	0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72, 0x22, 0x8e, 0x01,
-	0x0a, 0x0e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64,
-	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64,
-	0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1c, 0x0a, 0x09,
-	0x66, 0x69, 0x72, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x09, 0x66, 0x69, 0x72, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x6c, 0x61,
-	0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6c, 0x61,
-	0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72,
-	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x76, 0x61, 0x74, 0x61, 0x72, 0x42, 0x3f,
-	0x5a, 0x3d, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x6f, 0x6e,
-	0x61, 0x73, 0x68, 0x69, 0x6c, 0x74, 0x6c, 0x2f, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73,
-	0x2d, 0x62, 0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65,
-	0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_packages_events_events_proto_rawDesc = []byte{
+	0x0a, 0x1c, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74,
+	0x73, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x06,
+	0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x1a, 0x1f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73,
+	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x61, 0x72, 0x74, 0x79, 0x2f, 0x70, 0x61, 0x72, 0x74,
+	0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x23, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65,
+	0x73, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x2f, 0x70,
+	0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x3c, 0x0a, 0x0e,
+	0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x12, 0x2a,
+	0x0a, 0x07, 0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x10, 0x2e, 0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x2e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c,
+	0x65, 0x52, 0x07, 0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x22, 0x3c, 0x0a, 0x0e, 0x50, 0x72,
+	0x6f, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x12, 0x2a, 0x0a, 0x07,
+	0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e,
+	0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x2e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52,
+	0x07, 0x70, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x22, 0x38, 0x0a, 0x0c, 0x50, 0x61, 0x72, 0x74,
+	0x79, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x12, 0x28, 0x0a, 0x05, 0x70, 0x61, 0x72, 0x74,
+	0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70, 0x61, 0x72, 0x74, 0x79, 0x2e,
+	0x50, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x50, 0x61, 0x72, 0x74, 0x79, 0x52, 0x05, 0x70, 0x61, 0x72,
+	0x74, 0x79, 0x22, 0x38, 0x0a, 0x0c, 0x50, 0x61, 0x72, 0x74, 0x79, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x64, 0x12, 0x28, 0x0a, 0x05, 0x70, 0x61, 0x72, 0x74, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x12, 0x2e, 0x70, 0x61, 0x72, 0x74, 0x79, 0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x63,
+	0x50, 0x61, 0x72, 0x74, 0x79, 0x52, 0x05, 0x70, 0x61, 0x72, 0x74, 0x79, 0x42, 0x38, 0x5a, 0x36,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x6f, 0x6e, 0x61, 0x73,
+	0x68, 0x69, 0x6c, 0x74, 0x6c, 0x2f, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2d, 0x62,
+	0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73, 0x2f,
+	0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_packages_types_events_events_proto_rawDescOnce sync.Once
-	file_packages_types_events_events_proto_rawDescData = file_packages_types_events_events_proto_rawDesc
+	file_packages_events_events_proto_rawDescOnce sync.Once
+	file_packages_events_events_proto_rawDescData = file_packages_events_events_proto_rawDesc
 )
 
-func file_packages_types_events_events_proto_rawDescGZIP() []byte {
-	file_packages_types_events_events_proto_rawDescOnce.Do(func() {
-		file_packages_types_events_events_proto_rawDescData = protoimpl.X.CompressGZIP(file_packages_types_events_events_proto_rawDescData)
+func file_packages_events_events_proto_rawDescGZIP() []byte {
+	file_packages_events_events_proto_rawDescOnce.Do(func() {
+		file_packages_events_events_proto_rawDescData = protoimpl.X.CompressGZIP(file_packages_events_events_proto_rawDescData)
 	})
-	return file_packages_types_events_events_proto_rawDescData
+	return file_packages_events_events_proto_rawDescData
 }
 
-var file_packages_types_events_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_packages_types_events_events_proto_goTypes = []interface{}{
-	(*ProfileCreated)(nil), // 0: events.ProfileCreated
-	(*ProfileUpdated)(nil), // 1: events.ProfileUpdated
+var file_packages_events_events_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_packages_events_events_proto_goTypes = []interface{}{
+	(*ProfileCreated)(nil),    // 0: events.ProfileCreated
+	(*ProfileUpdated)(nil),    // 1: events.ProfileUpdated
+	(*PartyCreated)(nil),      // 2: events.PartyCreated
+	(*PartyUpdated)(nil),      // 3: events.PartyUpdated
+	(*profile.Profile)(nil),   // 4: profile.Profile
+	(*party.PublicParty)(nil), // 5: party.PublicParty
 }
-var file_packages_types_events_events_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_packages_events_events_proto_depIdxs = []int32{
+	4, // 0: events.ProfileCreated.profile:type_name -> profile.Profile
+	4, // 1: events.ProfileUpdated.profile:type_name -> profile.Profile
+	5, // 2: events.PartyCreated.party:type_name -> party.PublicParty
+	5, // 3: events.PartyUpdated.party:type_name -> party.PublicParty
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_packages_types_events_events_proto_init() }
-func file_packages_types_events_events_proto_init() {
-	if File_packages_types_events_events_proto != nil {
+func init() { file_packages_events_events_proto_init() }
+func file_packages_events_events_proto_init() {
+	if File_packages_events_events_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_packages_types_events_events_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_packages_events_events_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ProfileCreated); i {
 			case 0:
 				return &v.state
@@ -253,8 +293,32 @@ func file_packages_types_events_events_proto_init() {
 				return nil
 			}
 		}
-		file_packages_types_events_events_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_packages_events_events_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ProfileUpdated); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_packages_events_events_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PartyCreated); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_packages_events_events_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PartyUpdated); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -270,18 +334,18 @@ func file_packages_types_events_events_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_packages_types_events_events_proto_rawDesc,
+			RawDescriptor: file_packages_events_events_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_packages_types_events_events_proto_goTypes,
-		DependencyIndexes: file_packages_types_events_events_proto_depIdxs,
-		MessageInfos:      file_packages_types_events_events_proto_msgTypes,
+		GoTypes:           file_packages_events_events_proto_goTypes,
+		DependencyIndexes: file_packages_events_events_proto_depIdxs,
+		MessageInfos:      file_packages_events_events_proto_msgTypes,
 	}.Build()
-	File_packages_types_events_events_proto = out.File
-	file_packages_types_events_events_proto_rawDesc = nil
-	file_packages_types_events_events_proto_goTypes = nil
-	file_packages_types_events_events_proto_depIdxs = nil
+	File_packages_events_events_proto = out.File
+	file_packages_events_events_proto_rawDesc = nil
+	file_packages_events_events_proto_goTypes = nil
+	file_packages_events_events_proto_depIdxs = nil
 }

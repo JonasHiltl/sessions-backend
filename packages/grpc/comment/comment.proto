@@ -3,8 +3,8 @@ syntax = "proto3";
 package comment;
 option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/comment";
 
-import "google/api/annotations.proto";
-import "common/common.proto";
+import "packages/grpc/google/api/annotations.proto";
+import "packages/grpc/common/common.proto";
 
 service CommentService {
     rpc CreateComment (CreateCommentRequest) returns (Comment){

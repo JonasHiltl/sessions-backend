@@ -17,59 +17,48 @@ migrate:
 	SCYLLA_HOSTS=localhost SCYLLA_KEYSPACE=sessions go run packages/scylla/migration/main.go
 
 protos-types:
-	protoc --go_out=. --go_opt=paths=source_relative packages/types/**/*.proto
+	protoc --go_out=. --go_opt=paths=source_relative packages/types/*.proto
+
+protos-events:
+	protoc  \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
+	packages/events/*.proto
 
 protos-party:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/party/descriptor.pb \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/party/*.proto
 
 protos-common:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/common/*.proto
 
 protos-profile:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/profile/descriptor.pb \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/profile/*.proto
 		
 protos-story:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/story/descriptor.pb \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/story/*.proto
 
 protos-comment:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/comment/descriptor.pb \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/comment/*.proto
 
 protos-auth:
 	protoc \
-	--proto_path packages/grpc \
-	--go_out packages/grpc/ --go_opt paths=source_relative \
-	--go-grpc_out packages/grpc/ --go-grpc_opt paths=source_relative  \
-	--descriptor_set_out services/auth/descriptor.pb \
-	--include_imports \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/auth/*.proto
 
 
