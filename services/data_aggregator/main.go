@@ -11,6 +11,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
 	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
@@ -77,7 +78,7 @@ func main() {
 	// TODO: Add endpoint vor Profile Search
 
 	party := app.Group("/party")
-	party.Post("/", partyHandler.CreateParty)
+	party.Post("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.CreateParty)
 	party.Delete("/:id", partyHandler.DeleteParty)
 	party.Get("/:id", partyHandler.GetParty)
 	party.Get("/user/:id", partyHandler.GetPartyByUser)

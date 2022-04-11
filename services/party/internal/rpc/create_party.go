@@ -2,8 +2,10 @@ package handler
 
 import (
 	"context"
+	"log"
 	"time"
 
+	"github.com/jonashiltl/sessions-backend/packages/events"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
@@ -14,6 +16,7 @@ import (
 func (s *partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) (*pg.PublicParty, error) {
 	start, err := time.Parse(time.RFC3339, req.StartDate)
 	if err != nil {
+		log.Println(err)
 		return nil, status.Error(codes.InvalidArgument, "Invalid start date")
 	}
 
@@ -34,6 +37,8 @@ func (s *partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
+
+	s.stream.PublishEvent(&events.PartyCreated{Party: p.ToPublicParty()})
 
 	return p.ToPublicParty(), nil
 }

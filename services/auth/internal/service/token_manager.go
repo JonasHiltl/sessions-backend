@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 )
@@ -23,6 +25,7 @@ func (t tokenManager) NewJWT(u datastruct.AuthUser) (string, error) {
 		"iss":           "sessions.com",
 		"emailVerified": u.EmailVerified,
 		"role":          u.Role,
+		"iat":           time.Now().Unix(),
 	}
 
 	if u.Provider != "" {

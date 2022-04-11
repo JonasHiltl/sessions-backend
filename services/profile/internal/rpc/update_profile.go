@@ -37,7 +37,7 @@ func (s *profileServer) UpdateProfile(c context.Context, req *pg.UpdateProfileRe
 		return nil, utils.HandleError(err)
 	}
 
-	s.stream.PublishEvent(events.ProfileUpdated{
+	s.stream.PublishEvent(&events.ProfileUpdated{
 		Profile: &pg.Profile{
 			Id:        dp.Id,
 			Username:  dp.Username,

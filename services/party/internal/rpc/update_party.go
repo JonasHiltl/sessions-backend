@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/jonashiltl/sessions-backend/packages/events"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
@@ -34,6 +35,19 @@ func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
+
+	s.stream.PublishEvent(&events.PartyUpdated{Party: &pg.PublicParty{
+		Id:            req.PartyId,
+		UserId:        req.RequesterId,
+		Title:         req.Title,
+		Lat:           req.Lat,
+		Long:          req.Long,
+		StreetAddress: req.StreetAddress,
+		PostalCode:    req.PostalCode,
+		State:         req.State,
+		Country:       req.Country,
+		StartDate:     start.String(),
+	}})
 
 	return p.ToPublicParty(), nil
 }

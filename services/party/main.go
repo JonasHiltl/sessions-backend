@@ -7,6 +7,7 @@ import (
 
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	rpc "github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
@@ -27,6 +28,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
+	stream := stream.NewStream(nc)
 
 	sess, err := repository.NewDB(c.ScyllaKeyspace, c.ScyllaHosts)
 	if err != nil {
@@ -48,7 +50,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pServer := rpc.NewPartyServer(partyService)
+	pServer := rpc.NewPartyServer(partyService, stream)
 
 	pg.RegisterPartyServiceServer(grpcServer, pServer)
 

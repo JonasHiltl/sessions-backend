@@ -40,6 +40,14 @@ func (p Provider) FromString(provider string) Provider {
 	}[provider]
 }
 
+func ProviderFromString(provider string) Provider {
+	return map[string]Provider{
+		"apple":  Apple,
+		"google": Google,
+		"":       UndefinedProvider,
+	}[provider]
+}
+
 func (p Provider) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.String())
 }

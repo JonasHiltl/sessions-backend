@@ -23,7 +23,7 @@ func (s *profileServer) CreateProfile(c context.Context, req *pg.CreateProfileRe
 		return nil, utils.HandleError(err)
 	}
 
-	s.stream.PublishEvent(events.ProfileCreated{
+	s.stream.PublishEvent(&events.ProfileCreated{
 		Profile: p.ToGRPCProfile(),
 	})
 

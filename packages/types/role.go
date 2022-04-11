@@ -26,6 +26,14 @@ func (t *Role) FromString(role string) Role {
 		"admin": AdminRole,
 		"":      UndefinedRole,
 	}[role]
+
+}
+func RoleFromString(role string) Role {
+	return map[string]Role{
+		"user":  UserRole,
+		"admin": AdminRole,
+		"":      UndefinedRole,
+	}[role]
 }
 
 func (r Role) EnumIndex() int {

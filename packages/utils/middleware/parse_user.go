@@ -1,32 +1,43 @@
 package middleware
 
 import (
-	"context"
-	"encoding/base64"
-	"encoding/json"
-	"strings"
+	"log"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/jonashiltl/sessions-backend/packages/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
-func ParseUser(c context.Context) (types.JwtPayload, error) {
-	payload := ""
-	if md, ok := metadata.FromIncomingContext(c); ok {
-		if jwt, ok := md["jwt_payload"]; ok {
-			payload = strings.Join(jwt, ",")
-		}
+func ParseUser(c *fiber.Ctx) types.JwtPayload {
+	log.Println(c.Locals("user"))
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	payload := types.JwtPayload{}
+
+	if iss, ok := claims["iss"].(string); ok {
+		payload.Iss = iss
 	}
 
-	stringBytes, err := base64.StdEncoding.DecodeString(payload)
-	if err != nil {
-		return types.JwtPayload{}, status.Error(codes.Unauthenticated, "Not logged in")
+	if sub, ok := claims["sub"].(string); ok {
+		payload.Sub = sub
 	}
 
-	result := types.JwtPayload{}
-	json.Unmarshal(stringBytes, &result)
+	if iat, ok := claims["iat"].(float64); ok {
+		payload.Iat = iat
+	}
 
-	return result, nil
+	if pStr, ok := claims["provider"].(string); ok {
+		payload.Provider = types.ProviderFromString(pStr)
+	}
+
+	if rStr, ok := claims["role"].(string); ok {
+		payload.Role = types.RoleFromString(rStr)
+	}
+
+	if eVerified, ok := claims["emailVerified"].(bool); ok {
+		payload.EmailVerified = eVerified
+	}
+
+	return payload
 }
