@@ -1,14 +1,14 @@
 package dto
 
 import (
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
+	"github.com/jonashiltl/sessions-backend/packages/types"
 )
 
 type AuthUser struct {
 	Id            string
-	Provider      comtypes.Provider
+	Provider      types.Provider
 	Email         string
 	EmailVerified bool
 	PasswordHash  string
-	Role          comtypes.Role
+	Role          types.Role
 }

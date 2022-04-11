@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/dto"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
@@ -43,9 +42,6 @@ func (cs *commentService) Create(ctx context.Context, c dto.Comment) (datastruct
 		Created_at: time.Now(),
 	}
 	result, err := cs.dao.NewCommentQuery().Create(ctx, dc)
-	if err == nil {
-		cs.nc.Publish("notification.push.party.created", &comtypes.CommentedNotification{PartyId: c.PId, AuthorId: c.AId, Body: c.Body})
-	}
 	return result, err
 }
 

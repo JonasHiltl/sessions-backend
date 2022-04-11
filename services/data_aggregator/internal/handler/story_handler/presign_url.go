@@ -2,8 +2,8 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
 func (h *storyGatewayHandler) PresignURL(c *fiber.Ctx) error {
@@ -11,7 +11,7 @@ func (h *storyGatewayHandler) PresignURL(c *fiber.Ctx) error {
 
 	res, err := h.storyClient.PresignURL(c.Context(), &story.PresignURLRequest{Key: key})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

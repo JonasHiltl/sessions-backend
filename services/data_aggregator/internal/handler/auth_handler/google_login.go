@@ -2,8 +2,8 @@ package authhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
 func (h *authGatewayHandler) GoogleLogin(c *fiber.Ctx) error {
@@ -14,7 +14,7 @@ func (h *authGatewayHandler) GoogleLogin(c *fiber.Ctx) error {
 
 	res, err := h.authClient.GoogleLogin(c.Context(), req)
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

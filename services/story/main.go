@@ -7,8 +7,8 @@ import (
 
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/story/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/story/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/service"
 	"google.golang.org/grpc"
 )
@@ -40,7 +40,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	sServer := handler.NewStoryServer(sService, us)
+	sServer := rpc.NewStoryServer(sService, us)
 
 	sg.RegisterStoryServiceServer(grpcServer, sServer)
 

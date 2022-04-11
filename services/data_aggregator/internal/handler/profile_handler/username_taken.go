@@ -2,8 +2,8 @@ package profilehandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
 func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
@@ -11,7 +11,7 @@ func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
 
 	res, err := h.profileClient.UsernameTaken(c.Context(), &profile.UsernameTakenRequest{Username: uName})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

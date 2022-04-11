@@ -8,8 +8,8 @@ import (
 	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/comment/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/comment/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
@@ -48,7 +48,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	cServer := handler.NewCommentServer(cs)
+	cServer := rpc.NewCommentServer(cs)
 
 	cg.RegisterCommentServiceServer(grpcServer, cServer)
 

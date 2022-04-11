@@ -31,13 +31,16 @@ func NewDB(url string) (*mongo.Database, error) {
 	}
 
 	db := client.Database("sessions")
-	models := []mongo.IndexModel{
-		{
-			Keys: bson.M{"email": 1}, Options: options.Index().SetUnique(true),
-		},
+	mod := mongo.IndexModel{
+		Keys: bson.M{
+			"email": 1,
+		}, Options: options.Index().SetUnique(true),
 	}
 
-	db.Collection(AUTH_COLLECTION).Indexes().CreateMany(ctx, models)
+	_, err = db.Collection(AUTH_COLLECTION).Indexes().CreateOne(ctx, mod)
+	if err != nil {
+		return nil, err
+	}
 
 	return db, nil
 }

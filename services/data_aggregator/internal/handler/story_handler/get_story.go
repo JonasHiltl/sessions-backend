@@ -2,9 +2,9 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
@@ -13,7 +13,7 @@ func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 
 	s, err := h.storyClient.GetStory(c.Context(), &story.GetStoryRequest{SId: sId})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	// Get all profiles of the tagged people and the story creator in one call
@@ -21,7 +21,7 @@ func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 
 	profilesRes, err := h.profileClient.GetManyProfiles(c.Context(), &pg.GetManyProfilesRequest{Ids: ids})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	// Remove the creator of the story from the returned array and create a filtered list with only the profiles of the tagged people.

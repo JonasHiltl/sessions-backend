@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/datastruct"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -34,7 +34,7 @@ func (aq *authQuery) Create(ctx context.Context, u datastruct.AuthUser) (datastr
 		return datastruct.AuthUser{}, err
 	}
 
-	code, err := comutils.GenerateOTP(4)
+	code, err := utils.GenerateOTP(4)
 	if err != nil {
 		return datastruct.AuthUser{}, errors.New("No user found")
 	}
@@ -141,7 +141,7 @@ func (aq *authQuery) GetByEmail(ctx context.Context, email string) (res datastru
 }
 
 func (aq *authQuery) RotateEmailCode(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
-	code, err := comutils.GenerateOTP(4)
+	code, err := utils.GenerateOTP(4)
 	if err != nil {
 		return res, errors.New("No user found")
 	}

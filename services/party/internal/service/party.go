@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
-	"github.com/jonashiltl/sessions-backend/packages/comtypes"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
@@ -56,9 +55,6 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		StartDate:     p.StartDate.Format(time.RFC3339),
 	}
 	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
-	if err == nil {
-		ps.nc.Publish("notification.push.party.created", &comtypes.PartyCreatedNotification{CreatorId: p.Id, Title: p.Title})
-	}
 	return newParty, err
 }
 

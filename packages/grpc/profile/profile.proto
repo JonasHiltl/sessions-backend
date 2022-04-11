@@ -23,7 +23,6 @@ message Profile {
     string firstname = 3;
     string lastname = 4;
     string avatar = 5;
-    int32 friendCount = 6;
 }
 
 message CreateProfileRequest {

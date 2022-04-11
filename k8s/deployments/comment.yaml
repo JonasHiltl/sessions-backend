@@ -16,7 +16,7 @@ spec:
           image: jonashiltl/comment-service
           resources:
             limits:
-              memory: "500Mi"
+              memory: "250Mi"
               cpu: "500m"
           command:
             - air

@@ -2,10 +2,10 @@ package partyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/comutils"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
@@ -14,17 +14,17 @@ func (h *partyGatewayHandler) GetParty(c *fiber.Ctx) error {
 
 	p, err := h.partyClient.GetParty(c.Context(), &party.GetPartyRequest{PartyId: id})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	profileRes, err := h.profileClient.GetProfile(c.Context(), &pg.GetProfileRequest{Id: p.UserId})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	storyRes, err := h.storyClient.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
 	if err != nil {
-		return comutils.ToHTTPError(err)
+		return utils.ToHTTPError(err)
 	}
 
 	res := datastruct.AggregatedParty{

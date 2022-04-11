@@ -8,8 +8,8 @@ import (
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
@@ -48,7 +48,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	pServer := handler.NewPartyServer(partyService)
+	pServer := rpc.NewPartyServer(partyService)
 
 	pg.RegisterPartyServiceServer(grpcServer, pServer)
 

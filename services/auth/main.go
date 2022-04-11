@@ -9,8 +9,8 @@ import (
 
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/auth/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/auth/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/service"
 	"google.golang.org/grpc"
 )
@@ -47,7 +47,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	uServer := handler.NewAuthServer(as, tm, pm, gm)
+	uServer := rpc.NewAuthServer(as, tm, pm, gm)
 
 	ag.RegisterAuthServiceServer(grpcServer, uServer)
 

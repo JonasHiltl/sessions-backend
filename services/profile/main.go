@@ -9,9 +9,10 @@ import (
 
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/profile/internal/handler"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/profile/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
@@ -29,6 +30,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
+	stream := stream.NewStream(nc)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -54,7 +56,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	uServer := handler.NewProfileServer(userService, uploadService)
+	uServer := rpc.NewProfileServer(userService, uploadService, stream)
 
 	profile.RegisterProfileServiceServer(grpcServer, uServer)
 
