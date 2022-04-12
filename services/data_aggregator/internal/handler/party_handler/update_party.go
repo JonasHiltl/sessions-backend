@@ -6,6 +6,7 @@ import (
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
+	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
@@ -14,6 +15,9 @@ func (h *partyGatewayHandler) UpdateParty(c *fiber.Ctx) error {
 	if err := c.BodyParser(req); err != nil {
 		return err
 	}
+
+	user := middleware.ParseUser(c)
+	req.RequesterId = user.Sub
 
 	p, err := h.partyClient.UpdateParty(c.Context(), req)
 	if err != nil {

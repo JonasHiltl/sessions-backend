@@ -79,10 +79,10 @@ func main() {
 
 	party := app.Group("/party")
 	party.Post("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.CreateParty)
-	party.Delete("/:id", partyHandler.DeleteParty)
+	party.Delete("/:id", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.DeleteParty)
 	party.Get("/:id", partyHandler.GetParty)
 	party.Get("/user/:id", partyHandler.GetPartyByUser)
-	profile.Patch("/", partyHandler.UpdateParty)
+	profile.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.UpdateParty)
 
 	story := app.Group("/story")
 	story.Post("/", storyHandler.CreateStory)

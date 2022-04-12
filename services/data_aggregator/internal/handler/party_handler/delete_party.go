@@ -1,18 +1,21 @@
 package partyhandler
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
+	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
 func (h *partyGatewayHandler) DeleteParty(c *fiber.Ctx) error {
-	// TODO read u_id from headers
-	u_id := "tawtrwa"
+	user := middleware.ParseUser(c)
+	log.Println(user.Sub)
 
 	pId := c.Params("id")
 
-	res, err := h.partyClient.DeleteParty(c.Context(), &party.DeletePartyRequest{RequesterId: u_id, PartyId: pId})
+	res, err := h.partyClient.DeleteParty(c.Context(), &party.DeletePartyRequest{RequesterId: user.Sub, PartyId: pId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
