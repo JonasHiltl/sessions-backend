@@ -1,7 +1,6 @@
 package stream
 
 import (
-	"log"
 	"reflect"
 	"strings"
 	"unicode"
@@ -23,7 +22,6 @@ func NewStream(nats *nats.EncodedConn) Stream {
 
 func (s stream) PublishEvent(event interface{}) error {
 	sub := eventToSubject(event)
-	log.Printf("Publishing %v to %v", event, sub)
 	return s.nats.Publish(sub, event)
 }
 
