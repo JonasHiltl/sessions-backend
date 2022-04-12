@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -113,6 +114,7 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte) (res
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {
+		log.Println(err.Error())
 		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 
@@ -123,7 +125,6 @@ func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte) (re
 	stmt, names := qb.
 		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).
-		OrderBy("created_at", qb.DESC).
 		ToCql()
 
 	q := sq.sess.
@@ -137,6 +138,7 @@ func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte) (re
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {
+		log.Println(err.Error())
 		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 

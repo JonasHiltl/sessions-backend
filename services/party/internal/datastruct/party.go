@@ -1,6 +1,8 @@
 package datastruct
 
 import (
+	"time"
+
 	"github.com/gofrs/uuid"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 )
@@ -16,7 +18,7 @@ type Party struct {
 	PostalCode    string    `json:"postal_code"    db:"postal_code"    validate:"required"`
 	State         string    `json:"state"          db:"state"          validate:"required"`
 	Country       string    `json:"country"        db:"country"        validate:"required"`
-	StartDate     string    `json:"start_date"     db:"start_date"     validate:"required"`
+	StartDate     time.Time `json:"start_date"     db:"start_date"     validate:"required"`
 }
 
 func (p Party) ToPublicParty() *pg.PublicParty {
@@ -35,12 +37,17 @@ func (p Party) ToPublicParty() *pg.PublicParty {
 	}
 
 	return &pg.PublicParty{
-		Id:        p.Id,
-		UserId:    p.UserId,
-		IsPublic:  p.IsPublic,
-		Lat:       p.Position[0],
-		Long:      p.Position[1],
-		Title:     p.Title,
-		CreatedAt: t.String(),
+		Id:            p.Id,
+		UserId:        p.UserId,
+		Title:         p.Title,
+		IsPublic:      p.IsPublic,
+		Lat:           p.Position[0],
+		Long:          p.Position[1],
+		StreetAddress: p.StreetAddress,
+		PostalCode:    p.PostalCode,
+		State:         p.State,
+		Country:       p.Country,
+		StartDate:     p.StartDate.UTC().Format(time.RFC3339),
+		CreatedAt:     t.String(),
 	}
 }

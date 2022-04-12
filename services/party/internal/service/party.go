@@ -52,7 +52,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		PostalCode:    p.PostalCode,
 		State:         p.State,
 		Country:       p.Country,
-		StartDate:     p.StartDate.Format(time.RFC3339),
+		StartDate:     p.StartDate,
 	}
 	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
 	return newParty, err
@@ -63,8 +63,6 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 	if p.Lat != 0 && p.Long != 0 {
 		gHash = geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
 	}
-
-	startDateStr := p.StartDate.Format(time.RFC3339)
 
 	dp := datastruct.Party{
 		Id:            p.Id,
@@ -77,7 +75,7 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		PostalCode:    p.PostalCode,
 		State:         p.State,
 		Country:       p.Country,
-		StartDate:     startDateStr,
+		StartDate:     p.StartDate,
 	}
 
 	err := ps.dao.NewPartyQuery().Update(ctx, dp)
@@ -96,8 +94,8 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		newP.GHash = gHash
 	}
 
-	if startDateStr != "" && startDateStr != newP.StartDate {
-		newP.StartDate = startDateStr
+	if !p.StartDate.IsZero() && p.StartDate != newP.StartDate {
+		newP.StartDate = p.StartDate
 	}
 
 	if p.StreetAddress != "" && p.StreetAddress != newP.StreetAddress {

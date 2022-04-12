@@ -7,7 +7,7 @@ import (
 
 type AggregatedParty struct {
 	Id            string            `json:"id,omitempty"`
-	Creator       *pg.Profile       `json:"user_id,omitempty"`
+	Creator       *pg.Profile       `json:"creator,omitempty"`
 	Title         string            `json:"title,omitempty"`
 	IsPublic      bool              `json:"is_public,omitempty"`
 	Lat           float32           `json:"lat,omitempty"`

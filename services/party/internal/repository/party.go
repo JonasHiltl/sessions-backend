@@ -21,7 +21,7 @@ const (
 
 var partyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
-	Columns: []string{"id", "user_id", "title", "is_public", "geohash"},
+	Columns: []string{"id", "user_id", "title", "is_public", "geohash", "position", "street_address", "postal_code", "state", "country", "start_date"},
 	PartKey: []string{"id"},
 }
 var partyTable = table.New(partyMetadata)
@@ -93,7 +93,7 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 		b.Set("position")
 	}
 
-	if p.StartDate != "" {
+	if !p.StartDate.IsZero() {
 		b.Set("start_date")
 	}
 
