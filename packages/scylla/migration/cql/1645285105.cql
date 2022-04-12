@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS party (
   state text,
   country text,
   start_date timestamp,
-) WITH default_time_to_live = 86400
-WITH cdc = {'enabled' = 'true' };
+) WITH default_time_to_live = 86400;
 
 CREATE INDEX party_by_user_test ON sessions.party (user_id);
 
