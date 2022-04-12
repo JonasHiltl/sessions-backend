@@ -36,18 +36,25 @@ func (p Party) ToPublicParty() *pg.PublicParty {
 		return &pg.PublicParty{}
 	}
 
+	var lat float32
+	var long float32
+	if len(p.Position) == 2 {
+		lat = p.Position[0]
+		long = p.Position[1]
+	}
+
 	return &pg.PublicParty{
 		Id:            p.Id,
 		UserId:        p.UserId,
 		Title:         p.Title,
 		IsPublic:      p.IsPublic,
-		Lat:           p.Position[0],
-		Long:          p.Position[1],
+		Lat:           lat,
+		Long:          long,
 		StreetAddress: p.StreetAddress,
 		PostalCode:    p.PostalCode,
 		State:         p.State,
 		Country:       p.Country,
 		StartDate:     p.StartDate.UTC().Format(time.RFC3339),
-		CreatedAt:     t.String(),
+		CreatedAt:     t.UTC().Format(time.RFC3339),
 	}
 }
