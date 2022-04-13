@@ -22,10 +22,12 @@ var friendRelationMetadata = table.Metadata{
 	Columns: []string{"user_id", "friend_id", "accepted", "created_at"},
 	PartKey: []string{"user_id", "friend_id"},
 }
+var friendRelationTable = table.New(friendRelationMetadata)
 
 type FriendRelationRepository interface {
 	CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) (datastruct.FriendRelation, error)
 	AcceptFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
+	GetFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
 	GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.FriendRelation, []byte, error)
 }
 
@@ -84,6 +86,18 @@ func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId
 	}
 
 	return fr, nil
+}
+
+func (r *friendRelationRepository) GetFriendRelation(ctx context.Context, uId, fId string) (res datastruct.FriendRelation, err error) {
+	err = r.sess.
+		Query(friendRelationTable.Get()).
+		BindMap((qb.M{"user_id": uId, "friend_id": fId})).
+		GetRelease(&res)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
 
 func (r *friendRelationRepository) GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.FriendRelation, nextPage []byte, err error) {
