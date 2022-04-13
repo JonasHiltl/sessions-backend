@@ -22,3 +22,13 @@ message PartyCreated {
 message PartyUpdated {
     party.PublicParty party = 1;
 }
+
+message FriendRequested {
+    string user_id = 1;
+    string friend_id = 2;
+}
+
+message FriendAccepted {
+    string user_id = 1;
+    string friend_id = 2;
+}

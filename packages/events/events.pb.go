@@ -211,6 +211,116 @@ func (x *PartyUpdated) GetParty() *party.PublicParty {
 	return nil
 }
 
+type FriendRequested struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId   string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	FriendId string `protobuf:"bytes,2,opt,name=friend_id,json=friendId,proto3" json:"friend_id,omitempty"`
+}
+
+func (x *FriendRequested) Reset() {
+	*x = FriendRequested{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_packages_events_events_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FriendRequested) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FriendRequested) ProtoMessage() {}
+
+func (x *FriendRequested) ProtoReflect() protoreflect.Message {
+	mi := &file_packages_events_events_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FriendRequested.ProtoReflect.Descriptor instead.
+func (*FriendRequested) Descriptor() ([]byte, []int) {
+	return file_packages_events_events_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *FriendRequested) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *FriendRequested) GetFriendId() string {
+	if x != nil {
+		return x.FriendId
+	}
+	return ""
+}
+
+type FriendAccepted struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId   string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	FriendId string `protobuf:"bytes,2,opt,name=friend_id,json=friendId,proto3" json:"friend_id,omitempty"`
+}
+
+func (x *FriendAccepted) Reset() {
+	*x = FriendAccepted{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_packages_events_events_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FriendAccepted) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FriendAccepted) ProtoMessage() {}
+
+func (x *FriendAccepted) ProtoReflect() protoreflect.Message {
+	mi := &file_packages_events_events_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FriendAccepted.ProtoReflect.Descriptor instead.
+func (*FriendAccepted) Descriptor() ([]byte, []int) {
+	return file_packages_events_events_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *FriendAccepted) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *FriendAccepted) GetFriendId() string {
+	if x != nil {
+		return x.FriendId
+	}
+	return ""
+}
+
 var File_packages_events_events_proto protoreflect.FileDescriptor
 
 var file_packages_events_events_proto_rawDesc = []byte{
@@ -235,11 +345,20 @@ var file_packages_events_events_proto_rawDesc = []byte{
 	0x74, 0x79, 0x22, 0x38, 0x0a, 0x0c, 0x50, 0x61, 0x72, 0x74, 0x79, 0x55, 0x70, 0x64, 0x61, 0x74,
 	0x65, 0x64, 0x12, 0x28, 0x0a, 0x05, 0x70, 0x61, 0x72, 0x74, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x12, 0x2e, 0x70, 0x61, 0x72, 0x74, 0x79, 0x2e, 0x50, 0x75, 0x62, 0x6c, 0x69, 0x63,
-	0x50, 0x61, 0x72, 0x74, 0x79, 0x52, 0x05, 0x70, 0x61, 0x72, 0x74, 0x79, 0x42, 0x38, 0x5a, 0x36,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x6f, 0x6e, 0x61, 0x73,
-	0x68, 0x69, 0x6c, 0x74, 0x6c, 0x2f, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2d, 0x62,
-	0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73, 0x2f,
-	0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x50, 0x61, 0x72, 0x74, 0x79, 0x52, 0x05, 0x70, 0x61, 0x72, 0x74, 0x79, 0x22, 0x47, 0x0a, 0x0f,
+	0x46, 0x72, 0x69, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x65, 0x64, 0x12,
+	0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x66, 0x72, 0x69, 0x65,
+	0x6e, 0x64, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x72, 0x69,
+	0x65, 0x6e, 0x64, 0x49, 0x64, 0x22, 0x46, 0x0a, 0x0e, 0x46, 0x72, 0x69, 0x65, 0x6e, 0x64, 0x41,
+	0x63, 0x63, 0x65, 0x70, 0x74, 0x65, 0x64, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64,
+	0x12, 0x1b, 0x0a, 0x09, 0x66, 0x72, 0x69, 0x65, 0x6e, 0x64, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x66, 0x72, 0x69, 0x65, 0x6e, 0x64, 0x49, 0x64, 0x42, 0x38, 0x5a,
+	0x36, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x6f, 0x6e, 0x61,
+	0x73, 0x68, 0x69, 0x6c, 0x74, 0x6c, 0x2f, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2d,
+	0x62, 0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x70, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65, 0x73,
+	0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -254,20 +373,22 @@ func file_packages_events_events_proto_rawDescGZIP() []byte {
 	return file_packages_events_events_proto_rawDescData
 }
 
-var file_packages_events_events_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_packages_events_events_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_packages_events_events_proto_goTypes = []interface{}{
 	(*ProfileCreated)(nil),    // 0: events.ProfileCreated
 	(*ProfileUpdated)(nil),    // 1: events.ProfileUpdated
 	(*PartyCreated)(nil),      // 2: events.PartyCreated
 	(*PartyUpdated)(nil),      // 3: events.PartyUpdated
-	(*profile.Profile)(nil),   // 4: profile.Profile
-	(*party.PublicParty)(nil), // 5: party.PublicParty
+	(*FriendRequested)(nil),   // 4: events.FriendRequested
+	(*FriendAccepted)(nil),    // 5: events.FriendAccepted
+	(*profile.Profile)(nil),   // 6: profile.Profile
+	(*party.PublicParty)(nil), // 7: party.PublicParty
 }
 var file_packages_events_events_proto_depIdxs = []int32{
-	4, // 0: events.ProfileCreated.profile:type_name -> profile.Profile
-	4, // 1: events.ProfileUpdated.profile:type_name -> profile.Profile
-	5, // 2: events.PartyCreated.party:type_name -> party.PublicParty
-	5, // 3: events.PartyUpdated.party:type_name -> party.PublicParty
+	6, // 0: events.ProfileCreated.profile:type_name -> profile.Profile
+	6, // 1: events.ProfileUpdated.profile:type_name -> profile.Profile
+	7, // 2: events.PartyCreated.party:type_name -> party.PublicParty
+	7, // 3: events.PartyUpdated.party:type_name -> party.PublicParty
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -329,6 +450,30 @@ func file_packages_events_events_proto_init() {
 				return nil
 			}
 		}
+		file_packages_events_events_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FriendRequested); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_packages_events_events_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FriendAccepted); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -336,7 +481,7 @@ func file_packages_events_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_packages_events_events_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
