@@ -31,7 +31,7 @@ type PartyQuery interface {
 	Update(ctx context.Context, p datastruct.Party) error
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
-	GetByUser(ctx context.Context, uId string, page []byte) ([]datastruct.Party, []byte, error)
+	GetByUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error)
 	GeoSearch(ctx context.Context, nHashes []string, page []byte) ([]datastruct.Party, []byte, error)
 }
 
@@ -157,7 +157,7 @@ func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
 	return nil
 }
 
-func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
+func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(PARTY_BY_USER).
 		Where(qb.Eq("user_id")).
@@ -169,8 +169,11 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte) (r
 	defer q.Release()
 
 	q.PageState(page)
-	q.PageSize(10)
-
+	if limit == 0 {
+		q.PageSize(10)
+	} else {
+		q.PageSize(int(limit))
+	}
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {

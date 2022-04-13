@@ -1,6 +1,8 @@
 package partyhandler
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
@@ -12,7 +14,13 @@ func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	uId := c.Params("id")
 	nextPage := c.Query("nextPage")
 
-	partyRes, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage})
+	limitStr := c.Query("limit")
+	limit, err := strconv.ParseUint(limitStr, 10, 32)
+	if err != nil {
+		limit = 0
+	}
+
+	partyRes, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage, Limit: uint32(limit)})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

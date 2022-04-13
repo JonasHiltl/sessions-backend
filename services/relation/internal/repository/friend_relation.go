@@ -103,7 +103,7 @@ func (r *friendRelationRepository) GetFriendsOfUser(ctx context.Context, uId str
 
 	q.PageState(page)
 	if limit == 0 {
-		q.PageSize(0)
+		q.PageSize(20)
 	} else {
 		q.PageSize(int(limit))
 	}

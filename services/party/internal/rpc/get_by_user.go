@@ -16,7 +16,7 @@ func (s *partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*p
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	ps, p, err := s.ps.GetByUser(c, req.UserId, p)
+	ps, p, err := s.ps.GetByUser(c, req.UserId, p, req.Limit)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
