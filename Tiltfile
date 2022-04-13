@@ -25,7 +25,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         # Sync files from host to container
@@ -44,7 +43,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         # Sync files from host to container
@@ -63,11 +61,27 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         sync('./services/party/internal', '/app/services/party/internal'),
         sync('./services/party/main.go', '/app/services/party/main.go'),
+        sync('./packages', '/app/packages'),
+    ]
+)
+
+docker_build(
+    'jonashiltl/relation-service', 
+    '.', 
+    dockerfile='services/relation/Dockerfile', 
+    only=[
+        './services/relation', 
+        './packages', 
+        './go.mod', 
+        './go.sum', 
+    ],
+    live_update=[
+        sync('./services/relation/internal', '/app/services/relation/internal'),
+        sync('./services/relation/main.go', '/app/services/relation/main.go'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -81,7 +95,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         sync('./services/story/internal', '/app/services/story/internal'),
@@ -99,7 +112,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         sync('./services/comment/internal', '/app/services/comment/internal'),
@@ -117,7 +129,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         sync('./services/notification/internal', '/app/services/notification/internal'),
@@ -135,7 +146,6 @@ docker_build(
         './packages', 
         './go.mod', 
         './go.sum', 
-        './tools.go'
     ],
     live_update=[
         sync('./services/data_aggregator/internal', '/app/services/data_aggregator/internal'),
@@ -164,6 +174,7 @@ k8s_yaml([
     'k8s/deployments/profile.yaml',
     'k8s/deployments/auth.yaml',
     'k8s/deployments/story.yaml',
+    'k8s/deployments/relation.yaml',
     'k8s/deployments/data-aggregator.yaml',
 ])
 k8s_yaml([
@@ -175,6 +186,7 @@ k8s_yaml([
     'k8s/services/auth.yaml',
     'k8s/services/vespa.yaml',
     'k8s/services/data-aggregator.yaml',
+    'k8s/services/relation.yaml',
 #    'k8s/services/scylla.yaml',
 #    'k8s/services/mongo.yaml',
 ])
