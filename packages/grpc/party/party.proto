@@ -3,7 +3,6 @@ syntax = "proto3";
 package party;
 option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/party";
 
-import "packages/grpc/google/api/annotations.proto";
 import "packages/grpc/common/common.proto";
 
 service PartyService {
