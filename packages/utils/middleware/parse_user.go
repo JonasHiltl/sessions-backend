@@ -1,15 +1,12 @@
 package middleware
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/jonashiltl/sessions-backend/packages/types"
 )
 
 func ParseUser(c *fiber.Ctx) types.JwtPayload {
-	log.Println(c.Locals("user"))
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 

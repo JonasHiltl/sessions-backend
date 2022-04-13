@@ -63,17 +63,16 @@ func (pq *partyQuery) Create(ctx context.Context, p datastruct.Party, ttl time.D
 	return p, nil
 }
 
-func (pq *partyQuery) Get(ctx context.Context, pId string) (datastruct.Party, error) {
-	var result datastruct.Party
-	err := pq.sess.
+func (pq *partyQuery) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
+	err = pq.sess.
 		Query(partyTable.Get()).
 		BindMap((qb.M{"id": pId})).
-		GetRelease(&result)
+		GetRelease(&res)
 	if err != nil {
-		return datastruct.Party{}, err
+		return res, err
 	}
 
-	return result, nil
+	return res, nil
 }
 
 func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
