@@ -28,5 +28,5 @@ func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendReques
 		FriendId: req.FriendId,
 	})
 
-	return fr.ToGRPCProfile(), nil
+	return fr.ToGRPCFriendRelation(), nil
 }

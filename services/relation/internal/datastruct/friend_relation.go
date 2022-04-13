@@ -14,7 +14,7 @@ type FriendRelation struct {
 	AcceptedAt time.Time `json:"accepted_at" db:"accepted_at" validate:"required"`
 }
 
-func (fr FriendRelation) ToGRPCProfile() *rg.FriendRelation {
+func (fr FriendRelation) ToGRPCFriendRelation() *rg.FriendRelation {
 	return &rg.FriendRelation{
 		UserId:     fr.UserId,
 		FriendId:   fr.FriendId,

@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type RelationServiceClient interface {
 	FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*FriendRelation, error)
 	AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*FriendRelation, error)
+	GetFriendsOfUser(ctx context.Context, in *GetFriendsOfUserRequest, opts ...grpc.CallOption) (*PagedFriendRelations, error)
 }
 
 type relationServiceClient struct {
@@ -52,12 +53,22 @@ func (c *relationServiceClient) AcceptFriend(ctx context.Context, in *AcceptFrie
 	return out, nil
 }
 
+func (c *relationServiceClient) GetFriendsOfUser(ctx context.Context, in *GetFriendsOfUserRequest, opts ...grpc.CallOption) (*PagedFriendRelations, error) {
+	out := new(PagedFriendRelations)
+	err := c.cc.Invoke(ctx, "/relation.RelationService/GetFriendsOfUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RelationServiceServer is the server API for RelationService service.
 // All implementations must embed UnimplementedRelationServiceServer
 // for forward compatibility
 type RelationServiceServer interface {
 	FriendRequest(context.Context, *FriendRequestRequest) (*FriendRelation, error)
 	AcceptFriend(context.Context, *AcceptFriendRequest) (*FriendRelation, error)
+	GetFriendsOfUser(context.Context, *GetFriendsOfUserRequest) (*PagedFriendRelations, error)
 	mustEmbedUnimplementedRelationServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedRelationServiceServer) FriendRequest(context.Context, *Friend
 }
 func (UnimplementedRelationServiceServer) AcceptFriend(context.Context, *AcceptFriendRequest) (*FriendRelation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptFriend not implemented")
+}
+func (UnimplementedRelationServiceServer) GetFriendsOfUser(context.Context, *GetFriendsOfUserRequest) (*PagedFriendRelations, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFriendsOfUser not implemented")
 }
 func (UnimplementedRelationServiceServer) mustEmbedUnimplementedRelationServiceServer() {}
 
@@ -120,6 +134,24 @@ func _RelationService_AcceptFriend_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RelationService_GetFriendsOfUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFriendsOfUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RelationServiceServer).GetFriendsOfUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/relation.RelationService/GetFriendsOfUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RelationServiceServer).GetFriendsOfUser(ctx, req.(*GetFriendsOfUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RelationService_ServiceDesc is the grpc.ServiceDesc for RelationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var RelationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AcceptFriend",
 			Handler:    _RelationService_AcceptFriend_Handler,
+		},
+		{
+			MethodName: "GetFriendsOfUser",
+			Handler:    _RelationService_GetFriendsOfUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

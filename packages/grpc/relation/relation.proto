@@ -6,6 +6,7 @@ option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/relati
 service RelationService {
     rpc FriendRequest (FriendRequestRequest) returns (FriendRelation) {};
     rpc AcceptFriend (AcceptFriendRequest) returns (FriendRelation) {};
+    rpc GetFriendsOfUser (GetFriendsOfUserRequest) returns (PagedFriendRelations) {};
 }
 
 message FriendRelation {
@@ -24,4 +25,15 @@ message FriendRequestRequest {
 message AcceptFriendRequest {
     string user_id = 1;
     string friend_id = 2;
+}
+
+message PagedFriendRelations {
+    repeated FriendRelation relations = 1;
+    string next_page = 2;
+}
+
+message GetFriendsOfUserRequest {
+    string user_id = 1;
+    string next_page = 2;
+    uint32 limit = 3;
 }

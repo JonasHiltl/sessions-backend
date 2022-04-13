@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -25,6 +26,7 @@ var friendRelationMetadata = table.Metadata{
 type FriendRelationRepository interface {
 	CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) (datastruct.FriendRelation, error)
 	AcceptFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
+	GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.FriendRelation, []byte, error)
 }
 
 type friendRelationRepository struct {
@@ -82,4 +84,35 @@ func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId
 	}
 
 	return fr, nil
+}
+
+func (r *friendRelationRepository) GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.FriendRelation, nextPage []byte, err error) {
+	stmt, names := qb.
+		Select(FILTERED_FRIEND_RELATIONS).
+		Where(qb.Eq("user_id")).
+		Where(qb.Eq("accepted")).
+		ToCql()
+
+	q := r.sess.
+		Query(stmt, names).
+		BindMap((qb.M{
+			"user_id":  uId,
+			"accepted": true,
+		}))
+	defer q.Release()
+
+	q.PageState(page)
+	if limit == 0 {
+		q.PageSize(0)
+	} else {
+		q.PageSize(int(limit))
+	}
+
+	iter := q.Iter()
+	err = iter.Select(&result)
+	if err != nil {
+		return []datastruct.FriendRelation{}, nil, errors.New("no friends found")
+	}
+
+	return result, iter.PageState(), nil
 }
