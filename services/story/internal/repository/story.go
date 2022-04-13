@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	TABLE_NAME     string = "story"
-	STORY_BY_PARTY string = "story_by_party"
-	STORY_BY_USER  string = "story_by_user"
+	TABLE_NAME     string = "stories"
+	STORY_BY_PARTY string = "stories_by_party"
+	STORY_BY_USER  string = "stories_by_user"
 )
 
 var storyMetadata = table.Metadata{

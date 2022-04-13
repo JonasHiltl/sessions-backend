@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS party (
+CREATE TABLE IF NOT EXISTS parties (
   id timeuuid PRIMARY KEY,
   user_id text,
   title text,
@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS party (
   start_date timestamp,
 ) WITH default_time_to_live = 86400;
 
-CREATE INDEX party_by_user_test ON sessions.party (user_id);
+CREATE INDEX parties_by_user_test ON sessions.parties (user_id);
 
-CREATE MATERIALIZED VIEW party_by_user AS 
-  SELECT * FROM party
+CREATE MATERIALIZED VIEW parties_by_user AS 
+  SELECT * FROM parties
   WHERE id IS NOT NULL AND user_id IS NOT NULL
   PRIMARY KEY (user_id, id)
 WITH CLUSTERING ORDER BY (id DESC);

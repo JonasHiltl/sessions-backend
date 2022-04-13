@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	TABLE_NAME    string = "party"
-	PARTY_BY_USER string = "party_by_user"
+	TABLE_NAME    string = "parties"
+	PARTY_BY_USER string = "parties_by_user"
 )
 
 var partyMetadata = table.Metadata{
