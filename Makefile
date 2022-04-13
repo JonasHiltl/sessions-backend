@@ -25,6 +25,12 @@ protos-events:
 	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/events/*.proto
 
+protos-relation:
+	protoc  \
+	--go_out . --go_opt paths=source_relative \
+	--go-grpc_out . --go-grpc_opt paths=source_relative  \
+	packages/grpc/relation/*.proto
+
 protos-party:
 	protoc \
 	--go_out . --go_opt paths=source_relative \

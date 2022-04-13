@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package relation;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/relation";
+
+service RelationService {
+    rpc FriendRequest (FriendRequestRequest) returns (FriendRelation) {};
+    rpc AcceptFriend (AcceptFriendRequest) returns (FriendRelation) {};
+}
+
+message FriendRelation {
+    string user_id = 1;
+    string friend_id = 2;
+    bool accepted = 3;
+    string created_at = 4;
+    string accepted_at = 5;
+}
+
+message FriendRequestRequest {
+    string user_id = 1;
+    string friend_id = 2;
+}
+
+message AcceptFriendRequest {
+    string user_id = 1;
+    string friend_id = 2;
+}
