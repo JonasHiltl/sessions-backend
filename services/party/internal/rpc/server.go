@@ -1,4 +1,4 @@
-package handler
+package rpc
 
 import (
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"

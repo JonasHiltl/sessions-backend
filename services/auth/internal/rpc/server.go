@@ -1,4 +1,4 @@
-package handler
+package rpc
 
 import (
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"

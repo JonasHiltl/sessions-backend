@@ -10,7 +10,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
-	rpc "github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
+	"github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"

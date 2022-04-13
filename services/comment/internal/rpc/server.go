@@ -1,4 +1,4 @@
-package handler
+package rpc
 
 import (
 	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"

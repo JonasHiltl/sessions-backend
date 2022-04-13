@@ -12,7 +12,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/repository"
-	rpc "github.com/jonashiltl/sessions-backend/services/profile/internal/rpc"
+	"github.com/jonashiltl/sessions-backend/services/profile/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/profile/internal/service"
 	gonats "github.com/nats-io/nats.go"
 	"google.golang.org/grpc"

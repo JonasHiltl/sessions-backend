@@ -10,7 +10,7 @@ import (
 	ag "github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/repository"
-	rpc "github.com/jonashiltl/sessions-backend/services/auth/internal/rpc"
+	"github.com/jonashiltl/sessions-backend/services/auth/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/auth/internal/service"
 	"google.golang.org/grpc"
 )

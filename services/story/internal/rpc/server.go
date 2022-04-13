@@ -1,4 +1,4 @@
-package handler
+package rpc
 
 import (
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
