@@ -30,8 +30,8 @@ type StoryQuery interface {
 	Create(c context.Context, s datastruct.Story) (datastruct.Story, error)
 	Delete(c context.Context, uId, sId string) error
 	Get(c context.Context, sId string) (datastruct.Story, error)
-	GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error)
-	GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error)
+	GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error)
+	GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error)
 }
 
 type storyQuery struct {
@@ -97,7 +97,7 @@ func (sq *storyQuery) Get(c context.Context, sId string) (datastruct.Story, erro
 	return result, nil
 }
 
-func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte) (result []datastruct.Story, nextPage []byte, err error) {
+func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_USER).
 		Where(qb.Eq("user_id")).
@@ -109,7 +109,11 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte) (res
 	defer q.Release()
 
 	q.PageState(page)
-	q.PageSize(10)
+	if limit == 0 {
+		q.PageSize(10)
+	} else {
+		q.PageSize(int(limit))
+	}
 
 	iter := q.Iter()
 	err = iter.Select(&result)
@@ -121,7 +125,7 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte) (res
 	return result, iter.PageState(), nil
 }
 
-func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte) (result []datastruct.Story, nextPage []byte, err error) {
+func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).
@@ -133,7 +137,11 @@ func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte) (re
 	defer q.Release()
 
 	q.PageState(page)
-	q.PageSize(10)
+	if limit == 0 {
+		q.PageSize(10)
+	} else {
+		q.PageSize(int(limit))
+	}
 
 	iter := q.Iter()
 	err = iter.Select(&result)

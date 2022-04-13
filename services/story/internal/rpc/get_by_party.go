@@ -16,7 +16,7 @@ func (s *storyServer) GetByParty(c context.Context, req *sg.GetByPartyRequest) (
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	stories, p, err := s.sService.GetByParty(c, req.PartyId, p)
+	stories, p, err := s.sService.GetByParty(c, req.PartyId, p, req.Limit)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}

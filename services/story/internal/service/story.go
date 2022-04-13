@@ -17,8 +17,8 @@ type StoryService interface {
 	Create(c context.Context, s dto.Story) (datastruct.Story, error)
 	Delete(c context.Context, uId, sId string) error
 	Get(c context.Context, sId string) (datastruct.Story, error)
-	GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error)
-	GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error)
+	GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error)
+	GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error)
 }
 
 type storyService struct {
@@ -52,12 +52,12 @@ func (sService *storyService) Get(c context.Context, sId string) (datastruct.Sto
 	return sService.dao.NewStoryQuery().Get(c, sId)
 }
 
-func (sService *storyService) GetByUser(c context.Context, uId string, page []byte) ([]datastruct.Story, []byte, error) {
-	return sService.dao.NewStoryQuery().GetByUser(c, uId, page)
+func (sService *storyService) GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
+	return sService.dao.NewStoryQuery().GetByUser(c, uId, page, limit)
 }
 
-func (sService *storyService) GetByParty(c context.Context, pId string, page []byte) ([]datastruct.Story, []byte, error) {
-	return sService.dao.NewStoryQuery().GetByParty(c, pId, page)
+func (sService *storyService) GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
+	return sService.dao.NewStoryQuery().GetByParty(c, pId, page, limit)
 }
 
 func (sService *storyService) Delete(c context.Context, uId, sId string) error {

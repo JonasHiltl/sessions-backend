@@ -15,10 +15,7 @@ func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	nextPage := c.Query("nextPage")
 
 	limitStr := c.Query("limit")
-	limit, err := strconv.ParseUint(limitStr, 10, 32)
-	if err != nil {
-		limit = 0
-	}
+	limit, _ := strconv.ParseUint(limitStr, 10, 32)
 
 	partyRes, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage, Limit: uint32(limit)})
 	if err != nil {
