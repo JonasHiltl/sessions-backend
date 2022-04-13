@@ -21,6 +21,8 @@ type ProfileQuery interface {
 	GetById(ctx context.Context, id string) (datastruct.Profile, error)
 	GetByUsername(ctx context.Context, username string) (datastruct.Profile, error)
 	UsernameTaken(ctx context.Context, username string) bool
+	IncrementFriendCount(ctx context.Context, id string) error
+	DecrementFriendCount(ctx context.Context, id string) error
 }
 
 type profileQuery struct {
@@ -107,7 +109,7 @@ func (pq *profileQuery) Delete(ctx context.Context, idStr string) error {
 	}
 
 	if res.DeletedCount != 1 {
-		return errors.New("Failed to delete user")
+		return errors.New("failed to delete user")
 	}
 
 	return nil
@@ -171,4 +173,58 @@ func (pq *profileQuery) UsernameTaken(ctx context.Context, username string) bool
 	}
 
 	return true
+}
+
+func (pq *profileQuery) IncrementFriendCount(ctx context.Context, idStr string) error {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return errors.New("invalid profile id")
+	}
+
+	update := bson.D{
+		primitive.E{
+			Key: "$inc",
+			Value: bson.D{
+				primitive.E{
+					Key:   "friend_count",
+					Value: 1,
+				},
+			},
+		},
+	}
+
+	res, err := pq.col.UpdateByID(ctx, id, update)
+	if err != nil {
+		return err
+	}
+	log.Println(res)
+
+	return nil
+}
+
+func (pq *profileQuery) DecrementFriendCount(ctx context.Context, idStr string) error {
+	id, err := primitive.ObjectIDFromHex(idStr)
+	if err != nil {
+		return errors.New("invalid profile id")
+	}
+
+	update := bson.D{
+		primitive.E{
+			Key: "$inc",
+			Value: bson.D{
+				primitive.E{
+					Key:   "friend_count",
+					Value: -1,
+				},
+			},
+		},
+	}
+
+	res, err := pq.col.UpdateByID(ctx, id, update)
+	if err != nil {
+		return err
+	}
+	log.Println(res)
+
+	return nil
 }

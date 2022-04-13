@@ -3,7 +3,6 @@ syntax = "proto3";
 package profile;
 option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/profile";
 
-import "packages/grpc/google/api/annotations.proto";
 import "packages/grpc/common/common.proto";
 
 service ProfileService {
@@ -23,6 +22,7 @@ message Profile {
     string firstname = 3;
     string lastname = 4;
     string avatar = 5;
+    uint64 friend_count = 6;
 }
 
 message CreateProfileRequest {

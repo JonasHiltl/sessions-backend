@@ -19,6 +19,8 @@ type ProfileService interface {
 	Update(ctx context.Context, u dto.Profile) (datastruct.Profile, error)
 	Delete(ctx context.Context, id string) error
 	UsernameTaken(ctx context.Context, uName string) bool
+	IncrementFriendCount(ctx context.Context, id string) error
+	DecrementFriendCount(ctx context.Context, id string) error
 }
 
 type profileService struct {
@@ -86,4 +88,12 @@ func (ps *profileService) Delete(ctx context.Context, id string) error {
 
 func (ps *profileService) UsernameTaken(ctx context.Context, uName string) bool {
 	return ps.dao.NewProfileRepository().UsernameTaken(ctx, uName)
+}
+
+func (ps *profileService) IncrementFriendCount(ctx context.Context, id string) error {
+	return ps.dao.NewProfileRepository().IncrementFriendCount(ctx, id)
+}
+
+func (ps *profileService) DecrementFriendCount(ctx context.Context, id string) error {
+	return ps.dao.NewProfileRepository().DecrementFriendCount(ctx, id)
 }
