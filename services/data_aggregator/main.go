@@ -71,7 +71,7 @@ func main() {
 
 	profile := app.Group("/profile")
 	profile.Get("/me", profileHandler.GetMe)
-	profile.Get("/:id", profileHandler.GetProfile)
+	profile.Get("/:id", middleware.AuthOptional(c.TOKEN_SECRET), profileHandler.GetProfile)
 	profile.Get("/:username", profileHandler.GetProfileByUsername)
 	profile.Get("/:username", profileHandler.UsernameTaken)
 	profile.Patch("/", profileHandler.UpdateProfile)

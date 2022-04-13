@@ -3,10 +3,12 @@ package profilehandler
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 )
 
 type profileGatewayHandler struct {
-	profileClient profile.ProfileServiceClient
+	profileClient  profile.ProfileServiceClient
+	relationClient relation.RelationServiceClient
 }
 
 type ProfileGatewayHandler interface {
