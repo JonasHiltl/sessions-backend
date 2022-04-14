@@ -77,10 +77,10 @@ func main() {
 	auth.Post("/google-login", authHandler.GoogleLogin)
 
 	profile := app.Group("/profile")
-	profile.Get("/me", profileHandler.GetMe)
+	profile.Get("/me", middleware.AuthRequired(c.TOKEN_SECRET), profileHandler.GetMe)
 	profile.Get("/:id", middleware.AuthOptional(c.TOKEN_SECRET), profileHandler.GetProfile)
 	profile.Get("/:username", profileHandler.GetProfileByUsername)
-	profile.Get("/:username", profileHandler.UsernameTaken)
+	profile.Get("/username-taken/:username", profileHandler.UsernameTaken)
 	profile.Patch("/", profileHandler.UpdateProfile)
 	// TODO: Add endpoint vor Profile Search
 

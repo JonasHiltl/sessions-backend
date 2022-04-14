@@ -6,6 +6,10 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
+type UsernameTakenResponse struct {
+	Taken bool `json:"taken"`
+}
+
 func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
 	uName := c.Params("username")
 
@@ -14,5 +18,5 @@ func (h *profileGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
 		return utils.ToHTTPError(err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(res)
+	return c.Status(fiber.StatusOK).JSON(&UsernameTakenResponse{Taken: res.Taken})
 }
