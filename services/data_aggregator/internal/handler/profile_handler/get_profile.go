@@ -19,6 +19,10 @@ func (h *profileGatewayHandler) GetProfile(c *fiber.Ctx) error {
 		return utils.ToHTTPError(err)
 	}
 
+	if profile == nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Profile not found")
+	}
+
 	var relation *relation.FriendRelation
 	// if somebody wants the Profile of somebody else we also return the friendship status between them two
 	if id != user.Sub {

@@ -10,12 +10,14 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
 	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
 	profilehandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/profile_handler"
+	relationhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/relation_handler"
 	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
 )
 
@@ -41,11 +43,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("did not connect to story service: %v", err)
 	}
+	relationClient, err := relation.NewClient(c.RELATION_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to story service: %v", err)
+	}
 
 	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient)
-	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient)
+	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient, relationClient)
 	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
 	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)
+	relationHandler := relationhandler.NewRelationGatewayHandler(relationClient)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
@@ -91,6 +98,10 @@ func main() {
 	story.Get("/party/:id", storyHandler.GetStoryByParty)
 	story.Get("/user/:id", storyHandler.GetStoryByUser)
 	story.Get("/presign/:key", storyHandler.PresignURL)
+
+	relation := app.Group("/relation")
+	relation.Put("/friend/request/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FriendRequest)
+	relation.Put("/friend/accept/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.AcceptFriend)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

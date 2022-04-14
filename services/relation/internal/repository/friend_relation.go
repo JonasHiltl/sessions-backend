@@ -44,6 +44,7 @@ func (r *friendRelationRepository) CreateFriendRelation(ctx context.Context, fr 
 
 	stmt, names := qb.
 		Insert(TABLE_NAME).
+		Unique().
 		Columns(friendRelationMetadata.Columns...).
 		ToCql()
 
@@ -63,12 +64,14 @@ func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId
 		Update(TABLE_NAME).
 		Where(qb.Eq("user_id")).
 		Where(qb.Eq("friend_id")).
+		If(qb.EqLit("accepted", "false")).
 		Set("accepted").
-		Set("accepted_at").ToCql()
+		Set("accepted_at").
+		ToCql()
 
 	fr := datastruct.FriendRelation{
 		UserId:     uId,
-		FriendId:   uId,
+		FriendId:   fId,
 		Accepted:   true,
 		AcceptedAt: time.Now(),
 	}

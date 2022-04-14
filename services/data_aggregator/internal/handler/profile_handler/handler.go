@@ -2,13 +2,13 @@ package profilehandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	rg "github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 )
 
 type profileGatewayHandler struct {
-	profileClient  profile.ProfileServiceClient
-	relationClient relation.RelationServiceClient
+	profileClient  pg.ProfileServiceClient
+	relationClient rg.RelationServiceClient
 }
 
 type ProfileGatewayHandler interface {
@@ -19,8 +19,9 @@ type ProfileGatewayHandler interface {
 	UsernameTaken(c *fiber.Ctx) error
 }
 
-func NewProfileGatewayHandler(profileClient profile.ProfileServiceClient) ProfileGatewayHandler {
+func NewProfileGatewayHandler(profileClient pg.ProfileServiceClient, relationClient rg.RelationServiceClient) ProfileGatewayHandler {
 	return &profileGatewayHandler{
-		profileClient: profileClient,
+		profileClient:  profileClient,
+		relationClient: relationClient,
 	}
 }

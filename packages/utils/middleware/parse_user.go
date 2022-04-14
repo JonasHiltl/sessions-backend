@@ -7,7 +7,10 @@ import (
 )
 
 func ParseUser(c *fiber.Ctx) types.JwtPayload {
-	user := c.Locals("user").(*jwt.Token)
+	user, ok := c.Locals("user").(*jwt.Token)
+	if !ok {
+		return types.JwtPayload{}
+	}
 	claims := user.Claims.(jwt.MapClaims)
 
 	payload := types.JwtPayload{}

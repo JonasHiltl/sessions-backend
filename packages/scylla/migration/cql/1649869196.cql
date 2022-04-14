@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS friend_relations (
-  user_id timeuuid,
-  friend_id timeuuid,
+  user_id text,
+  friend_id text,
   accepted boolean,
   created_at timestamp,
   accepted_at timestamp,
@@ -9,6 +9,5 @@ CREATE TABLE IF NOT EXISTS friend_relations (
 
 CREATE MATERIALIZED VIEW filtered_friend_relations AS 
   SELECT * FROM friend_relations
-  WHERE user_id IS NOT NULL AND friend_id IS NOT NULL AND accepted IS NOT NULL
-  PRIMARY KEY (user_id, accepted, created_at)
-WITH CLUSTERING ORDER BY (created_at DESC);
+  WHERE user_id IS NOT NULL AND friend_id IS NOT NULL AND accepted IS NOT NULL AND created_at IS NOT NULL
+  PRIMARY KEY (user_id, accepted, friend_id);

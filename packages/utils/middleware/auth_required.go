@@ -14,8 +14,10 @@ func AuthRequired(secret string) func(*fiber.Ctx) error {
 
 func AuthOptional(secret string) func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(secret),
-		ErrorHandler: noError,
+		SigningKey: []byte(secret),
+		Filter: func(c *fiber.Ctx) bool {
+			return c.Get("Authorization") == ""
+		},
 	})
 }
 func jwtError(c *fiber.Ctx, err error) error {
@@ -23,8 +25,4 @@ func jwtError(c *fiber.Ctx, err error) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Missing or malformed Token")
 	}
 	return fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired Token")
-}
-
-func noError(c *fiber.Ctx, err error) error {
-	return nil
 }
