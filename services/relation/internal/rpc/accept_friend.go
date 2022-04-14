@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/jonashiltl/sessions-backend/packages/events"
+	cg "github.com/jonashiltl/sessions-backend/packages/grpc/common"
 	rg "github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (s *relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendRequest) (*rg.FriendRelation, error) {
-	fr, err := s.frs.AcceptFriendRelation(ctx, req.UserId, req.FriendId)
+func (s *relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendRequest) (*cg.MessageResponse, error) {
+	err := s.frs.AcceptFriendRelation(ctx, req.UserId, req.FriendId)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
@@ -19,5 +20,5 @@ func (s *relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendR
 		FriendId: req.FriendId,
 	})
 
-	return fr.ToGRPCFriendRelation(), nil
+	return &cg.MessageResponse{Message: "Friend request sent"}, nil
 }

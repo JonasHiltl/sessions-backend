@@ -25,8 +25,8 @@ var friendRelationMetadata = table.Metadata{
 var friendRelationTable = table.New(friendRelationMetadata)
 
 type FriendRelationRepository interface {
-	CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) (datastruct.FriendRelation, error)
-	AcceptFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
+	CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) error
+	AcceptFriendRelation(ctx context.Context, uId, fId string) error
 	GetFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
 	GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.FriendRelation, []byte, error)
 }
@@ -35,11 +35,11 @@ type friendRelationRepository struct {
 	sess *gocqlx.Session
 }
 
-func (r *friendRelationRepository) CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) (datastruct.FriendRelation, error) {
+func (r *friendRelationRepository) CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) error {
 	v := validator.New()
 	err := v.Struct(fr)
 	if err != nil {
-		return datastruct.FriendRelation{}, err
+		return err
 	}
 
 	stmt, names := qb.
@@ -53,13 +53,13 @@ func (r *friendRelationRepository) CreateFriendRelation(ctx context.Context, fr 
 		BindStruct(fr).
 		ExecRelease()
 	if err != nil {
-		return datastruct.FriendRelation{}, err
+		return err
 	}
 
-	return fr, nil
+	return nil
 }
 
-func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error) {
+func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId, fId string) error {
 	stmt, names := qb.
 		Update(TABLE_NAME).
 		Where(qb.Eq("user_id")).
@@ -69,26 +69,19 @@ func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId
 		Set("accepted_at").
 		ToCql()
 
-	fr := datastruct.FriendRelation{
-		UserId:     uId,
-		FriendId:   fId,
-		Accepted:   true,
-		AcceptedAt: time.Now(),
-	}
-
 	err := r.sess.Query(stmt, names).
 		BindMap((qb.M{
-			"user_id":     fr.UserId,
-			"friend_id":   fr.FriendId,
-			"accepted":    fr.Accepted,
-			"accepted_at": fr.AcceptedAt,
+			"user_id":     uId,
+			"friend_id":   fId,
+			"accepted":    true,
+			"accepted_at": time.Now(),
 		})).
 		ExecRelease()
 	if err != nil {
-		return datastruct.FriendRelation{}, err
+		return err
 	}
 
-	return fr, nil
+	return nil
 }
 
 func (r *friendRelationRepository) GetFriendRelation(ctx context.Context, uId, fId string) (res datastruct.FriendRelation, err error) {

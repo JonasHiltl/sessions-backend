@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/jonashiltl/sessions-backend/packages/events"
+	cg "github.com/jonashiltl/sessions-backend/packages/grpc/common"
 	rg "github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/relation/internal/datastruct"
 )
 
-func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*rg.FriendRelation, error) {
+func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*cg.MessageResponse, error) {
 	fr := datastruct.FriendRelation{
 		UserId:    req.UserId,
 		FriendId:  req.FriendId,
@@ -18,7 +19,7 @@ func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendReques
 		CreatedAt: time.Now(),
 	}
 
-	fr, err := s.frs.CreateFriendRelation(ctx, fr)
+	err := s.frs.CreateFriendRelation(ctx, fr)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
@@ -28,5 +29,5 @@ func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendReques
 		FriendId: req.FriendId,
 	})
 
-	return fr.ToGRPCFriendRelation(), nil
+	return &cg.MessageResponse{Message: "Friend request accepted"}, nil
 }

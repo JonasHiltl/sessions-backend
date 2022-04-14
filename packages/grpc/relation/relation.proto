@@ -3,9 +3,11 @@ syntax = "proto3";
 package relation;
 option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/relation";
 
+import "packages/grpc/common/common.proto";
+
 service RelationService {
-    rpc FriendRequest (FriendRequestRequest) returns (FriendRelation) {};
-    rpc AcceptFriend (AcceptFriendRequest) returns (FriendRelation) {};
+    rpc FriendRequest (FriendRequestRequest) returns (common.MessageResponse) {};
+    rpc AcceptFriend (AcceptFriendRequest) returns (common.MessageResponse) {};
     rpc GetFriendRelation (GetFriendRelationRequest) returns (FriendRelation) {};
     rpc GetFriendsOfUser (GetFriendsOfUserRequest) returns (PagedFriendRelations) {};
 }

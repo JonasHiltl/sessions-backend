@@ -20,10 +20,10 @@ func (h *relationGatewayHandler) FriendRequest(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "You can't add yourself")
 	}
 
-	fr, err := h.relationClient.FriendRequest(c.Context(), &relation.FriendRequestRequest{UserId: user.Sub, FriendId: fId})
+	msg, err := h.relationClient.FriendRequest(c.Context(), &relation.FriendRequestRequest{UserId: user.Sub, FriendId: fId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fr)
+	return c.Status(fiber.StatusOK).JSON(msg)
 }
