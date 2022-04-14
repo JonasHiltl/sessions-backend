@@ -24,11 +24,11 @@ type ProfileService interface {
 }
 
 type profileService struct {
-	dao repository.Dao
+	repo repository.ProfileRepository
 }
 
-func NewProfileService(dao repository.Dao) ProfileService {
-	return &profileService{dao: dao}
+func NewProfileService(repo repository.ProfileRepository) ProfileService {
+	return &profileService{repo: repo}
 }
 
 func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
@@ -45,7 +45,7 @@ func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct
 		Avatar:    u.Avatar,
 	}
 
-	res, err := ps.dao.NewProfileRepository().Create(ctx, newU)
+	res, err := ps.repo.Create(ctx, newU)
 	if err != nil {
 		if strings.Contains(err.Error(), "dup key: { username:") {
 			return datastruct.Profile{}, errors.New("username 2 already taken")
@@ -56,13 +56,13 @@ func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct
 }
 
 func (ps *profileService) GetById(ctx context.Context, id string) (datastruct.Profile, error) {
-	return ps.dao.NewProfileRepository().GetById(ctx, id)
+	return ps.repo.GetById(ctx, id)
 }
 func (ps *profileService) GetByUsername(ctx context.Context, username string) (datastruct.Profile, error) {
-	return ps.dao.NewProfileRepository().GetByUsername(ctx, username)
+	return ps.repo.GetByUsername(ctx, username)
 }
 func (ps *profileService) GetMany(ctx context.Context, ids []string) ([]datastruct.Profile, error) {
-	return ps.dao.NewProfileRepository().GetMany(ctx, ids)
+	return ps.repo.GetMany(ctx, ids)
 }
 
 func (ps *profileService) Update(ctx context.Context, u dto.Profile) (datastruct.Profile, error) {
@@ -79,21 +79,21 @@ func (ps *profileService) Update(ctx context.Context, u dto.Profile) (datastruct
 		Avatar:    u.Avatar,
 	}
 
-	return ps.dao.NewProfileRepository().Update(ctx, newU)
+	return ps.repo.Update(ctx, newU)
 }
 
 func (ps *profileService) Delete(ctx context.Context, id string) error {
-	return ps.dao.NewProfileRepository().Delete(ctx, id)
+	return ps.repo.Delete(ctx, id)
 }
 
 func (ps *profileService) UsernameTaken(ctx context.Context, uName string) bool {
-	return ps.dao.NewProfileRepository().UsernameTaken(ctx, uName)
+	return ps.repo.UsernameTaken(ctx, uName)
 }
 
 func (ps *profileService) IncrementFriendCount(ctx context.Context, id string) error {
-	return ps.dao.NewProfileRepository().IncrementFriendCount(ctx, id)
+	return ps.repo.IncrementFriendCount(ctx, id)
 }
 
 func (ps *profileService) DecrementFriendCount(ctx context.Context, id string) error {
-	return ps.dao.NewProfileRepository().DecrementFriendCount(ctx, id)
+	return ps.repo.DecrementFriendCount(ctx, id)
 }

@@ -24,18 +24,18 @@ var commentsMetadata = table.Metadata{
 	SortKey: []string{"author_id", "created_at"},
 }
 
-type CommentQuery interface {
+type CommentRepository interface {
 	Create(ctx context.Context, p datastruct.Comment) (datastruct.Comment, error)
 	Delete(ctx context.Context, uId, pId, cId string) error
 	GetByParty(ctx context.Context, pId string) ([]datastruct.Comment, error)
 	GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error)
 }
 
-type commentQuery struct {
+type commentRepository struct {
 	sess *gocqlx.Session
 }
 
-func (cq *commentQuery) Create(ctx context.Context, c datastruct.Comment) (datastruct.Comment, error) {
+func (cq *commentRepository) Create(ctx context.Context, c datastruct.Comment) (datastruct.Comment, error) {
 	v := validator.New()
 	err := v.Struct(c)
 	if err != nil {
@@ -60,7 +60,7 @@ func (cq *commentQuery) Create(ctx context.Context, c datastruct.Comment) (datas
 
 // https://github.com/scylladb/scylla/issues/10171
 // TODO: currently deletion by index is not supported if supported create GSI on comment_id and delete by it
-func (cq *commentQuery) Delete(ctx context.Context, uId, pId, cId string) error {
+func (cq *commentRepository) Delete(ctx context.Context, uId, pId, cId string) error {
 	stmt, names := qb.
 		Delete(TABLE_NAME).
 		Where(qb.Eq("comment_id")).
@@ -78,7 +78,7 @@ func (cq *commentQuery) Delete(ctx context.Context, uId, pId, cId string) error 
 	return nil
 }
 
-func (cq *commentQuery) GetByParty(ctx context.Context, pId string) ([]datastruct.Comment, error) {
+func (cq *commentRepository) GetByParty(ctx context.Context, pId string) ([]datastruct.Comment, error) {
 	var result []datastruct.Comment
 	stmt, names := qb.
 		Select(COMMENTS_BY_PARTY).
@@ -99,7 +99,7 @@ func (cq *commentQuery) GetByParty(ctx context.Context, pId string) ([]datastruc
 	return result, nil
 }
 
-func (cq *commentQuery) GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error) {
+func (cq *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error) {
 	var result []datastruct.Comment
 	stmt, names := qb.
 		Select(TABLE_NAME).

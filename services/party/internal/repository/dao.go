@@ -8,7 +8,7 @@ import (
 )
 
 type Dao interface {
-	NewPartyQuery() PartyQuery
+	NewPartyRepository() PartyRepository
 }
 
 type dao struct {
@@ -35,6 +35,6 @@ func NewDAO(sess *gocqlx.Session) Dao {
 	return &dao{sess: sess}
 }
 
-func (d *dao) NewPartyQuery() PartyQuery {
-	return &partyQuery{sess: d.sess}
+func (d *dao) NewPartyRepository() PartyRepository {
+	return &partyRepository{sess: d.sess}
 }

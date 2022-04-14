@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type ProfileQuery interface {
+type ProfileRepository interface {
 	Create(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error)
 	Delete(ctx context.Context, id string) error
 	Update(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error)
@@ -25,11 +25,11 @@ type ProfileQuery interface {
 	DecrementFriendCount(ctx context.Context, id string) error
 }
 
-type profileQuery struct {
+type profileRepository struct {
 	col *mongo.Collection
 }
 
-func (pq *profileQuery) Create(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error) {
+func (pq *profileRepository) Create(ctx context.Context, u datastruct.Profile) (datastruct.Profile, error) {
 	v := validator.New()
 	err := v.Struct(u)
 	if err != nil {
@@ -52,7 +52,7 @@ func (pq *profileQuery) Create(ctx context.Context, u datastruct.Profile) (datas
 	return u, nil
 }
 
-func (pq *profileQuery) GetById(ctx context.Context, idStr string) (res datastruct.Profile, err error) {
+func (pq *profileRepository) GetById(ctx context.Context, idStr string) (res datastruct.Profile, err error) {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return res, errors.New("invalid profile id")
@@ -69,7 +69,7 @@ func (pq *profileQuery) GetById(ctx context.Context, idStr string) (res datastru
 	return res, err
 }
 
-func (pq *profileQuery) GetMany(ctx context.Context, idsStr []string) (res []datastruct.Profile, err error) {
+func (pq *profileRepository) GetMany(ctx context.Context, idsStr []string) (res []datastruct.Profile, err error) {
 	var ids []primitive.ObjectID
 	for _, i := range idsStr {
 		id, err := primitive.ObjectIDFromHex(i)
@@ -95,7 +95,7 @@ func (pq *profileQuery) GetMany(ctx context.Context, idsStr []string) (res []dat
 	return res, nil
 }
 
-func (pq *profileQuery) Delete(ctx context.Context, idStr string) error {
+func (pq *profileRepository) Delete(ctx context.Context, idStr string) error {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return errors.New("invalid profile id")
@@ -115,7 +115,7 @@ func (pq *profileQuery) Delete(ctx context.Context, idStr string) error {
 	return nil
 }
 
-func (pq *profileQuery) Update(ctx context.Context, u datastruct.Profile) (res datastruct.Profile, err error) {
+func (pq *profileRepository) Update(ctx context.Context, u datastruct.Profile) (res datastruct.Profile, err error) {
 	input := bson.M{}
 	filter := bson.M{"_id": u.Id}
 
@@ -149,7 +149,7 @@ func (pq *profileQuery) Update(ctx context.Context, u datastruct.Profile) (res d
 	return res, nil
 }
 
-func (pq *profileQuery) GetByUsername(ctx context.Context, username string) (res datastruct.Profile, err error) {
+func (pq *profileRepository) GetByUsername(ctx context.Context, username string) (res datastruct.Profile, err error) {
 	err = pq.
 		col.
 		FindOne(ctx, bson.M{"username": username}).
@@ -161,7 +161,7 @@ func (pq *profileQuery) GetByUsername(ctx context.Context, username string) (res
 	return res, err
 }
 
-func (pq *profileQuery) UsernameTaken(ctx context.Context, username string) bool {
+func (pq *profileRepository) UsernameTaken(ctx context.Context, username string) bool {
 	user := datastruct.Profile{}
 	err := pq.col.FindOne(ctx, bson.M{"username": username}).Decode(&user)
 	if err != nil {
@@ -175,7 +175,7 @@ func (pq *profileQuery) UsernameTaken(ctx context.Context, username string) bool
 	return true
 }
 
-func (pq *profileQuery) IncrementFriendCount(ctx context.Context, idStr string) error {
+func (pq *profileRepository) IncrementFriendCount(ctx context.Context, idStr string) error {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return errors.New("invalid profile id")
@@ -202,7 +202,7 @@ func (pq *profileQuery) IncrementFriendCount(ctx context.Context, idStr string) 
 	return nil
 }
 
-func (pq *profileQuery) DecrementFriendCount(ctx context.Context, idStr string) error {
+func (pq *profileRepository) DecrementFriendCount(ctx context.Context, idStr string) error {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return errors.New("invalid profile id")

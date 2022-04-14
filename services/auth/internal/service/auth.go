@@ -21,11 +21,11 @@ type AuthService interface {
 }
 
 type authService struct {
-	dao repository.Dao
+	repo repository.AuthRepository
 }
 
-func NewAuthService(dao repository.Dao) AuthService {
-	return &authService{dao: dao}
+func NewAuthService(repo repository.AuthRepository) AuthService {
+	return &authService{repo: repo}
 }
 
 func (as *authService) Create(ctx context.Context, u dto.AuthUser) (datastruct.AuthUser, error) {
@@ -40,7 +40,7 @@ func (as *authService) Create(ctx context.Context, u dto.AuthUser) (datastruct.A
 		Role:          u.Role.String(),
 	}
 
-	res, err := as.dao.NewAuthRepository().Create(ctx, newU)
+	res, err := as.repo.Create(ctx, newU)
 	if err != nil {
 		if strings.Contains(err.Error(), "dup key: { email:") {
 			return datastruct.AuthUser{}, errors.New("email already taken")
@@ -51,7 +51,7 @@ func (as *authService) Create(ctx context.Context, u dto.AuthUser) (datastruct.A
 }
 
 func (as *authService) Delete(ctx context.Context, id string) error {
-	return as.dao.NewAuthRepository().Delete(ctx, id)
+	return as.repo.Delete(ctx, id)
 }
 
 func (as *authService) Update(ctx context.Context, u dto.AuthUser) (datastruct.AuthUser, error) {
@@ -69,16 +69,16 @@ func (as *authService) Update(ctx context.Context, u dto.AuthUser) (datastruct.A
 		Role:          u.Role.String(),
 	}
 
-	return as.dao.NewAuthRepository().Update(ctx, newU)
+	return as.repo.Update(ctx, newU)
 }
 
 func (as *authService) GetById(ctx context.Context, id string) (datastruct.AuthUser, error) {
-	return as.dao.NewAuthRepository().GetById(ctx, id)
+	return as.repo.GetById(ctx, id)
 }
 func (as *authService) GetByEmail(ctx context.Context, username string) (datastruct.AuthUser, error) {
-	return as.dao.NewAuthRepository().GetByEmail(ctx, username)
+	return as.repo.GetByEmail(ctx, username)
 }
 
 func (as *authService) UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error) {
-	return as.dao.NewAuthRepository().UpdateVerified(ctx, email, emailVerified)
+	return as.repo.UpdateVerified(ctx, email, emailVerified)
 }

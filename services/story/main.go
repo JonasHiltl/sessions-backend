@@ -27,7 +27,7 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	sService := service.NewStoryServie(dao)
+	sService := service.NewStoryServie(dao.NewStoryRepository())
 	us := service.NewUploadService(c.SPACES_KEY, c.SPACES_ENDPOINT, c.SPACES_KEY)
 
 	var sb strings.Builder

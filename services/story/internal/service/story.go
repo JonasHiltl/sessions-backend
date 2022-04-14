@@ -22,11 +22,11 @@ type StoryService interface {
 }
 
 type storyService struct {
-	dao repository.Dao
+	repo repository.StoryRepository
 }
 
-func NewStoryServie(dao repository.Dao) StoryService {
-	return &storyService{dao: dao}
+func NewStoryServie(repo repository.StoryRepository) StoryService {
+	return &storyService{repo: repo}
 }
 
 func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct.Story, error) {
@@ -45,21 +45,21 @@ func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct
 		Url:           s.Url,
 		TaggedFriends: s.TaggedFriends,
 	}
-	return sService.dao.NewStoryQuery().Create(c, ds)
+	return sService.repo.Create(c, ds)
 }
 
 func (sService *storyService) Get(c context.Context, sId string) (datastruct.Story, error) {
-	return sService.dao.NewStoryQuery().Get(c, sId)
+	return sService.repo.Get(c, sId)
 }
 
 func (sService *storyService) GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
-	return sService.dao.NewStoryQuery().GetByUser(c, uId, page, limit)
+	return sService.repo.GetByUser(c, uId, page, limit)
 }
 
 func (sService *storyService) GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
-	return sService.dao.NewStoryQuery().GetByParty(c, pId, page, limit)
+	return sService.repo.GetByParty(c, pId, page, limit)
 }
 
 func (sService *storyService) Delete(c context.Context, uId, sId string) error {
-	return sService.dao.NewStoryQuery().Delete(c, uId, sId)
+	return sService.repo.Delete(c, uId, sId)
 }

@@ -26,7 +26,7 @@ var storyMetadata = table.Metadata{
 }
 var storyTable = table.New(storyMetadata)
 
-type StoryQuery interface {
+type StoryRepository interface {
 	Create(c context.Context, s datastruct.Story) (datastruct.Story, error)
 	Delete(c context.Context, uId, sId string) error
 	Get(c context.Context, sId string) (datastruct.Story, error)
@@ -34,11 +34,11 @@ type StoryQuery interface {
 	GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error)
 }
 
-type storyQuery struct {
+type storyRepository struct {
 	sess *gocqlx.Session
 }
 
-func (sq *storyQuery) Create(c context.Context, s datastruct.Story) (datastruct.Story, error) {
+func (sq *storyRepository) Create(c context.Context, s datastruct.Story) (datastruct.Story, error) {
 	v := validator.New()
 	err := v.Struct(s)
 	if err != nil {
@@ -64,7 +64,7 @@ func (sq *storyQuery) Create(c context.Context, s datastruct.Story) (datastruct.
 	return s, err
 }
 
-func (sq *storyQuery) Delete(c context.Context, uId, sId string) error {
+func (sq *storyRepository) Delete(c context.Context, uId, sId string) error {
 	stmt, names := qb.
 		Delete(TABLE_NAME).
 		Where(qb.Eq("id")).
@@ -81,7 +81,7 @@ func (sq *storyQuery) Delete(c context.Context, uId, sId string) error {
 	return nil
 }
 
-func (sq *storyQuery) Get(c context.Context, sId string) (datastruct.Story, error) {
+func (sq *storyRepository) Get(c context.Context, sId string) (datastruct.Story, error) {
 	var result datastruct.Story
 	err := sq.sess.
 		Query(storyTable.Get()).
@@ -97,7 +97,7 @@ func (sq *storyQuery) Get(c context.Context, sId string) (datastruct.Story, erro
 	return result, nil
 }
 
-func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
+func (sq *storyRepository) GetByUser(c context.Context, uId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_USER).
 		Where(qb.Eq("user_id")).
@@ -125,7 +125,7 @@ func (sq *storyQuery) GetByUser(c context.Context, uId string, page []byte, limi
 	return result, iter.PageState(), nil
 }
 
-func (sq *storyQuery) GetByParty(c context.Context, pId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
+func (sq *storyRepository) GetByParty(c context.Context, pId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).

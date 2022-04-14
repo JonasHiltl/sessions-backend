@@ -20,12 +20,12 @@ type CommentService interface {
 }
 
 type commentService struct {
-	dao repository.Dao
-	nc  *nats.EncodedConn
+	repo repository.CommentRepository
+	nc   *nats.EncodedConn
 }
 
-func NewCommentServie(dao repository.Dao, nc *nats.EncodedConn) CommentService {
-	return &commentService{dao: dao, nc: nc}
+func NewCommentServie(repo repository.CommentRepository, nc *nats.EncodedConn) CommentService {
+	return &commentService{repo: repo, nc: nc}
 }
 
 func (cs *commentService) Create(ctx context.Context, c dto.Comment) (datastruct.Comment, error) {
@@ -41,18 +41,18 @@ func (cs *commentService) Create(ctx context.Context, c dto.Comment) (datastruct
 		Body:       c.Body,
 		Created_at: time.Now(),
 	}
-	result, err := cs.dao.NewCommentQuery().Create(ctx, dc)
+	result, err := cs.repo.Create(ctx, dc)
 	return result, err
 }
 
 func (cs *commentService) Delete(ctx context.Context, uId, pId, cId string) error {
-	return cs.dao.NewCommentQuery().Delete(ctx, uId, pId, cId)
+	return cs.repo.Delete(ctx, uId, pId, cId)
 }
 
 func (cs *commentService) GetByParty(ctx context.Context, pId string) ([]datastruct.Comment, error) {
-	return cs.dao.NewCommentQuery().GetByParty(ctx, pId)
+	return cs.repo.GetByParty(ctx, pId)
 }
 
 func (cs *commentService) GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error) {
-	return cs.dao.NewCommentQuery().GetByPartyUser(ctx, pId, uId)
+	return cs.repo.GetByPartyUser(ctx, pId, uId)
 }

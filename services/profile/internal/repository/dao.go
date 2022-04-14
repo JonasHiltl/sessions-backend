@@ -10,7 +10,7 @@ import (
 )
 
 type Dao interface {
-	NewProfileRepository() ProfileQuery
+	NewProfileRepository() ProfileRepository
 }
 
 type dao struct {
@@ -49,6 +49,6 @@ func NewDAO(db *mongo.Database) Dao {
 	return &dao{db: db}
 }
 
-func (d *dao) NewProfileRepository() ProfileQuery {
-	return &profileQuery{col: d.db.Collection(PROFILE_COLLECTION)}
+func (d *dao) NewProfileRepository() ProfileRepository {
+	return &profileRepository{col: d.db.Collection(PROFILE_COLLECTION)}
 }

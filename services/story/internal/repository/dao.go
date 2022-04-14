@@ -8,7 +8,7 @@ import (
 )
 
 type Dao interface {
-	NewStoryQuery() StoryQuery
+	NewStoryRepository() StoryRepository
 }
 
 type dao struct {
@@ -35,6 +35,6 @@ func NewDAO(sess *gocqlx.Session) Dao {
 	return &dao{sess: sess}
 }
 
-func (d *dao) NewStoryQuery() StoryQuery {
-	return &storyQuery{sess: d.sess}
+func (d *dao) NewStoryRepository() StoryRepository {
+	return &storyRepository{sess: d.sess}
 }

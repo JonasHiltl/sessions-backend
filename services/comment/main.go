@@ -36,7 +36,7 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	cs := service.NewCommentServie(dao, nc)
+	cs := service.NewCommentServie(dao.NewCommentRepository(), nc)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

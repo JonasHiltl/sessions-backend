@@ -25,12 +25,12 @@ type PartyService interface {
 }
 
 type partyService struct {
-	dao repository.Dao
-	nc  *nats.EncodedConn
+	repo repository.PartyRepository
+	nc   *nats.EncodedConn
 }
 
-func NewPartyServie(dao repository.Dao, nc *nats.EncodedConn) PartyService {
-	return &partyService{dao: dao, nc: nc}
+func NewPartyServie(repo repository.PartyRepository, nc *nats.EncodedConn) PartyService {
+	return &partyService{repo: repo, nc: nc}
 }
 
 func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
@@ -54,7 +54,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 		Country:       p.Country,
 		StartDate:     p.StartDate,
 	}
-	newParty, err := ps.dao.NewPartyQuery().Create(ctx, dp, time.Hour*24)
+	newParty, err := ps.repo.Create(ctx, dp, time.Hour*24)
 	return newParty, err
 }
 
@@ -78,12 +78,12 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 		StartDate:     p.StartDate,
 	}
 
-	err := ps.dao.NewPartyQuery().Update(ctx, dp)
+	err := ps.repo.Update(ctx, dp)
 	if err != nil {
 		return datastruct.Party{}, err
 	}
 
-	newP, err := ps.dao.NewPartyQuery().Get(ctx, p.Id)
+	newP, err := ps.repo.Get(ctx, p.Id)
 	// make sure new value is getting returned
 
 	if p.Title != "" && p.Title != newP.Title {
@@ -118,15 +118,15 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 }
 
 func (ps *partyService) Delete(ctx context.Context, UserId, pId string) error {
-	return ps.dao.NewPartyQuery().Delete(ctx, UserId, pId)
+	return ps.repo.Delete(ctx, UserId, pId)
 }
 
 func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {
-	return ps.dao.NewPartyQuery().Get(ctx, pId)
+	return ps.repo.Get(ctx, pId)
 }
 
 func (ps *partyService) GetByUser(ctx context.Context, UserId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error) {
-	return ps.dao.NewPartyQuery().GetByUser(ctx, UserId, page, limit)
+	return ps.repo.GetByUser(ctx, UserId, page, limit)
 }
 
 func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {
@@ -135,5 +135,5 @@ func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64
 	}
 
 	h := geohash.Neighbors(geohash.EncodeWithPrecision(lat, long, precision))
-	return ps.dao.NewPartyQuery().GeoSearch(ctx, h, page)
+	return ps.repo.GeoSearch(ctx, h, page)
 }

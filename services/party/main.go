@@ -38,7 +38,7 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	partyService := service.NewPartyServie(dao, nc)
+	partyService := service.NewPartyServie(dao.NewPartyRepository(), nc)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

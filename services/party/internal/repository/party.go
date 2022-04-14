@@ -26,7 +26,7 @@ var partyMetadata = table.Metadata{
 }
 var partyTable = table.New(partyMetadata)
 
-type PartyQuery interface {
+type PartyRepository interface {
 	Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error)
 	Update(ctx context.Context, p datastruct.Party) error
 	Delete(ctx context.Context, uId, pId string) error
@@ -35,11 +35,11 @@ type PartyQuery interface {
 	GeoSearch(ctx context.Context, nHashes []string, page []byte) ([]datastruct.Party, []byte, error)
 }
 
-type partyQuery struct {
+type partyRepository struct {
 	sess *gocqlx.Session
 }
 
-func (pq *partyQuery) Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error) {
+func (pq *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error) {
 	v := validator.New()
 	err := v.Struct(p)
 	if err != nil {
@@ -63,7 +63,7 @@ func (pq *partyQuery) Create(ctx context.Context, p datastruct.Party, ttl time.D
 	return p, nil
 }
 
-func (pq *partyQuery) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
+func (pq *partyRepository) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
 	err = pq.sess.
 		Query(partyTable.Get()).
 		BindMap((qb.M{"id": pId})).
@@ -75,7 +75,7 @@ func (pq *partyQuery) Get(ctx context.Context, pId string) (res datastruct.Party
 	return res, nil
 }
 
-func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
+func (pq *partyRepository) Update(ctx context.Context, p datastruct.Party) error {
 	b := qb.
 		Update(TABLE_NAME).
 		Where(qb.Eq("id"))
@@ -136,7 +136,7 @@ func (pq *partyQuery) Update(ctx context.Context, p datastruct.Party) error {
 	return nil
 }
 
-func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
+func (pq *partyRepository) Delete(ctx context.Context, uId, pId string) error {
 	stmt, names := qb.
 		Delete(TABLE_NAME).
 		Where(qb.Eq("id")).
@@ -156,7 +156,7 @@ func (pq *partyQuery) Delete(ctx context.Context, uId, pId string) error {
 	return nil
 }
 
-func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
+func (pq *partyRepository) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(PARTY_BY_USER).
 		Where(qb.Eq("user_id")).
@@ -182,7 +182,7 @@ func (pq *partyQuery) GetByUser(ctx context.Context, uId string, page []byte, li
 	return result, iter.PageState(), nil
 }
 
-func (pq *partyQuery) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
+func (pq *partyRepository) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(TABLE_NAME).
 		Where(qb.Eq("is_public")).

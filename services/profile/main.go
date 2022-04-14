@@ -43,7 +43,7 @@ func main() {
 
 	dao := repository.NewDAO(mongo)
 
-	userService := service.NewProfileService(dao)
+	userService := service.NewProfileService(dao.NewProfileRepository())
 	uploadService := service.NewUploadService(c.SpacesEndpoint, c.SpacesToken)
 
 	var sb strings.Builder

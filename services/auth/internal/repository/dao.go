@@ -10,7 +10,7 @@ import (
 )
 
 type Dao interface {
-	NewAuthRepository() AuthQuery
+	NewAuthRepository() AuthRepository
 }
 
 type dao struct {
@@ -49,6 +49,6 @@ func NewDAO(db *mongo.Database) Dao {
 	return &dao{db: db}
 }
 
-func (d *dao) NewAuthRepository() AuthQuery {
-	return &authQuery{col: d.db.Collection(AUTH_COLLECTION)}
+func (d *dao) NewAuthRepository() AuthRepository {
+	return &authRepository{col: d.db.Collection(AUTH_COLLECTION)}
 }

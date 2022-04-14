@@ -35,7 +35,7 @@ func main() {
 	tm := service.NewTokenManager(c.TokenSecret)
 	gm := service.NewGoogleManager(c.GoogleClientID)
 	pm := service.NewPasswordManager()
-	as := service.NewAuthService(dao)
+	as := service.NewAuthService(dao.NewAuthRepository())
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

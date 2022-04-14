@@ -8,7 +8,7 @@ import (
 )
 
 type Dao interface {
-	NewCommentQuery() CommentQuery
+	NewCommentRepository() CommentRepository
 }
 
 type dao struct {
@@ -35,6 +35,6 @@ func NewDAO(sess *gocqlx.Session) Dao {
 	return &dao{sess: sess}
 }
 
-func (d *dao) NewCommentQuery() CommentQuery {
-	return &commentQuery{sess: d.sess}
+func (d *dao) NewCommentRepository() CommentRepository {
+	return &commentRepository{sess: d.sess}
 }

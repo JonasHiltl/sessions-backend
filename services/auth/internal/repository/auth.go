@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type AuthQuery interface {
+type AuthRepository interface {
 	Create(context.Context, datastruct.AuthUser) (datastruct.AuthUser, error)
 	Delete(ctx context.Context, id string) error
 	Update(ctx context.Context, u datastruct.AuthUser) (datastruct.AuthUser, error)
@@ -23,11 +23,11 @@ type AuthQuery interface {
 	UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error)
 }
 
-type authQuery struct {
+type authRepository struct {
 	col *mongo.Collection
 }
 
-func (aq *authQuery) Create(ctx context.Context, u datastruct.AuthUser) (datastruct.AuthUser, error) {
+func (aq *authRepository) Create(ctx context.Context, u datastruct.AuthUser) (datastruct.AuthUser, error) {
 	v := validator.New()
 	err := v.Struct(u)
 	if err != nil {
@@ -57,7 +57,7 @@ func (aq *authQuery) Create(ctx context.Context, u datastruct.AuthUser) (datastr
 	return u, nil
 }
 
-func (uq *authQuery) Delete(ctx context.Context, idStr string) error {
+func (uq *authRepository) Delete(ctx context.Context, idStr string) error {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return errors.New("invalid profile id")
@@ -77,7 +77,7 @@ func (uq *authQuery) Delete(ctx context.Context, idStr string) error {
 	return nil
 }
 
-func (uq *authQuery) Update(ctx context.Context, u datastruct.AuthUser) (res datastruct.AuthUser, err error) {
+func (uq *authRepository) Update(ctx context.Context, u datastruct.AuthUser) (res datastruct.AuthUser, err error) {
 	input := bson.M{}
 	filter := bson.M{"_id": u.Id}
 
@@ -111,7 +111,7 @@ func (uq *authQuery) Update(ctx context.Context, u datastruct.AuthUser) (res dat
 	return res, nil
 }
 
-func (aq *authQuery) GetById(ctx context.Context, idStr string) (res datastruct.AuthUser, err error) {
+func (aq *authRepository) GetById(ctx context.Context, idStr string) (res datastruct.AuthUser, err error) {
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return res, errors.New("invalid profile id")
@@ -128,7 +128,7 @@ func (aq *authQuery) GetById(ctx context.Context, idStr string) (res datastruct.
 	return res, err
 }
 
-func (aq *authQuery) GetByEmail(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
+func (aq *authRepository) GetByEmail(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
 	err = aq.
 		col.
 		FindOne(ctx, bson.M{"email": email}).
@@ -140,7 +140,7 @@ func (aq *authQuery) GetByEmail(ctx context.Context, email string) (res datastru
 	return res, err
 }
 
-func (aq *authQuery) RotateEmailCode(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
+func (aq *authRepository) RotateEmailCode(ctx context.Context, email string) (res datastruct.AuthUser, err error) {
 	code, err := utils.GenerateOTP(4)
 	if err != nil {
 		return res, errors.New("No user found")
@@ -165,7 +165,7 @@ func (aq *authQuery) RotateEmailCode(ctx context.Context, email string) (res dat
 	return res, nil
 }
 
-func (aq *authQuery) UpdateVerified(ctx context.Context, email string, emailVerified bool) (res datastruct.AuthUser, err error) {
+func (aq *authRepository) UpdateVerified(ctx context.Context, email string, emailVerified bool) (res datastruct.AuthUser, err error) {
 	input := bson.M{
 		"email_verified": emailVerified,
 	}
