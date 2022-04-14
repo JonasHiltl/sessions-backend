@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS friend_relations (
 );
 
 CREATE MATERIALIZED VIEW filtered_friend_relations AS 
-  SELECT * FROM friend_relation
+  SELECT * FROM friend_relations
   WHERE user_id IS NOT NULL AND friend_id IS NOT NULL AND accepted IS NOT NULL
   PRIMARY KEY (user_id, accepted, created_at)
 WITH CLUSTERING ORDER BY (created_at DESC);

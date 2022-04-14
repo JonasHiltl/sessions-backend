@@ -63,7 +63,6 @@ func (pq *profileQuery) GetById(ctx context.Context, idStr string) (res datastru
 		FindOne(ctx, bson.M{"_id": id}).
 		Decode(&res)
 	if err != nil {
-		log.Println(err)
 		return res, err
 	}
 
@@ -88,6 +87,7 @@ func (pq *profileQuery) GetMany(ctx context.Context, idsStr []string) (res []dat
 	}
 
 	err = cur.All(ctx, &res)
+	log.Println(err)
 	if err != nil {
 		return res, err
 	}

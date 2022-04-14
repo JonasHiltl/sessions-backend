@@ -23,10 +23,7 @@ func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 		return utils.ToHTTPError(err)
 	}
 
-	profileRes, err := h.profileClient.GetProfile(c.Context(), &profile.GetProfileRequest{Id: p.UserId})
-	if err != nil {
-		return utils.ToHTTPError(err)
-	}
+	profileRes, _ := h.profileClient.GetProfile(c.Context(), &profile.GetProfileRequest{Id: p.UserId})
 
 	res := datastruct.AggregatedParty{
 		Id:            p.Id,
