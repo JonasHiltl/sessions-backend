@@ -31,7 +31,7 @@ func (g googleManager) ValidateGoogleJWT(tokenString string) (datastruct.GoogleC
 	token, err := jwt.ParseWithClaims(
 		tokenString,
 		&claimsStruct,
-		func(token *jwt.Token) (interface{}, error) {
+		func(token *jwt.Token) (any, error) {
 			pem, err := g.getGooglePublicKey(fmt.Sprintf("%s", token.Header["kid"]))
 			if err != nil {
 				return nil, err

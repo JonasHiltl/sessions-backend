@@ -18,7 +18,7 @@ type ApiError struct {
 	Msg   string
 }
 
-func (cv *CustomValidator) Validate(i interface{}) error {
+func (cv *CustomValidator) Validate(i any) error {
 	if err := cv.Validator.Struct(i); err != nil {
 		var ve validator.ValidationErrors
 		if errors.As(err, &ve) {
