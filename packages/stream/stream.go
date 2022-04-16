@@ -1,11 +1,14 @@
 package stream
 
 import (
+	"log"
 	"reflect"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/encoders/protobuf"
 )
 
 type stream struct {
@@ -13,23 +16,59 @@ type stream struct {
 }
 
 type Stream interface {
-	PublishEvent(event interface{}) error
+	PublishEvent(event any) error
+	SubscribeByEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error)
 }
 
-func NewStream(nats *nats.EncodedConn) Stream {
+func New(nats *nats.EncodedConn) Stream {
 	return &stream{nats: nats}
 }
 
-func (s stream) PublishEvent(event interface{}) error {
+func Connect(cluster string, opts []nats.Option) (*nats.EncodedConn, error) {
+	opts = setupConnOptions(opts)
+
+	nc, err := nats.Connect(cluster, opts...)
+	if err != nil {
+		return nil, err
+	}
+	c, err := nats.NewEncodedConn(nc, protobuf.PROTOBUF_ENCODER)
+	if err != nil {
+		return nil, err
+	}
+	log.Println("Connected to Nats Server at ", c.Conn.ConnectedUrl())
+	return c, nil
+}
+
+func (s stream) PublishEvent(event any) error {
 	sub := eventToSubject(event)
 	return s.nats.Publish(sub, event)
 }
 
-func (s stream) SubscribeByEvent() {
+func (s stream) SubscribeByEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error) {
+	sub := eventToSubject(event)
 
+	return s.nats.QueueSubscribe(sub, queue, handler)
 }
 
-func eventToSubject(event interface{}) string {
+func setupConnOptions(opts []nats.Option) []nats.Option {
+	totalWait := 10 * time.Minute
+	reconnectDelay := time.Second
+
+	opts = append(opts, nats.ReconnectWait(reconnectDelay))
+	opts = append(opts, nats.MaxReconnects(int(totalWait/reconnectDelay)))
+	opts = append(opts, nats.DisconnectErrHandler(func(nc *nats.Conn, err error) {
+		log.Printf("Disconnected due to: %s, will attempt reconnects for %.0fm", err, totalWait.Minutes())
+	}))
+	opts = append(opts, nats.ReconnectHandler(func(nc *nats.Conn) {
+		log.Printf("Reconnected [%s]", nc.ConnectedUrl())
+	}))
+	opts = append(opts, nats.ClosedHandler(func(nc *nats.Conn) {
+		log.Fatalf("Exiting: %v", nc.LastError())
+	}))
+	return opts
+}
+
+func eventToSubject(event any) string {
 	t := reflect.TypeOf(event)
 
 	s := strings.Split(t.String(), ".")

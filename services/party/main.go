@@ -6,13 +6,12 @@ import (
 	"strings"
 
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	"github.com/jonashiltl/sessions-backend/packages/nats"
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
-	gonats "github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
 )
 
@@ -22,13 +21,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	opts := []gonats.Option{gonats.Name("Party Service")}
-	nc, err := nats.Connect(c.NatsCluster, opts)
+	opts := []nats.Option{nats.Name("Party Service")}
+	nc, err := stream.Connect(c.NatsCluster, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
-	stream := stream.NewStream(nc)
+	stream := stream.New(nc)
 
 	sess, err := repository.NewDB(c.ScyllaKeyspace, c.ScyllaHosts)
 	if err != nil {

@@ -6,12 +6,12 @@ import (
 	"strings"
 
 	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
-	"github.com/jonashiltl/sessions-backend/packages/nats"
+	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
-	gonats "github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
 )
 
@@ -21,8 +21,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	opts := []gonats.Option{gonats.Name("Comment Service")}
-	nc, err := nats.Connect(c.NatsCluster, opts)
+	opts := []nats.Option{nats.Name("Comment Service")}
+	nc, err := stream.Connect(c.NatsCluster, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
