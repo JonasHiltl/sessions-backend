@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"net/smtp"
-
 	"github.com/jonashiltl/sessions-backend/packages/events"
+	mail "github.com/xhit/go-simple-mail/v2"
 )
 
 type server struct {
-	smtp *smtp.Client
+	mail *mail.SMTPClient
 }
 
 type Server interface {
@@ -17,6 +16,6 @@ type Server interface {
 	FriendAccepted(m *events.FriendAccepted)
 }
 
-func NewServer(smtp *smtp.Client) Server {
-	return &server{smtp: smtp}
+func NewServer(mail *mail.SMTPClient) Server {
+	return &server{mail: mail}
 }

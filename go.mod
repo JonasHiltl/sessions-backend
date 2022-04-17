@@ -21,6 +21,7 @@ require (
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/spf13/viper v1.11.0
+	github.com/xhit/go-simple-mail/v2 v2.11.0
 	go.mongodb.org/mongo-driver v1.9.0
 	google.golang.org/genproto v0.0.0-20220414192740-2d67ff6cf2b4
 	google.golang.org/grpc v1.45.0
@@ -34,6 +35,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/go-test/deep v1.0.8 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
@@ -57,6 +59,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/toorop/go-dkim v0.0.0-20201103131630-e1cd1a0a5208 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.35.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
