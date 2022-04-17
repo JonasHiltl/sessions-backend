@@ -6,6 +6,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/events"
 )
 
-func (*server) PartyCreated(p *events.PartyCreated) {
-	log.Printf("%v", p.Party)
+func (s *server) Registered(m *events.Registered) {
+	log.Printf("%v", m)
 }

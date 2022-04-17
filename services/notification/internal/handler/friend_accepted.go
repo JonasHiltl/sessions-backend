@@ -2,11 +2,10 @@ package handler
 
 import (
 	"log"
-	"os"
 
-	gonats "github.com/nats-io/nats.go"
+	"github.com/jonashiltl/sessions-backend/packages/events"
 )
 
-func (*server) FriendAccepted(m *gonats.Msg) {
-	log.Printf("Received on [%s] Queue[%s] Pid[%d]: '%s'", m.Subject, m.Sub.Queue, os.Getpid(), string(m.Data))
+func (s *server) FriendAccepted(fa *events.FriendAccepted) {
+	log.Printf("%v accepted request from %v", fa.FriendId, fa.UserId)
 }

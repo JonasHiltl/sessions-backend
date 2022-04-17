@@ -71,7 +71,9 @@ func setupConnOptions(opts []nats.Option) []nats.Option {
 func eventToSubject(event any) string {
 	t := reflect.TypeOf(event)
 
-	s := strings.Split(t.String(), ".")
+	str := strings.ReplaceAll(t.String(), "*", "")
+
+	s := strings.Split(str, ".")
 
 	// if type is events.ImportantType, remove events prefix from string
 	if len(s) == 2 && s[0] == "events" {

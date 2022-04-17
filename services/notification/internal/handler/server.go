@@ -1,21 +1,22 @@
 package handler
 
 import (
-	gonats "github.com/nats-io/nats.go"
+	"net/smtp"
+
+	"github.com/jonashiltl/sessions-backend/packages/events"
 )
 
 type server struct {
+	smtp *smtp.Client
 }
 
 type Server interface {
-	EmailVerification(m *gonats.Msg)
-	PartyCreated(m *gonats.Msg)
-	Commented(m *gonats.Msg)
-	Replied(m *gonats.Msg)
-	FriendRequest(m *gonats.Msg)
-	FriendAccepted(m *gonats.Msg)
+	Registered(m *events.Registered)
+	PartyCreated(p *events.PartyCreated)
+	FriendRequested(m *events.FriendRequested)
+	FriendAccepted(m *events.FriendAccepted)
 }
 
-func NewServer() Server {
-	return &server{}
+func NewServer(smtp *smtp.Client) Server {
+	return &server{smtp: smtp}
 }

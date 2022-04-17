@@ -48,7 +48,7 @@ func (ps *profileService) Create(ctx context.Context, u dto.Profile) (datastruct
 	res, err := ps.repo.Create(ctx, newU)
 	if err != nil {
 		if strings.Contains(err.Error(), "dup key: { username:") {
-			return datastruct.Profile{}, errors.New("username 2 already taken")
+			return datastruct.Profile{}, errors.New("username already taken")
 		}
 	}
 
