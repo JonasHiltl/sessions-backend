@@ -3,11 +3,11 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port           string `mapstructure:"PORT"`
-	MongoURL       string `mapstructure:"MONGO_URL"`
-	NatsCluster    string `mapstructure:"NATS_CLUSTER"`
-	SpacesEndpoint string `mapstructure:"SPACES_ENDPOINT"`
-	SpacesToken    string `mapstructure:"SPACES_TOKEN"`
+	PORT            string `mapstructure:"PORT"`
+	MONGO_URL       string `mapstructure:"MONGO_URL"`
+	NATS_CLUSTER    string `mapstructure:"NATS_CLUSTER"`
+	SPACES_ENDPOINT string `mapstructure:"SPACES_ENDPOINT"`
+	SPACES_TOKEN    string `mapstructure:"SPACES_TOKEN"`
 }
 
 func LoadConfig() (config Config, err error) {

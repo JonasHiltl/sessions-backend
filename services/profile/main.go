@@ -24,7 +24,7 @@ func main() {
 	}
 
 	opts := []nats.Option{nats.Name("Profile Service")}
-	nc, err := stream.Connect(c.NatsCluster, opts)
+	nc, err := stream.Connect(c.NATS_CLUSTER, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -34,7 +34,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	mongo, err := repository.NewDB(c.MongoURL)
+	mongo, err := repository.NewDB(c.MONGO_URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,11 +43,11 @@ func main() {
 	dao := repository.NewDAO(mongo)
 
 	userService := service.NewProfileService(dao.NewProfileRepository())
-	uploadService := service.NewUploadService(c.SpacesEndpoint, c.SpacesToken)
+	uploadService := service.NewUploadService(c.SPACES_ENDPOINT, c.SPACES_TOKEN)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.Port)
+	sb.WriteString(c.PORT)
 	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)

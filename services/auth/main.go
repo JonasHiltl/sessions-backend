@@ -24,7 +24,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	mongo, err := repository.NewDB(c.MongoURL)
+	mongo, err := repository.NewDB(c.MONGO_URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,14 +32,14 @@ func main() {
 
 	dao := repository.NewDAO(mongo)
 
-	tm := service.NewTokenManager(c.TokenSecret)
-	gm := service.NewGoogleManager(c.GoogleClientID)
+	tm := service.NewTokenManager(c.TOKEN_SECRET)
+	gm := service.NewGoogleManager(c.GOOGLE_CLIENTID)
 	pm := service.NewPasswordManager()
 	as := service.NewAuthService(dao.NewAuthRepository())
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.Port)
+	sb.WriteString(c.PORT)
 	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)

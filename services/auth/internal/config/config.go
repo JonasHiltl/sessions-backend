@@ -3,11 +3,11 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port           string `mapstructure:"PORT"`
-	MongoURL       string `mapstructure:"MONGO_URL"`
-	NatsCluster    string `mapstructure:"NATS_CLUSTER"`
-	TokenSecret    string `mapstructure:"TOKEN_SECRET"`
-	GoogleClientID string `mapstructure:"GOOGLE_CLIENTID"`
+	PORT            string `mapstructure:"PORT"`
+	MONGO_URL       string `mapstructure:"MONGO_URL"`
+	NATS_CLUSTER    string `mapstructure:"NATS_CLUSTER"`
+	TOKEN_SECRET    string `mapstructure:"TOKEN_SECRET"`
+	GOOGLE_CLIENTID string `mapstructure:"GOOGLE_CLIENTID"`
 }
 
 func LoadConfig() (config Config, err error) {

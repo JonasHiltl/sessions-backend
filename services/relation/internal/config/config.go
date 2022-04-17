@@ -3,10 +3,10 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Port           string `mapstructure:"PORT"`
-	ScyllaKeyspace string `mapstructure:"SCYLLA_KEYSPACE"`
-	ScyllaHosts    string `mapstructure:"SCYLLA_HOSTS"`
-	NatsCluster    string `mapstructure:"NATS_CLUSTER"`
+	PORT            string `mapstructure:"PORT"`
+	SCYLLA_KEYSPACE string `mapstructure:"SCYLLA_KEYSPACE"`
+	SCYLLA_HOSTS    string `mapstructure:"SCYLLA_HOSTS"`
+	NATS_CLUSTER    string `mapstructure:"NATS_CLUSTER"`
 }
 
 func LoadConfig() (config Config, err error) {

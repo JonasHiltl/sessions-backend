@@ -21,14 +21,14 @@ func main() {
 	}
 
 	opts := []nats.Option{nats.Name("Relation Service")}
-	nc, err := stream.Connect(c.NatsCluster, opts)
+	nc, err := stream.Connect(c.NATS_CLUSTER, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	sess, err := repository.NewDB(c.ScyllaKeyspace, c.ScyllaHosts)
+	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func main() {
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.Port)
+	sb.WriteString(c.PORT)
 	conn, err := net.Listen("tcp", sb.String())
 	if err != nil {
 		log.Fatalln(err)
