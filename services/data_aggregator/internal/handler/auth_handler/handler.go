@@ -4,11 +4,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	"github.com/jonashiltl/sessions-backend/packages/stream"
 )
 
 type authGatewayHandler struct {
 	authClient    auth.AuthServiceClient
 	profileClient profile.ProfileServiceClient
+	stream        stream.Stream
 }
 
 type AuthGatewayHandler interface {
@@ -18,9 +20,10 @@ type AuthGatewayHandler interface {
 	VerifyEmail(c *fiber.Ctx) error
 }
 
-func NewAuthGatewayHandler(authClient auth.AuthServiceClient, profileClient profile.ProfileServiceClient) AuthGatewayHandler {
+func NewAuthGatewayHandler(authClient auth.AuthServiceClient, profileClient profile.ProfileServiceClient, stream stream.Stream) AuthGatewayHandler {
 	return &authGatewayHandler{
 		authClient:    authClient,
 		profileClient: profileClient,
+		stream:        stream,
 	}
 }

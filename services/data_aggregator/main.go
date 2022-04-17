@@ -12,6 +12,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
@@ -19,6 +20,7 @@ import (
 	profilehandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/profile_handler"
 	relationhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/relation_handler"
 	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -26,6 +28,14 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	opts := []nats.Option{nats.Name("Notification Service")}
+	nc, err := stream.Connect(c.NATS_CLUSTER, opts)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer nc.Close()
+	st := stream.New(nc)
 
 	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
 	if err != nil {
@@ -48,7 +58,7 @@ func main() {
 		log.Fatalf("did not connect to story service: %v", err)
 	}
 
-	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient)
+	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient, st)
 	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient, relationClient)
 	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
 	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)

@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type Config struct {
 	PORT                     string `mapstructure:"PORT"`
+	NATS_CLUSTER             string `mapstructure:"NATS_CLUSTER"`
 	AUTH_SERVICE_ADDRESS     string `mapstructure:"AUTH_SERVICE_ADDRESS"`
 	PROFILE_SERVICE_ADDRESS  string `mapstructure:"PROFILE_SERVICE_ADDRESS"`
 	PARTY_SERVICE_ADDRESS    string `mapstructure:"PARTY_SERVICE_ADDRESS"`
