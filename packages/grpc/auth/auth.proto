@@ -12,6 +12,7 @@ service AuthService {
     rpc AppleLogin (AppleLoginRequest) returns (LoginResponse) {}
     rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {}
     rpc ResendVerificationEmail (Empty) returns (common.MessageResponse) {}
+    rpc EmailTaken (EmailTakenRequest) returns (EmailTakenResponse) {};
 }
 
 message AuthUser {
@@ -54,6 +55,13 @@ message AppleLoginRequest {
 message VerifyEmailRequest {
     string email = 1;
     string code = 2;
+}
+
+message EmailTakenRequest {
+    string email = 1;
+}
+message EmailTakenResponse {
+    bool taken = 1;
 }
 
 message Empty {

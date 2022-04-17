@@ -18,6 +18,7 @@ type AuthService interface {
 	GetById(ctx context.Context, id string) (datastruct.AuthUser, error)
 	GetByEmail(ctx context.Context, email string) (datastruct.AuthUser, error)
 	UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error)
+	EmailTaken(ctx context.Context, email string) bool
 }
 
 type authService struct {
@@ -81,4 +82,8 @@ func (as *authService) GetByEmail(ctx context.Context, username string) (datastr
 
 func (as *authService) UpdateVerified(ctx context.Context, email string, emailVerified bool) (datastruct.AuthUser, error) {
 	return as.repo.UpdateVerified(ctx, email, emailVerified)
+}
+
+func (as *authService) EmailTaken(ctx context.Context, email string) bool {
+	return as.repo.EmailTaken(ctx, email)
 }
