@@ -21,6 +21,13 @@ services:
     volumes:
       - ./_data/scylla:/var/lib/scylla/data
 
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    ports:
+        - "1025:1025"
+        - "8025:8025"
+
   mongodb:
     container_name: mongo
     image: mongo:latest
