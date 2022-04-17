@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
-RUN go get github.com/cosmtrek/air
+RUN go install github.com/cosmtrek/air@latest
 
 COPY ./services/relation ./services/relation
 COPY ./packages ./packages
@@ -13,6 +13,6 @@ EXPOSE 8081
 
 WORKDIR /app/services/relation
 
-RUN go build -o ./relation-service
+RUN go build -o relation-service
 
-CMD ["./relation-service"]
+ENTRYPOINT ./relation-service

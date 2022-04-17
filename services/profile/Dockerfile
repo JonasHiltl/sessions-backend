@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
-RUN go get github.com/cosmtrek/air
+RUN go install github.com/cosmtrek/air@latest
 
 COPY ./services/profile ./services/profile
 COPY ./packages ./packages
@@ -13,6 +13,6 @@ EXPOSE 8081
 
 WORKDIR /app/services/profile
 
-RUN go build -o ./profile-service
+RUN go build -o profile-service
 
-CMD ["./profile-service"]
+ENTRYPOINT ./profile-service
