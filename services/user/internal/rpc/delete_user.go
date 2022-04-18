@@ -20,5 +20,4 @@ func (s *userServer) DeleteUser(ctx context.Context, req *ug.DeleteUserRequest) 
 	}
 
 	return &cg.MessageResponse{Message: "User removed"}, nil
-
 }

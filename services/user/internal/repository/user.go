@@ -125,7 +125,7 @@ func (uq *userRepository) Update(ctx context.Context, u datastruct.User) (res da
 
 	err = uq.
 		col.
-		FindOneAndUpdate(ctx, filter, input, &opt).
+		FindOneAndUpdate(ctx, filter, bson.M{"$set": input}, &opt).
 		Decode(&res)
 	if err != nil {
 		return res, err

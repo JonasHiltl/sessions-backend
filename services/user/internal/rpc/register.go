@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"net/mail"
+	"strings"
 
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/types"
@@ -27,7 +28,7 @@ func (s *userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug
 	du := datastruct.User{
 		Id:           primitive.NewObjectID(),
 		Email:        req.Email,
-		Username:     req.Username,
+		Username:     strings.ToLower(req.Username),
 		Firstname:    req.Firstname,
 		Lastname:     req.Lastname,
 		PasswordHash: hash,

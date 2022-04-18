@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"errors"
+	"strings"
 
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
@@ -18,7 +19,7 @@ func (s *userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) 
 
 	du := datastruct.User{
 		Id:        id,
-		Username:  req.Username,
+		Username:  strings.ToLower(req.Username),
 		Firstname: req.Firstname,
 		Lastname:  req.Lastname,
 		Avatar:    req.Avatar,

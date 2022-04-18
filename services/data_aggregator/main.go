@@ -87,7 +87,7 @@ func main() {
 	profile.Get("/username-taken/:username", profileHandler.UsernameTaken)
 
 	user := app.Group("/user")
-	user.Patch("/", profileHandler.UpdateUser)
+	user.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), profileHandler.UpdateUser)
 
 	party := app.Group("/party")
 	party.Post("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.CreateParty)
