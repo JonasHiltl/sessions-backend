@@ -3,7 +3,7 @@ package partyhandler
 import (
 	"github.com/gofiber/fiber/v2"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
@@ -18,12 +18,12 @@ func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 	req.RequesterId = user.Sub
 
-	p, err := h.partyClient.CreateParty(c.Context(), req)
+	p, err := h.pc.CreateParty(c.Context(), req)
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	profileRes, _ := h.profileClient.GetProfile(c.Context(), &profile.GetProfileRequest{Id: p.UserId})
+	profileRes, _ := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: p.UserId})
 
 	res := datastruct.AggregatedParty{
 		Id:            p.Id,

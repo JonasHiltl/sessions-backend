@@ -1,13 +1,13 @@
 package datastruct
 
 import (
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
 type AggregatedParty struct {
 	Id            string            `json:"id,omitempty"`
-	Creator       *pg.Profile       `json:"creator,omitempty"`
+	Creator       *ug.Profile       `json:"creator,omitempty"`
 	Title         string            `json:"title,omitempty"`
 	IsPublic      bool              `json:"is_public,omitempty"`
 	Lat           float32           `json:"lat,omitempty"`

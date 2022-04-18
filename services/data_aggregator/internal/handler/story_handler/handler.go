@@ -2,13 +2,13 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	sc "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	uc "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
 type storyGatewayHandler struct {
-	storyClient   story.StoryServiceClient
-	profileClient profile.ProfileServiceClient
+	sc sc.StoryServiceClient
+	uc uc.UserServiceClient
 }
 
 type StoryGatewayHandler interface {
@@ -20,9 +20,9 @@ type StoryGatewayHandler interface {
 	PresignURL(c *fiber.Ctx) error
 }
 
-func NewStoryGatewayHandler(storyClient story.StoryServiceClient, profileClient profile.ProfileServiceClient) StoryGatewayHandler {
+func NewStoryGatewayHandler(sc sc.StoryServiceClient, uc uc.UserServiceClient) StoryGatewayHandler {
 	return &storyGatewayHandler{
-		storyClient:   storyClient,
-		profileClient: profileClient,
+		sc: sc,
+		uc: uc,
 	}
 }

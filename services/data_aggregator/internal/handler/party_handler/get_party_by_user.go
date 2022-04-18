@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
@@ -17,13 +17,13 @@ func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	limitStr := c.Query("limit")
 	limit, _ := strconv.ParseUint(limitStr, 10, 32)
 
-	partyRes, err := h.partyClient.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage, Limit: uint32(limit)})
+	partyRes, err := h.pc.GetByUser(c.Context(), &party.GetByUserRequest{UserId: uId, NextPage: nextPage, Limit: uint32(limit)})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
 	// get the profile of the party creator
-	profilesRes, err := h.profileClient.GetProfile(c.Context(), &pg.GetProfileRequest{Id: uId})
+	profilesRes, err := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: uId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

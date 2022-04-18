@@ -37,7 +37,7 @@ func main() {
 	wg.Add(1)
 
 	go st.SubscribeByEvent("notification.email.friend.requested", events.FriendRequested{}, s.FriendRequested)
-	go st.SubscribeByEvent("notification.email.registered", events.Registered{}, s.Registered)
+	go st.SubscribeByEvent("notification.email.verify", events.Registered{}, s.Registered)
 
 	// this will wait until the wg counter is at 0
 	wg.Wait()

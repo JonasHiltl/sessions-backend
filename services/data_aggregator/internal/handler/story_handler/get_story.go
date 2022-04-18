@@ -2,8 +2,8 @@ package storyhandler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
@@ -11,7 +11,7 @@ import (
 func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 	sId := c.Params("id")
 
-	s, err := h.storyClient.GetStory(c.Context(), &story.GetStoryRequest{SId: sId})
+	s, err := h.sc.GetStory(c.Context(), &sg.GetStoryRequest{SId: sId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
@@ -19,15 +19,15 @@ func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 	// Get all profiles of the tagged people and the story creator in one call
 	ids := append(s.TaggedFriends, s.UserId)
 
-	profilesRes, err := h.profileClient.GetManyProfiles(c.Context(), &pg.GetManyProfilesRequest{Ids: ids})
+	profilesRes, err := h.uc.GetManyProfiles(c.Context(), &ug.GetManyProfilesRequest{Ids: ids})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
 	// Remove the creator of the story from the returned array and create a filtered list with only the profiles of the tagged people.
 	// Separately store the profile of the creator of the story
-	var profile *pg.Profile
-	var taggedFriends []*pg.Profile
+	var profile *ug.Profile
+	var taggedFriends []*ug.Profile
 	for _, p := range profilesRes.Profiles {
 		if p.Id != s.UserId {
 			taggedFriends = append(taggedFriends, p)

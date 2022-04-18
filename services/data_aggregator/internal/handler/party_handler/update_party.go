@@ -3,8 +3,8 @@ package partyhandler
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
@@ -19,17 +19,17 @@ func (h *partyGatewayHandler) UpdateParty(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 	req.RequesterId = user.Sub
 
-	p, err := h.partyClient.UpdateParty(c.Context(), req)
+	p, err := h.pc.UpdateParty(c.Context(), req)
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	profileRes, err := h.profileClient.GetProfile(c.Context(), &pg.GetProfileRequest{Id: p.UserId})
+	profileRes, err := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: p.UserId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	storyRes, err := h.storyClient.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
+	storyRes, err := h.sc.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

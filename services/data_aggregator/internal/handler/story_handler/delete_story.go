@@ -4,15 +4,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
+	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
 func (h *storyGatewayHandler) DeleteStory(c *fiber.Ctx) error {
-	// TODO read u_id from headers
-	u_id := "tawtrwa"
+	user := middleware.ParseUser(c)
 
 	sId := c.Params("id")
 
-	res, err := h.storyClient.DeleteStory(c.Context(), &story.DeleteStoryRequest{RequesterId: u_id, SId: sId})
+	res, err := h.sc.DeleteStory(c.Context(), &story.DeleteStoryRequest{RequesterId: user.Sub, SId: sId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

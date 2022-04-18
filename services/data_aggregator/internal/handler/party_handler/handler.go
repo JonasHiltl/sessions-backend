@@ -3,14 +3,14 @@ package partyhandler
 import (
 	"github.com/gofiber/fiber/v2"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	prg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
 type partyGatewayHandler struct {
-	partyClient   pg.PartyServiceClient
-	profileClient prg.ProfileServiceClient
-	storyClient   sg.StoryServiceClient
+	pc pg.PartyServiceClient
+	uc ug.UserServiceClient
+	sc sg.StoryServiceClient
 }
 
 type PartyGatewayHandler interface {
@@ -21,10 +21,10 @@ type PartyGatewayHandler interface {
 	GetPartyByUser(c *fiber.Ctx) error
 }
 
-func NewPartyGatewayHandler(partyClient pg.PartyServiceClient, profileClient prg.ProfileServiceClient, storyClient sg.StoryServiceClient) PartyGatewayHandler {
+func NewPartyGatewayHandler(pc pg.PartyServiceClient, uc ug.UserServiceClient, sc sg.StoryServiceClient) PartyGatewayHandler {
 	return &partyGatewayHandler{
-		partyClient:   partyClient,
-		profileClient: profileClient,
-		storyClient:   storyClient,
+		pc: pc,
+		uc: uc,
+		sc: sc,
 	}
 }

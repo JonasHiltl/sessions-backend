@@ -15,39 +15,20 @@
 #
 #   More info: https://docs.tilt.dev/api.html#api.docker_build
 #
-
 docker_build(
-    'jonashiltl/profile-service', 
+    'jonashiltl/user-service', 
     '.', 
-    dockerfile='services/profile/Dockerfile', 
+    dockerfile='services/user/Dockerfile', 
     only=[
-        './services/profile', 
+        './services/user', 
         './packages', 
         './go.mod', 
         './go.sum', 
     ],
     live_update=[
         # Sync files from host to container
-        sync('./services/profile/internal', '/app/services/profile/internal'),
-        sync('./services/profile/main.go', '/app/services/profile/main.go'),
-        sync('./packages', '/app/packages'),
-    ]
-)
-
-docker_build(
-    'jonashiltl/auth-service', 
-    '.', 
-    dockerfile='services/auth/Dockerfile', 
-    only=[
-        './services/auth', 
-        './packages', 
-        './go.mod', 
-        './go.sum', 
-    ],
-    live_update=[
-        # Sync files from host to container
-        sync('./services/auth/internal', '/app/services/auth/internal'),
-        sync('./services/auth/main.go', '/app/services/auth/main.go'),
+        sync('./services/user/internal', '/app/services/user/internal'),
+        sync('./services/user/main.go', '/app/services/user/main.go'),
         sync('./packages', '/app/packages'),
     ]
 )

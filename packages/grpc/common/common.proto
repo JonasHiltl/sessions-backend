@@ -6,3 +6,7 @@ option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/common
 message MessageResponse {
     string message = 1;
 }
+
+message Empty {
+
+}

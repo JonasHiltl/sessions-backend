@@ -9,6 +9,7 @@ type Config struct {
 	SMTP_USERNAME string `mapstructure:"SMTP_USERNAME"`
 	SMTP_HOST     string `mapstructure:"SMTP_HOST"`
 	SMTP_PORT     int    `mapstructure:"SMTP_PORT"`
+	EMAIL_FROM    string `mapstructure:"EMAIL_FROM"`
 }
 
 func LoadConfig() (config Config, err error) {

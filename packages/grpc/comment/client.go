@@ -1,9 +1,12 @@
 package comment
 
-import "google.golang.org/grpc"
+import (
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+)
 
 func NewClient(address string) (CommentServiceClient, error) {
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}

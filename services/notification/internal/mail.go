@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"time"
+
 	"github.com/jonashiltl/sessions-backend/services/notification/internal/config"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
@@ -30,13 +32,13 @@ func Connect(c config.Config) (*mail.SMTPClient, error) {
 	// server.Authentication = mail.AuthPlain
 
 	// Variable to keep alive connection
-	// server.KeepAlive = false
+	server.KeepAlive = false
 
 	// Timeout for connect to SMTP Server
-	// server.ConnectTimeout = 10 * time.Second
+	server.ConnectTimeout = 10 * time.Second
 
 	// Timeout for send the data and wait respond
-	// server.SendTimeout = 10 * time.Second
+	server.SendTimeout = 10 * time.Second
 
 	// Set TLSConfig to provide custom TLS configuration. For example,
 	// to skip TLS verification (useful for testing):
@@ -44,5 +46,4 @@ func Connect(c config.Config) (*mail.SMTPClient, error) {
 
 	// SMTP client
 	return server.Connect()
-
 }

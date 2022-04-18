@@ -7,19 +7,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/auth"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/profile"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	"github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
 	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
-	profilehandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/profile_handler"
 	relationhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/relation_handler"
 	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
+	userhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/user_handler"
 	"github.com/nats-io/nats.go"
 )
 
@@ -37,32 +36,28 @@ func main() {
 	defer nc.Close()
 	st := stream.New(nc)
 
-	authClient, err := auth.NewClient(c.AUTH_SERVICE_ADDRESS)
+	uc, err := user.NewClient(c.USER_SERVICE_ADDRESS)
 	if err != nil {
-		log.Fatalf("did not connect to auth service: %v", err)
+		log.Fatalf("did not connect to user service: %v", err)
 	}
-	profileClient, err := profile.NewClient(c.PROFILE_SERVICE_ADDRESS)
-	if err != nil {
-		log.Fatalf("did not connect to profile service: %v", err)
-	}
-	partyClient, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
+	pc, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to party service: %v", err)
 	}
-	storyClient, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
+	sc, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to story service: %v", err)
 	}
-	relationClient, err := relation.NewClient(c.RELATION_SERVICE_ADDRESS)
+	rc, err := relation.NewClient(c.RELATION_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to story service: %v", err)
 	}
 
-	authHandler := authhandler.NewAuthGatewayHandler(authClient, profileClient, st)
-	profileHandler := profilehandler.NewProfileGatewayHandler(profileClient, relationClient)
-	partyHandler := partyhandler.NewPartyGatewayHandler(partyClient, profileClient, storyClient)
-	storyHandler := storyhandler.NewStoryGatewayHandler(storyClient, profileClient)
-	relationHandler := relationhandler.NewRelationGatewayHandler(relationClient)
+	authHandler := authhandler.NewAuthGatewayHandler(uc, st)
+	profileHandler := userhandler.NewUserGatewayHandler(uc, rc)
+	partyHandler := partyhandler.NewPartyGatewayHandler(pc, uc, sc)
+	storyHandler := storyhandler.NewStoryGatewayHandler(sc, uc)
+	relationHandler := relationhandler.NewRelationGatewayHandler(rc)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
@@ -89,10 +84,10 @@ func main() {
 	profile := app.Group("/profile")
 	profile.Get("/me", middleware.AuthRequired(c.TOKEN_SECRET), profileHandler.GetMe)
 	profile.Get("/:id", middleware.AuthOptional(c.TOKEN_SECRET), profileHandler.GetProfile)
-	profile.Get("/:username", profileHandler.GetProfileByUsername)
 	profile.Get("/username-taken/:username", profileHandler.UsernameTaken)
-	profile.Patch("/", profileHandler.UpdateProfile)
-	// TODO: Add endpoint vor Profile Search
+
+	user := app.Group("/user")
+	user.Patch("/", profileHandler.UpdateUser)
 
 	party := app.Group("/party")
 	party.Post("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.CreateParty)

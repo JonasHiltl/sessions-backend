@@ -1,17 +1,17 @@
 package datastruct
 
 import (
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/profile"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 )
 
 type AggregatedStory struct {
 	Id            string        `json:"id,omitempty"`
 	PartyId       string        `json:"party_id,omitempty"`
-	Creator       *pg.Profile   `json:"creator,omitempty"`
+	Creator       *ug.Profile   `json:"creator,omitempty"`
 	Lat           float32       `json:"lat,omitempty"`
 	Long          float32       `json:"long,omitempty"`
 	Url           string        `json:"url,omitempty"`
-	TaggedFriends []*pg.Profile `json:"tagged_friends,omitempty"`
+	TaggedFriends []*ug.Profile `json:"tagged_friends,omitempty"`
 	CreatedAt     string        `json:"created_at,omitempty"`
 }
 

@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package user;
+option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/user";
+
+import "packages/grpc/common/common.proto";
+
+service UserService {
+    rpc Register (RegisterRequest) returns (RegisterResponse) {}
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc GoogleLogin (GoogleLoginRequest) returns (LoginResponse) {}
+    rpc AppleLogin (AppleLoginRequest) returns (LoginResponse) {}
+    rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {}
+    rpc ResendVerificationEmail (common.Empty) returns (common.MessageResponse) {}
+
+    rpc DeleteUser (DeleteUserRequest) returns (common.MessageResponse) {};
+    rpc UpdateUser (UpdateUserRequest) returns (User) {};
+    rpc GetMe (GetMeRequest) returns (User) {};
+
+    rpc GetProfile (GetProfileRequest) returns (Profile) {};
+    rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {};
+    rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {};
+}
+
+message UpdateUserRequest {
+    string id = 1;
+    string email = 2;
+    string username = 3;
+    string firstname = 4;
+    string lastname = 5;
+    string avatar = 6;
+    string password = 7;
+}
+
+message DeleteUserRequest {
+    string id = 2;
+}
+
+message RegisterRequest {
+    string email = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string password = 5;
+}
+
+message RegisterResponse {
+    string token = 1;
+    User user = 2;
+}
+
+message LoginRequest {
+    string usernameOrEmail = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+    User user = 2;
+}
+
+message GoogleLoginRequest {
+    string token = 1;
+}
+
+message AppleLoginRequest {
+    string token = 1;
+}
+
+message VerifyEmailRequest {
+    string email = 1;
+    string code = 2;
+}
+
+message User {
+    string id = 1;
+    string email = 2;
+    string username = 3;
+    string firstname = 4;
+    string lastname = 5;
+    string avatar = 6;
+    uint64 friend_count = 7;
+}
+
+message Profile {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+    uint64 friend_count = 6;
+}
+
+message CreateProfileRequest {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+}
+
+message GetProfileRequest {
+    string id = 1;
+}
+
+message GetManyProfilesRequest {
+    repeated string ids = 1;
+}
+
+message GetManyProfilesResponse {
+    repeated Profile profiles = 1;
+}
+
+message GetMeRequest {
+    string id = 1;
+}
+
+message UsernameTakenRequest {
+    string username = 1;
+}
+message UsernameTakenResponse {
+    bool taken = 1;
+}

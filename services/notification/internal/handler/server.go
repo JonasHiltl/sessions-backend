@@ -2,11 +2,13 @@ package handler
 
 import (
 	"github.com/jonashiltl/sessions-backend/packages/events"
+	"github.com/jonashiltl/sessions-backend/services/notification/internal/config"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
 type server struct {
-	mail *mail.SMTPClient
+	mail   *mail.SMTPClient
+	config config.Config
 }
 
 type Server interface {
