@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
@@ -48,6 +49,13 @@ func (r *userRepository) Create(ctx context.Context, u datastruct.User) (datastr
 		col.
 		InsertOne(ctx, u)
 	if err != nil {
+		if strings.Contains(err.Error(), "dup key: { email:") {
+			return datastruct.User{}, errors.New("email already taken")
+		}
+		if strings.Contains(err.Error(), "dup key: { username:") {
+			return datastruct.User{}, errors.New("username already taken")
+		}
+
 		return datastruct.User{}, err
 	}
 

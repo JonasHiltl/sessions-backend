@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 )
 
 type Dao interface {
@@ -32,13 +32,18 @@ func NewDB(url string) (*mongo.Database, error) {
 	}
 
 	db := client.Database("sessions")
-	mod := mongo.IndexModel{
-		Keys: bson.M{
-			"email": 1,
-		}, Options: options.Index().SetUnique(true),
+
+	models := []mongo.IndexModel{
+		{
+			Keys:    bsonx.Doc{{Key: "email", Value: bsonx.Int32(1)}},
+			Options: options.Index().SetUnique(true),
+		},
+		{
+			Keys:    bsonx.Doc{{Key: "username", Value: bsonx.Int32(1)}},
+			Options: options.Index().SetUnique(true)},
 	}
 
-	_, err = db.Collection(USER_COLLECTION).Indexes().CreateOne(ctx, mod)
+	_, err = db.Collection(USER_COLLECTION).Indexes().CreateMany(ctx, models)
 	if err != nil {
 		return nil, err
 	}
