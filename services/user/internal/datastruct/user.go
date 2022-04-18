@@ -31,3 +31,14 @@ func (p User) ToGRPCUser() *ug.User {
 		FriendCount: p.FriendCount,
 	}
 }
+
+func (p User) ToGRPCProfile() *ug.Profile {
+	return &ug.Profile{
+		Id:          p.Id.Hex(),
+		Username:    p.Username,
+		Firstname:   p.Firstname,
+		Lastname:    p.Lastname,
+		Avatar:      p.Avatar,
+		FriendCount: p.FriendCount,
+	}
+}

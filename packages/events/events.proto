@@ -14,10 +14,6 @@ message Registered {
     string lastname = 5;
 }
 
-message ProfileCreated {
-    user.Profile profile = 1;
-}
-
 // id must always be defined but for the rest just define the properties that got updated
 message ProfileUpdated {
     user.Profile profile = 1;

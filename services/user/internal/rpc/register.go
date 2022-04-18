@@ -5,6 +5,7 @@ import (
 	"net/mail"
 	"strings"
 
+	"github.com/jonashiltl/sessions-backend/packages/events"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/types"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
@@ -44,6 +45,14 @@ func (s *userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
+
+	s.stream.PublishEvent(&events.Registered{
+		Id:        u.Id.Hex(),
+		Email:     u.Email,
+		Username:  u.Username,
+		Firstname: u.Firstname,
+		Lastname:  u.Lastname,
+	})
 
 	return &ug.RegisterResponse{
 		Token: t,

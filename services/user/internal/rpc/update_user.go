@@ -6,6 +6,7 @@ import (
 	"net/mail"
 	"strings"
 
+	"github.com/jonashiltl/sessions-backend/packages/events"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
@@ -56,6 +57,10 @@ func (s *userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) 
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
+
+	s.stream.PublishEvent(&events.ProfileUpdated{
+		Profile: u.ToGRPCProfile(),
+	})
 
 	return u.ToGRPCUser(), nil
 }
