@@ -27,6 +27,7 @@ var friendRelationTable = table.New(friendRelationMetadata)
 type FriendRelationRepository interface {
 	CreateFriendRelation(ctx context.Context, fr datastruct.FriendRelation) error
 	AcceptFriendRelation(ctx context.Context, uId, fId string) error
+	RemoveFriendRelation(ctx context.Context, uId, fId string) error
 	GetFriendRelation(ctx context.Context, uId, fId string) (datastruct.FriendRelation, error)
 	GetFriendsOfUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.FriendRelation, []byte, error)
 }
@@ -82,6 +83,27 @@ func (r *friendRelationRepository) AcceptFriendRelation(ctx context.Context, uId
 	}
 
 	return nil
+}
+
+func (r *friendRelationRepository) RemoveFriendRelation(ctx context.Context, uId, fId string) error {
+	stmt, names := qb.
+		Delete(TABLE_NAME).
+		Where(qb.Eq("user_id")).
+		Where(qb.Eq("friend_id")).
+		ToCql()
+
+	err := r.sess.Query(stmt, names).
+		BindMap((qb.M{
+			"user_id":   uId,
+			"friend_id": fId,
+		})).
+		ExecRelease()
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (r *friendRelationRepository) GetFriendRelation(ctx context.Context, uId, fId string) (res datastruct.FriendRelation, err error) {

@@ -13,7 +13,7 @@ type User struct {
 	Firstname     string             `json:"firstname"               bson:"firstname,omitempty"     validate:"required"`
 	Lastname      string             `json:"lastname,omitempty"      bson:"lastname,omitempty"`
 	Avatar        string             `json:"avatar,omitempty"        bson:"avatar,omitempty"`
-	FriendCount   uint64             `json:"friend_count"            bson:"friend_count"`
+	FriendCount   int64              `json:"friend_count"            bson:"friend_count"`
 	EmailVerified bool               `json:"email_verified"          bson:"email_verified"`
 	EmailCode     string             `json:"email_code"              bson:"email_code,omitempty"`
 	PasswordHash  string             `json:"password_hash,omitempty" bson:"password_hash,omitempty" validate:"required_without=Provider"`

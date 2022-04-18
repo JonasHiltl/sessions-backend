@@ -8,6 +8,7 @@ import "packages/grpc/common/common.proto";
 service RelationService {
     rpc FriendRequest (FriendRequestRequest) returns (common.MessageResponse) {};
     rpc AcceptFriend (AcceptFriendRequest) returns (common.MessageResponse) {};
+    rpc RemoveFriend (RemoveFriendRequest) returns (common.MessageResponse) {};
     rpc GetFriendRelation (GetFriendRelationRequest) returns (FriendRelation) {};
     rpc GetFriendsOfUser (GetFriendsOfUserRequest) returns (PagedFriendRelations) {};
 }
@@ -26,6 +27,11 @@ message FriendRequestRequest {
 }
 
 message AcceptFriendRequest {
+    string user_id = 1;
+    string friend_id = 2;
+}
+
+message RemoveFriendRequest {
     string user_id = 1;
     string friend_id = 2;
 }

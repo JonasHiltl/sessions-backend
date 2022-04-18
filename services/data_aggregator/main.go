@@ -97,6 +97,7 @@ func main() {
 	friend := app.Group("/friend")
 	friend.Put("/request/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FriendRequest)
 	friend.Put("/accept/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.AcceptFriend)
+	friend.Delete("/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.RemoveFriend)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

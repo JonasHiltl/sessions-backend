@@ -12,6 +12,7 @@ type relationGatewayHandler struct {
 type RelationGatewayHandler interface {
 	FriendRequest(c *fiber.Ctx) error
 	AcceptFriend(c *fiber.Ctx) error
+	RemoveFriend(c *fiber.Ctx) error
 }
 
 func NewRelationGatewayHandler(relationClient rg.RelationServiceClient) RelationGatewayHandler {

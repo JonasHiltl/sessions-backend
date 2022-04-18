@@ -79,7 +79,7 @@ message User {
     string firstname = 4;
     string lastname = 5;
     string avatar = 6;
-    uint64 friend_count = 7;
+    int64 friend_count = 7;
 }
 
 message Profile {
@@ -88,7 +88,7 @@ message Profile {
     string firstname = 3;
     string lastname = 4;
     string avatar = 5;
-    uint64 friend_count = 6;
+    int64 friend_count = 6;
 }
 
 message CreateProfileRequest {

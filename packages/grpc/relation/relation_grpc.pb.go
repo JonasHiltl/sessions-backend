@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type RelationServiceClient interface {
 	FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetFriendRelation(ctx context.Context, in *GetFriendRelationRequest, opts ...grpc.CallOption) (*FriendRelation, error)
 	GetFriendsOfUser(ctx context.Context, in *GetFriendsOfUserRequest, opts ...grpc.CallOption) (*PagedFriendRelations, error)
 }
@@ -55,6 +56,15 @@ func (c *relationServiceClient) AcceptFriend(ctx context.Context, in *AcceptFrie
 	return out, nil
 }
 
+func (c *relationServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+	out := new(common.MessageResponse)
+	err := c.cc.Invoke(ctx, "/relation.RelationService/RemoveFriend", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *relationServiceClient) GetFriendRelation(ctx context.Context, in *GetFriendRelationRequest, opts ...grpc.CallOption) (*FriendRelation, error) {
 	out := new(FriendRelation)
 	err := c.cc.Invoke(ctx, "/relation.RelationService/GetFriendRelation", in, out, opts...)
@@ -79,6 +89,7 @@ func (c *relationServiceClient) GetFriendsOfUser(ctx context.Context, in *GetFri
 type RelationServiceServer interface {
 	FriendRequest(context.Context, *FriendRequestRequest) (*common.MessageResponse, error)
 	AcceptFriend(context.Context, *AcceptFriendRequest) (*common.MessageResponse, error)
+	RemoveFriend(context.Context, *RemoveFriendRequest) (*common.MessageResponse, error)
 	GetFriendRelation(context.Context, *GetFriendRelationRequest) (*FriendRelation, error)
 	GetFriendsOfUser(context.Context, *GetFriendsOfUserRequest) (*PagedFriendRelations, error)
 	mustEmbedUnimplementedRelationServiceServer()
@@ -93,6 +104,9 @@ func (UnimplementedRelationServiceServer) FriendRequest(context.Context, *Friend
 }
 func (UnimplementedRelationServiceServer) AcceptFriend(context.Context, *AcceptFriendRequest) (*common.MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptFriend not implemented")
+}
+func (UnimplementedRelationServiceServer) RemoveFriend(context.Context, *RemoveFriendRequest) (*common.MessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFriend not implemented")
 }
 func (UnimplementedRelationServiceServer) GetFriendRelation(context.Context, *GetFriendRelationRequest) (*FriendRelation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFriendRelation not implemented")
@@ -149,6 +163,24 @@ func _RelationService_AcceptFriend_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RelationService_RemoveFriend_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveFriendRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RelationServiceServer).RemoveFriend(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/relation.RelationService/RemoveFriend",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RelationServiceServer).RemoveFriend(ctx, req.(*RemoveFriendRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RelationService_GetFriendRelation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetFriendRelationRequest)
 	if err := dec(in); err != nil {
@@ -199,6 +231,10 @@ var RelationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AcceptFriend",
 			Handler:    _RelationService_AcceptFriend_Handler,
+		},
+		{
+			MethodName: "RemoveFriend",
+			Handler:    _RelationService_RemoveFriend_Handler,
 		},
 		{
 			MethodName: "GetFriendRelation",

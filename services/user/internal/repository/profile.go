@@ -109,7 +109,9 @@ func (r *profileRepository) IncrementFriendCount(ctx context.Context, idStr stri
 	if err != nil {
 		return err
 	}
-	log.Println(res)
+	if res.ModifiedCount != 1 {
+		return errors.New("failed to increment friend count")
+	}
 
 	return nil
 }
@@ -136,7 +138,8 @@ func (r *profileRepository) DecrementFriendCount(ctx context.Context, idStr stri
 	if err != nil {
 		return err
 	}
-	log.Println(res)
-
+	if res.ModifiedCount != 1 {
+		return errors.New("failed to decrement friend count")
+	}
 	return nil
 }

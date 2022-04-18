@@ -12,7 +12,7 @@ type Profile struct {
 	Firstname   string             `json:"firstname"          bson:"firstname,omitempty" validate:"required"`
 	Lastname    string             `json:"lastname,omitempty" bson:"lastname,omitempty"`
 	Avatar      string             `json:"avatar,omitempty"   bson:"avatar,omitempty"`
-	FriendCount uint64             `json:"friend_count"       bson:"friend_count"`
+	FriendCount int64              `json:"friend_count"       bson:"friend_count"`
 }
 
 func (p Profile) ToGRPCProfile() *ug.Profile {

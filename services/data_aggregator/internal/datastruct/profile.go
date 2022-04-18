@@ -11,6 +11,6 @@ type AggregatedProfile struct {
 	Firstname        string           `json:"firstname,omitempty"`
 	Lastname         string           `json:"lastname,omitempty"`
 	Avatar           string           `json:"avatar,omitempty"`
-	FriendCount      uint64           `json:"friend_count,omitempty"`
+	FriendCount      int64            `json:"friend_count,omitempty"`
 	FriendshipStatus FriendshipStatus `json:"friendship_status,omitempty"`
 }
