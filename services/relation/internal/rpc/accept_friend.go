@@ -20,5 +20,5 @@ func (s *relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendR
 		FriendId: req.FriendId,
 	})
 
-	return &cg.MessageResponse{Message: "Friend request sent"}, nil
+	return &cg.MessageResponse{Message: "Friend request accepted"}, nil
 }

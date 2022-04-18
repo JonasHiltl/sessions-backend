@@ -27,6 +27,11 @@ message PartyUpdated {
     party.PublicParty party = 1;
 }
 
+message FriendRemoved {
+    string user_id = 1;
+    string friend_id = 2;
+}
+
 message FriendRequested {
     string user_id = 1;
     string friend_id = 2;

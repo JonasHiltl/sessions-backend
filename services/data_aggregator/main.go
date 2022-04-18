@@ -94,9 +94,9 @@ func main() {
 	story.Get("/user/:id", storyHandler.GetStoryByUser)
 	story.Get("/presign/:key", storyHandler.PresignURL)
 
-	relation := app.Group("/relation")
-	relation.Put("/friend/request/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FriendRequest)
-	relation.Put("/friend/accept/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.AcceptFriend)
+	friend := app.Group("/friend")
+	friend.Put("/request/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FriendRequest)
+	friend.Put("/accept/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.AcceptFriend)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

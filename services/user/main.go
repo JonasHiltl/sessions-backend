@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
@@ -10,6 +11,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
+	"github.com/jonashiltl/sessions-backend/services/user/internal/subscribe"
 	"github.com/nats-io/nats.go"
 )
 
@@ -43,6 +45,15 @@ func main() {
 	google := service.NewGoogleManager(c.GOOGLE_CLIENTID)
 	password := service.NewPasswordManager()
 
-	s := rpc.NewUserServer(token, google, password, upload, dao.NewUserRepository(), dao.NewProfileRepository(), stream)
-	rpc.Start(s, c.PORT)
+	ps := dao.NewProfileRepository()
+
+	s := rpc.NewUserServer(token, google, password, upload, dao.NewUserRepository(), ps, stream)
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go rpc.Start(s, c.PORT)
+	go subscribe.NewSubscriber(stream, ps).Start()
+
+	wg.Wait()
 }
