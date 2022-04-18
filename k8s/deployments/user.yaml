@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth
+  name: user
 spec:
   selector:
     matchLabels:
-      app: auth
+      app: user
   template:
     metadata:
       labels:
-        app: auth
+        app: user
     spec:
       containers:
-        - name: auth
-          image: jonashiltl/auth-service
+        - name: user
+          image: jonashiltl/user-service
           resources:
             limits:
               memory: "250Mi"
