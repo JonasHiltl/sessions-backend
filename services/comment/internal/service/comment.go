@@ -24,7 +24,7 @@ type commentService struct {
 	nc   *nats.EncodedConn
 }
 
-func NewCommentServie(repo repository.CommentRepository, nc *nats.EncodedConn) CommentService {
+func NewCommentService(repo repository.CommentRepository, nc *nats.EncodedConn) CommentService {
 	return &commentService{repo: repo, nc: nc}
 }
 

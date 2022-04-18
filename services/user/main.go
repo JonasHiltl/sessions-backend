@@ -3,18 +3,14 @@ package main
 import (
 	"context"
 	"log"
-	"net"
-	"strings"
 	"time"
 
-	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
 	"github.com/nats-io/nats.go"
-	"google.golang.org/grpc"
 )
 
 func main() {
@@ -47,22 +43,6 @@ func main() {
 	google := service.NewGoogleManager(c.GOOGLE_CLIENTID)
 	password := service.NewPasswordManager()
 
-	var sb strings.Builder
-	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.PORT)
-	conn, err := net.Listen("tcp", sb.String())
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	grpc := grpc.NewServer()
-
 	s := rpc.NewUserServer(token, google, password, upload, dao.NewUserRepository(), dao.NewProfileRepository(), stream)
-
-	ug.RegisterUserServiceServer(grpc, s)
-
-	log.Println("Starting gRPC Server at: ", sb.String())
-	if err := grpc.Serve(conn); err != nil {
-		log.Fatal(err)
-	}
+	rpc.Start(s, c.PORT)
 }

@@ -2,15 +2,11 @@ package main
 
 import (
 	"log"
-	"net"
-	"strings"
 
-	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/repository"
 	rpc "github.com/jonashiltl/sessions-backend/services/story/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/story/internal/service"
-	"google.golang.org/grpc"
 )
 
 func main() {
@@ -27,25 +23,9 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	sService := service.NewStoryServie(dao.NewStoryRepository())
+	s := service.NewStoryServie(dao.NewStoryRepository())
 	us := service.NewUploadService(c.SPACES_KEY, c.SPACES_ENDPOINT, c.SPACES_KEY)
 
-	var sb strings.Builder
-	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.PORT)
-	conn, err := net.Listen("tcp", sb.String())
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	grpcServer := grpc.NewServer()
-
-	sServer := rpc.NewStoryServer(sService, us)
-
-	sg.RegisterStoryServiceServer(grpcServer, sServer)
-
-	log.Println("Starting gRPC Server at: ", sb.String())
-	if err := grpcServer.Serve(conn); err != nil {
-		log.Fatal(err)
-	}
+	st := rpc.NewStoryServer(s, us)
+	rpc.Start(st, c.PORT)
 }

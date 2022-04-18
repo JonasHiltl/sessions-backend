@@ -34,7 +34,7 @@ func main() {
 	s := handler.NewServer(smtp)
 
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(2)
 
 	go st.SubscribeByEvent("notification.email.friend.requested", events.FriendRequested{}, s.FriendRequested)
 	go st.SubscribeByEvent("notification.email.verify", events.Registered{}, s.Registered)

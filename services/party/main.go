@@ -2,17 +2,13 @@ package main
 
 import (
 	"log"
-	"net"
-	"strings"
 
-	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/nats-io/nats.go"
-	"google.golang.org/grpc"
 )
 
 func main() {
@@ -39,22 +35,6 @@ func main() {
 
 	partyService := service.NewPartyServie(dao.NewPartyRepository(), nc)
 
-	var sb strings.Builder
-	sb.WriteString("0.0.0.0:")
-	sb.WriteString(c.PORT)
-	conn, err := net.Listen("tcp", sb.String())
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	grpcServer := grpc.NewServer()
-
-	pServer := rpc.NewPartyServer(partyService, stream)
-
-	pg.RegisterPartyServiceServer(grpcServer, pServer)
-
-	log.Println("Starting gRPC Server at: ", sb.String())
-	if err := grpcServer.Serve(conn); err != nil {
-		log.Fatal(err)
-	}
+	p := rpc.NewPartyServer(partyService, stream)
+	rpc.Start(p, c.PORT)
 }
