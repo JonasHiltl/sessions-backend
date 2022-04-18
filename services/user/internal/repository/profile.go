@@ -34,6 +34,9 @@ func (r *profileRepository) GetById(ctx context.Context, idStr string) (res data
 		FindOne(ctx, bson.M{"_id": id}).
 		Decode(&res)
 	if err != nil {
+		if err.Error() == mongo.ErrNoDocuments.Error() {
+			return res, errors.New("no profile found")
+		}
 		return res, err
 	}
 
@@ -75,6 +78,9 @@ func (r *profileRepository) GetByUsername(ctx context.Context, username string) 
 		).
 		Decode(&res)
 	if err != nil {
+		if err.Error() == mongo.ErrNoDocuments.Error() {
+			return res, errors.New("no profile found")
+		}
 		return res, err
 	}
 

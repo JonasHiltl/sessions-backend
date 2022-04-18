@@ -8,6 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/types"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -24,6 +25,7 @@ func (s *userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug
 	}
 
 	du := datastruct.User{
+		Id:           primitive.NewObjectID(),
 		Email:        req.Email,
 		Username:     req.Username,
 		Firstname:    req.Firstname,

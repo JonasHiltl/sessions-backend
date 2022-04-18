@@ -145,6 +145,9 @@ func (r *userRepository) GetById(ctx context.Context, idStr string) (res datastr
 		FindOne(ctx, bson.M{"_id": id}).
 		Decode(&res)
 	if err != nil {
+		if err.Error() == mongo.ErrNoDocuments.Error() {
+			return res, errors.New("no user found")
+		}
 		return res, err
 	}
 
@@ -234,6 +237,9 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (res data
 		).
 		Decode(&res)
 	if err != nil {
+		if err.Error() == mongo.ErrNoDocuments.Error() {
+			return res, errors.New("no user found")
+		}
 		return res, err
 	}
 
@@ -244,14 +250,17 @@ func (r *userRepository) GetByEmailOrUsername(ctx context.Context, usernameOrEma
 	err = r.
 		col.
 		FindOne(ctx, bson.M{
-			"$or": bson.M{
-				"username": usernameOrEmail,
-				"email":    usernameOrEmail,
+			"$or": []interface{}{
+				bson.M{"username": usernameOrEmail},
+				bson.M{"email": usernameOrEmail},
 			},
 		},
 		).
 		Decode(&res)
 	if err != nil {
+		if err.Error() == mongo.ErrNoDocuments.Error() {
+			return res, errors.New("no user found")
+		}
 		return res, err
 	}
 

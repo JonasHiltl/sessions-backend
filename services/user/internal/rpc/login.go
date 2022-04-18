@@ -12,6 +12,9 @@ import (
 func (s *userServer) Login(ctx context.Context, req *ug.LoginRequest) (*ug.LoginResponse, error) {
 	u, err := s.us.GetByEmailOrUsername(ctx, req.UsernameOrEmail)
 	if err != nil {
+		if err.Error() == "no user found" {
+			return nil, status.Error(codes.InvalidArgument, "Invalid Username or Email")
+		}
 		return nil, utils.HandleError(err)
 	}
 
