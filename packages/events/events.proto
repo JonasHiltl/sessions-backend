@@ -4,7 +4,7 @@ package events;
 option go_package = "github.com/jonashiltl/sessions-backend/packages/events";
 
 import "packages/grpc/party/party.proto";
-import "packages/grpc/profile/profile.proto";
+import "packages/grpc/user/user.proto";
 
 message Registered {
     string id = 1;
@@ -15,12 +15,12 @@ message Registered {
 }
 
 message ProfileCreated {
-    profile.Profile profile = 1;
+    user.Profile profile = 1;
 }
 
 // id must always be defined but for the rest just define the properties that got updated
 message ProfileUpdated {
-    profile.Profile profile = 1;
+    user.Profile profile = 1;
 }
 
 message PartyCreated {

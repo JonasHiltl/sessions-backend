@@ -66,7 +66,7 @@ func (r *profileRepository) GetMany(ctx context.Context, idsStr []string) (res [
 	return res, nil
 }
 
-func (r *userRepository) GetByUsername(ctx context.Context, username string) (res datastruct.User, err error) {
+func (r *profileRepository) GetByUsername(ctx context.Context, username string) (res datastruct.User, err error) {
 	err = r.
 		col.
 		FindOne(ctx, bson.M{
