@@ -7,13 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/party"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/relation"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/story"
-	"github.com/jonashiltl/sessions-backend/packages/grpc/user"
+	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
+	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	rg "github.com/jonashiltl/sessions-backend/packages/grpc/relation"
+	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
+	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
 	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
+	commenthandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/comment_handler"
 	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
 	relationhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/relation_handler"
 	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
@@ -26,21 +28,25 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	uc, err := user.NewClient(c.USER_SERVICE_ADDRESS)
+	uc, err := ug.NewClient(c.USER_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to user service: %v", err)
 	}
-	pc, err := party.NewClient(c.PARTY_SERVICE_ADDRESS)
+	pc, err := pg.NewClient(c.PARTY_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to party service: %v", err)
 	}
-	sc, err := story.NewClient(c.STORY_SERVICE_ADDRESS)
+	sc, err := sg.NewClient(c.STORY_SERVICE_ADDRESS)
 	if err != nil {
 		log.Fatalf("did not connect to story service: %v", err)
 	}
-	rc, err := relation.NewClient(c.RELATION_SERVICE_ADDRESS)
+	rc, err := rg.NewClient(c.RELATION_SERVICE_ADDRESS)
 	if err != nil {
-		log.Fatalf("did not connect to story service: %v", err)
+		log.Fatalf("did not connect to relation service: %v", err)
+	}
+	cc, err := cg.NewClient(c.COMMENT_SERVICE_ADDRESS)
+	if err != nil {
+		log.Fatalf("did not connect to comment service: %v", err)
 	}
 
 	authHandler := authhandler.NewAuthGatewayHandler(uc)
@@ -48,6 +54,7 @@ func main() {
 	partyHandler := partyhandler.NewPartyGatewayHandler(pc, uc, sc)
 	storyHandler := storyhandler.NewStoryGatewayHandler(sc, uc)
 	relationHandler := relationhandler.NewRelationGatewayHandler(rc)
+	commentHandler := commenthandler.NewCommentGatewayHandler(cc, uc)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
@@ -98,6 +105,11 @@ func main() {
 	friend.Put("/request/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FriendRequest)
 	friend.Put("/accept/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.AcceptFriend)
 	friend.Delete("/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.RemoveFriend)
+
+	comment := app.Group("/comment")
+	comment.Post("/party/:id", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.CreateComment)
+	comment.Get("/party/:id", commentHandler.GetCommentByParty)
+	comment.Delete("/:cId", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.DeleteComment)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")

@@ -34,6 +34,7 @@ type UserServiceClient interface {
 	GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*User, error)
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetManyProfiles(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesResponse, error)
+	GetManyProfilesMap(ctx context.Context, in *GetManyProfilesMapRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error)
 	UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error)
 }
 
@@ -144,6 +145,15 @@ func (c *userServiceClient) GetManyProfiles(ctx context.Context, in *GetManyProf
 	return out, nil
 }
 
+func (c *userServiceClient) GetManyProfilesMap(ctx context.Context, in *GetManyProfilesMapRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error) {
+	out := new(GetManyProfilesMapResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetManyProfilesMap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error) {
 	out := new(UsernameTakenResponse)
 	err := c.cc.Invoke(ctx, "/user.UserService/UsernameTaken", in, out, opts...)
@@ -168,6 +178,7 @@ type UserServiceServer interface {
 	GetMe(context.Context, *GetMeRequest) (*User, error)
 	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
 	GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error)
+	GetManyProfilesMap(context.Context, *GetManyProfilesMapRequest) (*GetManyProfilesMapResponse, error)
 	UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -208,6 +219,9 @@ func (UnimplementedUserServiceServer) GetProfile(context.Context, *GetProfileReq
 }
 func (UnimplementedUserServiceServer) GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetManyProfiles not implemented")
+}
+func (UnimplementedUserServiceServer) GetManyProfilesMap(context.Context, *GetManyProfilesMapRequest) (*GetManyProfilesMapResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetManyProfilesMap not implemented")
 }
 func (UnimplementedUserServiceServer) UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UsernameTaken not implemented")
@@ -423,6 +437,24 @@ func _UserService_GetManyProfiles_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetManyProfilesMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetManyProfilesMapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetManyProfilesMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetManyProfilesMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetManyProfilesMap(ctx, req.(*GetManyProfilesMapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UsernameTaken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UsernameTakenRequest)
 	if err := dec(in); err != nil {
@@ -491,6 +523,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetManyProfiles",
 			Handler:    _UserService_GetManyProfiles_Handler,
+		},
+		{
+			MethodName: "GetManyProfilesMap",
+			Handler:    _UserService_GetManyProfilesMap_Handler,
 		},
 		{
 			MethodName: "UsernameTaken",

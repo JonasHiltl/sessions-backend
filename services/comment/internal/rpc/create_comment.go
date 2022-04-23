@@ -10,9 +10,9 @@ import (
 
 func (s *commentServer) CreateComment(ctx context.Context, req *cg.CreateCommentRequest) (*cg.Comment, error) {
 	dc := dto.Comment{
-		PId:  req.PId,
-		AId:  req.RequesterId,
-		Body: req.Body,
+		PartyId:  req.PartyId,
+		AuthorId: req.AuthorId,
+		Body:     req.Body,
 	}
 
 	v := validator.New()
@@ -26,11 +26,5 @@ func (s *commentServer) CreateComment(ctx context.Context, req *cg.CreateComment
 		return nil, err
 	}
 
-	return &cg.Comment{
-		Id:        c.Id,
-		PId:       c.PId,
-		AId:       c.AId,
-		Body:      c.Body,
-		CreatedAt: c.Created_at.String(),
-	}, nil
+	return c.ToGRPCComment(), nil
 }

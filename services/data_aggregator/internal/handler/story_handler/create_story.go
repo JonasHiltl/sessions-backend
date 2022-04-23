@@ -50,5 +50,5 @@ func (h *storyGatewayHandler) CreateStory(c *fiber.Ctx) error {
 		CreatedAt:     s.CreatedAt,
 	}
 
-	return c.Status(fiber.StatusOK).JSON(res)
+	return c.Status(fiber.StatusCreated).JSON(res)
 }

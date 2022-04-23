@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
@@ -45,9 +46,12 @@ func (r *profileRepository) GetById(ctx context.Context, idStr string) (res data
 
 func (r *profileRepository) GetMany(ctx context.Context, idsStr []string) (res []datastruct.Profile, err error) {
 	var ids []primitive.ObjectID
-	for _, i := range idsStr {
-		id, err := primitive.ObjectIDFromHex(i)
+
+	for _, id := range idsStr {
+		fmt.Println(id)
+		id, err := primitive.ObjectIDFromHex(id)
 		if err != nil {
+			log.Println(err)
 			return res, errors.New("invalid user id")
 		}
 		ids = append(ids, id)

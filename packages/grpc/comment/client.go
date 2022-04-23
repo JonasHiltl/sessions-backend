@@ -10,7 +10,6 @@ func NewClient(address string) (CommentServiceClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 	c := NewCommentServiceClient(conn)
 	return c, nil
 }

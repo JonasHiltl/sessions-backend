@@ -8,30 +8,41 @@ import "packages/grpc/common/common.proto";
 service CommentService {
     rpc CreateComment (CreateCommentRequest) returns (Comment){};
     rpc DeleteComment (DeleteCommentRequest) returns (common.MessageResponse){};
-}
-
-message CreateCommentRequest {
-    string requester_id = 1;
-    string p_id = 2;
-    string body = 3;
+    rpc GetCommentByParty (GetByPartyRequest) returns (PagedComments){}
 }
 
 message Comment {
     string id = 1;
-    string p_id = 2;
-    string a_id = 3;
+    string party_id = 2;
+    string author_id = 3;
     string body = 4;
     string created_at = 5;
 }
 
+message PagedComments {
+    repeated Comment comments = 1;
+    string next_page = 2;
+}
+
+message GetByPartyRequest {
+    string party_id = 1;
+    string next_page = 2;
+    uint32 limit = 3;
+}
+
+message CreateCommentRequest {
+    string author_id = 1;
+    string party_id = 2;
+    string body = 3;
+}
+
 message GetCommentRequest {
-    string requester_id = 1;
-    string p_id = 2;
-    string c_id = 3;
+    string author_id = 1;
+    string party_id = 2;
+    string comment_id = 3;
 }
 
 message DeleteCommentRequest {
-    string requester_id = 1;
-    string p_id = 2;
-    string c_id = 3;
+    string author_id = 1;
+    string comment_id = 2;
 }

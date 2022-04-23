@@ -34,7 +34,7 @@ func NewPartyServie(repo repository.PartyRepository, nc *nats.EncodedConn) Party
 }
 
 func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
-	uUserId, err := uuid.NewV1()
+	uuid, err := uuid.NewV1()
 	if err != nil {
 		return datastruct.Party{}, errors.New("failed generate Party id")
 	}
@@ -42,7 +42,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	gHash := geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
 
 	dp := datastruct.Party{
-		Id:            uUserId.String(),
+		Id:            uuid.String(),
 		UserId:        p.UserId,
 		Title:         p.Title,
 		GHash:         gHash,

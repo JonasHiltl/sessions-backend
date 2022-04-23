@@ -173,6 +173,7 @@ func (pq *partyRepository) GetByUser(ctx context.Context, uId string, page []byt
 	} else {
 		q.PageSize(int(limit))
 	}
+
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {

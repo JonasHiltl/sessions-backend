@@ -8,7 +8,6 @@ require (
 	github.com/gocql/gocql v1.0.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo/v4 v4.7.2
-	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mmcloughlin/geohash v0.10.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4

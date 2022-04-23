@@ -35,12 +35,12 @@ message CreateStoryRequest {
 }
 
 message GetStoryRequest {
-    string s_id = 1;
+    string story_id = 1;
 }
 
 message DeleteStoryRequest {
     string requester_id = 1;
-    string s_id = 2;
+    string story_id = 2;
 }
 
 message GetByUserRequest {

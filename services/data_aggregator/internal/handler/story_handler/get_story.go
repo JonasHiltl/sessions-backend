@@ -11,7 +11,7 @@ import (
 func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 	sId := c.Params("id")
 
-	s, err := h.sc.GetStory(c.Context(), &sg.GetStoryRequest{SId: sId})
+	s, err := h.sc.GetStory(c.Context(), &sg.GetStoryRequest{StoryId: sId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

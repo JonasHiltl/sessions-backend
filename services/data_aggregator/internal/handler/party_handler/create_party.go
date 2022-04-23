@@ -40,5 +40,5 @@ func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 		CreatedAt:     p.CreatedAt,
 	}
 
-	return c.Status(fiber.StatusOK).JSON(res)
+	return c.Status(fiber.StatusCreated).JSON(res)
 }

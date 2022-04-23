@@ -19,6 +19,7 @@ service UserService {
 
     rpc GetProfile (GetProfileRequest) returns (Profile) {};
     rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {};
+    rpc GetManyProfilesMap (GetManyProfilesMapRequest) returns (GetManyProfilesMapResponse) {};
     rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {};
 }
 
@@ -107,8 +108,16 @@ message GetManyProfilesRequest {
     repeated string ids = 1;
 }
 
+message GetManyProfilesMapRequest {
+    repeated string ids = 1;
+}
+
 message GetManyProfilesResponse {
     repeated Profile profiles = 1;
+}
+
+message GetManyProfilesMapResponse {
+    map<string, Profile> profiles = 1;
 }
 
 message GetMeRequest {
