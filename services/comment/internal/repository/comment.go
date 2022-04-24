@@ -14,14 +14,14 @@ import (
 )
 
 const (
-	TABLE_NAME        = "comments"
+	COMMENTS_BY_USER  = "comments_by_user"
 	COMMENTS_BY_PARTY = "comments_by_party"
 )
 
 var commentsMetadata = table.Metadata{
-	Name:    TABLE_NAME,
+	Name:    COMMENTS_BY_USER,
 	Columns: []string{"id", "party_id", "author_id", "body"},
-	PartKey: []string{"id"},
+	PartKey: []string{"party_id", "id"},
 }
 
 type CommentRepository interface {
@@ -35,7 +35,7 @@ type commentRepository struct {
 	sess *gocqlx.Session
 }
 
-func (cq *commentRepository) Create(ctx context.Context, c datastruct.Comment) (datastruct.Comment, error) {
+func (r *commentRepository) Create(ctx context.Context, c datastruct.Comment) (datastruct.Comment, error) {
 	v := validator.New()
 	err := v.Struct(c)
 	if err != nil {
@@ -43,11 +43,11 @@ func (cq *commentRepository) Create(ctx context.Context, c datastruct.Comment) (
 	}
 
 	stmt, names := qb.
-		Insert(TABLE_NAME).
+		Insert(COMMENTS_BY_USER).
 		Columns(commentsMetadata.Columns...).
 		ToCql()
 
-	err = cq.sess.
+	err = r.sess.
 		Query(stmt, names).
 		BindStruct(c).
 		ExecRelease()
@@ -60,18 +60,14 @@ func (cq *commentRepository) Create(ctx context.Context, c datastruct.Comment) (
 
 // https://github.com/scylladb/scylla/issues/10171
 // TODO: currently deletion by index is not supported if supported create GSI on comment_id and delete by it
-func (cq *commentRepository) Delete(ctx context.Context, uId, cId string) error {
+func (r *commentRepository) Delete(ctx context.Context, uId, cId string) error {
 	stmt, names := qb.
-		Delete(TABLE_NAME).
+		Delete(COMMENTS_BY_USER).
 		Where(qb.Eq("id")).
 		If(qb.Eq("author_id")).
 		ToCql()
 
-	log.Println(stmt)
-	log.Println(uId)
-	log.Println(cId)
-
-	err := cq.sess.
+	err := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"id": cId, "author_id": uId})).
 		ExecRelease()
@@ -84,14 +80,14 @@ func (cq *commentRepository) Delete(ctx context.Context, uId, cId string) error 
 	return nil
 }
 
-func (cq *commentRepository) GetByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.Comment, []byte, error) {
+func (r *commentRepository) GetByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.Comment, []byte, error) {
 	var result []datastruct.Comment
 	stmt, names := qb.
 		Select(COMMENTS_BY_PARTY).
 		Where(qb.Eq("party_id")).
 		ToCql()
 
-	q := cq.sess.
+	q := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"party_id": pId}))
 	defer q.Release()
@@ -113,10 +109,10 @@ func (cq *commentRepository) GetByParty(ctx context.Context, pId string, page []
 	return result, iter.PageState(), nil
 }
 
-func (cq *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error) {
+func (r *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error) {
 	var result []datastruct.Comment
 	stmt, names := qb.
-		Select(TABLE_NAME).
+		Select(COMMENTS_BY_USER).
 		Where(qb.Eq("party_id")).
 		Where(qb.Eq("author_id")).
 		OrderBy("created_at", qb.ASC).
@@ -124,7 +120,7 @@ func (cq *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string
 
 	log.Println(stmt)
 
-	err := cq.sess.
+	err := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"party_id": pId, "author_id": uId})).
 		PageSize(10).

@@ -9,6 +9,10 @@ service CommentService {
     rpc CreateComment (CreateCommentRequest) returns (Comment){};
     rpc DeleteComment (DeleteCommentRequest) returns (common.MessageResponse){};
     rpc GetCommentByParty (GetByPartyRequest) returns (PagedComments){}
+
+    rpc CreateReply (CreateReplyRequest) returns (Reply) {}
+    rpc DeleteReply (DeleteReplyRequest) returns (common.MessageResponse){};
+    rpc GetReplyByComment (GetReplyByCommentRequest) returns (PagedReply) {};
 }
 
 message Comment {
@@ -19,21 +23,46 @@ message Comment {
     string created_at = 5;
 }
 
-message PagedComments {
-    repeated Comment comments = 1;
-    string next_page = 2;
-}
-
-message GetByPartyRequest {
-    string party_id = 1;
-    string next_page = 2;
-    uint32 limit = 3;
+message Reply {    
+    string id = 1;
+    string comment_id = 2;
+    string author_id = 3;
+    string body = 4;
+    string created_at = 5;
 }
 
 message CreateCommentRequest {
     string author_id = 1;
     string party_id = 2;
     string body = 3;
+}
+
+message CreateReplyRequest {
+    string comment_id = 1;
+    string author_id = 2;
+    string body = 3;
+} 
+
+message PagedComments {
+    repeated Comment comments = 1;
+    string next_page = 2;
+}
+
+message PagedReply {
+    repeated Reply replies = 1;
+    string next_page = 2;
+}
+
+message GetReplyByCommentRequest {
+    string comment_id = 1;
+    string next_page = 2;
+    uint32 limit = 3;
+}
+
+message GetByPartyRequest {
+    string party_id = 1;
+    string next_page = 2;
+    uint32 limit = 3;
 }
 
 message GetCommentRequest {
@@ -45,4 +74,10 @@ message GetCommentRequest {
 message DeleteCommentRequest {
     string author_id = 1;
     string comment_id = 2;
+}
+
+message DeleteReplyRequest {
+    string author_id = 1;
+    string comment_id = 2;
+    string reply_id = 3;
 }

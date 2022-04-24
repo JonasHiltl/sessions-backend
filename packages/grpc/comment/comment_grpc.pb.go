@@ -26,6 +26,9 @@ type CommentServiceClient interface {
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*Comment, error)
 	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetCommentByParty(ctx context.Context, in *GetByPartyRequest, opts ...grpc.CallOption) (*PagedComments, error)
+	CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*Reply, error)
+	DeleteReply(ctx context.Context, in *DeleteReplyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	GetReplyByComment(ctx context.Context, in *GetReplyByCommentRequest, opts ...grpc.CallOption) (*PagedReply, error)
 }
 
 type commentServiceClient struct {
@@ -63,6 +66,33 @@ func (c *commentServiceClient) GetCommentByParty(ctx context.Context, in *GetByP
 	return out, nil
 }
 
+func (c *commentServiceClient) CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/comment.CommentService/CreateReply", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentServiceClient) DeleteReply(ctx context.Context, in *DeleteReplyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
+	out := new(common.MessageResponse)
+	err := c.cc.Invoke(ctx, "/comment.CommentService/DeleteReply", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentServiceClient) GetReplyByComment(ctx context.Context, in *GetReplyByCommentRequest, opts ...grpc.CallOption) (*PagedReply, error) {
+	out := new(PagedReply)
+	err := c.cc.Invoke(ctx, "/comment.CommentService/GetReplyByComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CommentServiceServer is the server API for CommentService service.
 // All implementations must embed UnimplementedCommentServiceServer
 // for forward compatibility
@@ -70,6 +100,9 @@ type CommentServiceServer interface {
 	CreateComment(context.Context, *CreateCommentRequest) (*Comment, error)
 	DeleteComment(context.Context, *DeleteCommentRequest) (*common.MessageResponse, error)
 	GetCommentByParty(context.Context, *GetByPartyRequest) (*PagedComments, error)
+	CreateReply(context.Context, *CreateReplyRequest) (*Reply, error)
+	DeleteReply(context.Context, *DeleteReplyRequest) (*common.MessageResponse, error)
+	GetReplyByComment(context.Context, *GetReplyByCommentRequest) (*PagedReply, error)
 	mustEmbedUnimplementedCommentServiceServer()
 }
 
@@ -85,6 +118,15 @@ func (UnimplementedCommentServiceServer) DeleteComment(context.Context, *DeleteC
 }
 func (UnimplementedCommentServiceServer) GetCommentByParty(context.Context, *GetByPartyRequest) (*PagedComments, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentByParty not implemented")
+}
+func (UnimplementedCommentServiceServer) CreateReply(context.Context, *CreateReplyRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateReply not implemented")
+}
+func (UnimplementedCommentServiceServer) DeleteReply(context.Context, *DeleteReplyRequest) (*common.MessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteReply not implemented")
+}
+func (UnimplementedCommentServiceServer) GetReplyByComment(context.Context, *GetReplyByCommentRequest) (*PagedReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReplyByComment not implemented")
 }
 func (UnimplementedCommentServiceServer) mustEmbedUnimplementedCommentServiceServer() {}
 
@@ -153,6 +195,60 @@ func _CommentService_GetCommentByParty_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CommentService_CreateReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReplyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).CreateReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/comment.CommentService/CreateReply",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).CreateReply(ctx, req.(*CreateReplyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommentService_DeleteReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteReplyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).DeleteReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/comment.CommentService/DeleteReply",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).DeleteReply(ctx, req.(*DeleteReplyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CommentService_GetReplyByComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReplyByCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).GetReplyByComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/comment.CommentService/GetReplyByComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).GetReplyByComment(ctx, req.(*GetReplyByCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CommentService_ServiceDesc is the grpc.ServiceDesc for CommentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -171,6 +267,18 @@ var CommentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommentByParty",
 			Handler:    _CommentService_GetCommentByParty_Handler,
+		},
+		{
+			MethodName: "CreateReply",
+			Handler:    _CommentService_CreateReply_Handler,
+		},
+		{
+			MethodName: "DeleteReply",
+			Handler:    _CommentService_DeleteReply_Handler,
+		},
+		{
+			MethodName: "GetReplyByComment",
+			Handler:    _CommentService_GetReplyByComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

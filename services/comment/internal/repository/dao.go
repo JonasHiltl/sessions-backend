@@ -9,6 +9,7 @@ import (
 
 type Dao interface {
 	NewCommentRepository() CommentRepository
+	NewReplyRepository() ReplyRepository
 }
 
 type dao struct {
@@ -37,4 +38,8 @@ func NewDAO(sess *gocqlx.Session) Dao {
 
 func (d *dao) NewCommentRepository() CommentRepository {
 	return &commentRepository{sess: d.sess}
+}
+
+func (d *dao) NewReplyRepository() ReplyRepository {
+	return &replyRepository{sess: d.sess}
 }

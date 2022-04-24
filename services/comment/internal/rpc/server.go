@@ -12,12 +12,14 @@ import (
 
 type commentServer struct {
 	cs service.CommentService
+	rs service.ReplyService
 	cg.UnimplementedCommentServiceServer
 }
 
-func NewCommentServer(cs service.CommentService) cg.CommentServiceServer {
+func NewCommentServer(cs service.CommentService, rs service.ReplyService) cg.CommentServiceServer {
 	return &commentServer{
 		cs: cs,
+		rs: rs,
 	}
 }
 

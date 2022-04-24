@@ -10,23 +10,23 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *commentServer) GetCommentByParty(ctx context.Context, req *cg.GetByPartyRequest) (*cg.PagedComments, error) {
+func (s *commentServer) GetReplyByComment(ctx context.Context, req *cg.GetReplyByCommentRequest) (*cg.PagedReply, error) {
 	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")
 	}
 
-	cs, p, err := s.cs.GetByParty(ctx, req.PartyId, p, req.Limit)
+	rs, p, err := s.rs.GetByComment(ctx, req.CommentId, p, req.Limit)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	pc := make([]*cg.Comment, len(cs))
-	for _, c := range cs {
-		pc = append(pc, c.ToGRPCComment())
+	pr := make([]*cg.Reply, len(rs))
+	for _, r := range rs {
+		pr = append(pr, r.ToGRPCReply())
 	}
 
-	return &cg.PagedComments{Comments: pc, NextPage: nextPage}, nil
+	return &cg.PagedReply{Replies: pr, NextPage: nextPage}, nil
 }

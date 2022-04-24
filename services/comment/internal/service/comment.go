@@ -8,7 +8,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/datastruct"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/dto"
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
-	"github.com/nats-io/nats.go"
 )
 
 type CommentService interface {
@@ -20,11 +19,10 @@ type CommentService interface {
 
 type commentService struct {
 	repo repository.CommentRepository
-	nc   *nats.EncodedConn
 }
 
-func NewCommentService(repo repository.CommentRepository, nc *nats.EncodedConn) CommentService {
-	return &commentService{repo: repo, nc: nc}
+func NewCommentService(repo repository.CommentRepository) CommentService {
+	return &commentService{repo: repo}
 }
 
 func (cs *commentService) Create(ctx context.Context, c dto.Comment) (datastruct.Comment, error) {
@@ -39,8 +37,7 @@ func (cs *commentService) Create(ctx context.Context, c dto.Comment) (datastruct
 		AuthorId: c.AuthorId,
 		Body:     c.Body,
 	}
-	result, err := cs.repo.Create(ctx, dc)
-	return result, err
+	return cs.repo.Create(ctx, dc)
 }
 
 func (cs *commentService) Delete(ctx context.Context, uId, cId string) error {

@@ -1,29 +1,21 @@
-CREATE TABLE IF NOT EXISTS comments (
-  id timeuuid PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS comments_by_party (
+  id timeuuid,
   party_id text,
   author_id text,
   body text,
-);
-
-CREATE INDEX comments_by_party_test ON sessions.comments (party_id);
-CREATE INDEX comments_by_user_test ON sessions.comments (author_id);
-
-CREATE MATERIALIZED VIEW comments_by_party AS 
-  SELECT * FROM comments
-  WHERE party_id IS NOT NULL AND id IS NOT NULL
-  PRIMARY KEY (party_id, id)
-WITH CLUSTERING ORDER BY (id DESC);
+  PRIMARY KEY (party_id, comment_id)
+) WITH CLUSTERING ORDER BY (comment_id DESC);
 
 CREATE MATERIALIZED VIEW comments_by_user AS 
-  SELECT * FROM comments
-  WHERE author_id IS NOT NULL AND id IS NOT NULL
-  PRIMARY KEY (author_id, id)
-WITH CLUSTERING ORDER BY (id DESC);
+  SELECT * FROM comments_by_party
+  WHERE author_id IS NOT NULL AND comment_id IS NOT NULL AND party_id IS NOT NULL
+  PRIMARY KEY (author_id, comment_id, party_id)
+WITH CLUSTERING ORDER BY (comment_id DESC);
 
 CREATE TABLE IF NOT EXISTS replies (
-  id text,
+  id timeuuid,
+  comment_id timeuuid,
   author_id text,
   body text,
-  created_at timestamp,
-  PRIMARY KEY (id, created_at)
-) WITH CLUSTERING ORDER BY (created_at ASC);
+  PRIMARY KEY (comment_id, id)
+) WITH CLUSTERING ORDER BY (id ASC);

@@ -12,19 +12,19 @@ import (
 )
 
 func main() {
-	co, err := config.LoadConfig()
+	c, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	opts := []nats.Option{nats.Name("Comment Service")}
-	nc, err := stream.Connect(co.NATS_CLUSTER, opts)
+	nc, err := stream.Connect(c.NATS_CLUSTER, opts)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer nc.Close()
 
-	sess, err := repository.NewDB(co.SCYLLA_KEYSPACE, co.SCYLLA_HOSTS)
+	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,8 +32,9 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	c := service.NewCommentService(dao.NewCommentRepository(), nc)
+	cs := service.NewCommentService(dao.NewCommentRepository())
+	rs := service.NewReplyService(dao.NewReplyRepository())
 
-	cs := rpc.NewCommentServer(c)
-	rpc.Start(cs, co.PORT)
+	s := rpc.NewCommentServer(cs, rs)
+	rpc.Start(s, c.PORT)
 }
