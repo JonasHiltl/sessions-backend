@@ -33,14 +33,14 @@ func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
 	}
 
 	aggC := make([]datastruct.AggregatedComment, len(cs.Comments))
-	for _, c := range cs.Comments {
-		aggC = append(aggC, datastruct.AggregatedComment{
+	for i, c := range cs.Comments {
+		aggC[i] = datastruct.AggregatedComment{
 			Id:        c.Id,
 			PartyId:   c.PartyId,
 			Author:    pRes.Profiles[c.AuthorId],
 			Body:      c.Body,
 			CreatedAt: c.CreatedAt,
-		})
+		}
 	}
 
 	res := datastruct.PagedAggregatedComment{

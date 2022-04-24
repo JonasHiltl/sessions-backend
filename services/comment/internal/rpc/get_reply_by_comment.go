@@ -24,8 +24,8 @@ func (s commentServer) GetReplyByComment(ctx context.Context, req *cg.GetReplyBy
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
 	pr := make([]*cg.Reply, len(rs))
-	for _, r := range rs {
-		pr = append(pr, r.ToGRPCReply())
+	for i, r := range rs {
+		pr[i] = r.ToGRPCReply()
 	}
 
 	return &cg.PagedReply{Replies: pr, NextPage: nextPage}, nil

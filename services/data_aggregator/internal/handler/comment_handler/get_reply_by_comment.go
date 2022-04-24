@@ -24,8 +24,8 @@ func (h commentGatewayHandler) GetReplyByComment(c *fiber.Ctx) error {
 	}
 
 	var replyAuthors []string
-	for _, c := range rs.Replies {
-		replyAuthors = append(replyAuthors, c.AuthorId)
+	for _, r := range rs.Replies {
+		replyAuthors = append(replyAuthors, r.AuthorId)
 	}
 
 	ps, err := h.uc.GetManyProfilesMap(c.Context(), &ug.GetManyProfilesMapRequest{Ids: utils.UniqueStringSlice(replyAuthors)})
@@ -36,14 +36,14 @@ func (h commentGatewayHandler) GetReplyByComment(c *fiber.Ctx) error {
 	log.Printf("%v+", ps.Profiles)
 
 	aggR := make([]datastruct.AggregatedReply, len(rs.Replies))
-	for _, r := range rs.Replies {
-		aggR = append(aggR, datastruct.AggregatedReply{
+	for i, r := range rs.Replies {
+		aggR[i] = datastruct.AggregatedReply{
 			Id:        r.Id,
 			CommentId: r.CommentId,
 			Author:    ps.Profiles[r.AuthorId],
 			Body:      r.Body,
 			CreatedAt: r.CreatedAt,
-		})
+		}
 	}
 
 	res := datastruct.PagedAggregatedReply{

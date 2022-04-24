@@ -24,8 +24,8 @@ func (s commentServer) GetCommentByParty(ctx context.Context, req *cg.GetByParty
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
 	pc := make([]*cg.Comment, len(cs))
-	for _, c := range cs {
-		pc = append(pc, c.ToGRPCComment())
+	for i, c := range cs {
+		pc[i] = c.ToGRPCComment()
 	}
 
 	return &cg.PagedComments{Comments: pc, NextPage: nextPage}, nil

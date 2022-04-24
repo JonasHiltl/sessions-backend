@@ -29,8 +29,8 @@ func (h partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	}
 
 	aggP := make([]datastruct.AggregatedParty, len(partyRes.Parties))
-	for _, p := range partyRes.Parties {
-		aggP = append(aggP, datastruct.AggregatedParty{
+	for i, p := range partyRes.Parties {
+		aggP[i] = datastruct.AggregatedParty{
 			Id:            p.Id,
 			Creator:       profilesRes,
 			Title:         p.Title,
@@ -45,7 +45,7 @@ func (h partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 			// Stories:
 			StartDate: p.StartDate,
 			CreatedAt: p.CreatedAt,
-		})
+		}
 	}
 
 	res := datastruct.PagedAggregatedParty{
