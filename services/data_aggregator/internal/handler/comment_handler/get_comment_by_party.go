@@ -17,25 +17,24 @@ func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
 	limitStr := c.Query("limit")
 	limit, _ := strconv.ParseUint(limitStr, 10, 32)
 
-	cRes, err := h.cc.GetCommentByParty(c.Context(), &cg.GetByPartyRequest{PartyId: pId, NextPage: nextPage, Limit: uint32(limit)})
+	cs, err := h.cc.GetCommentByParty(c.Context(), &cg.GetByPartyRequest{PartyId: pId, NextPage: nextPage, Limit: uint32(limit)})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
 	var commentAuthors []string
-	for _, c := range cRes.Comments {
+	for _, c := range cs.Comments {
 		commentAuthors = append(commentAuthors, c.AuthorId)
 	}
 
 	pRes, err := h.uc.GetManyProfilesMap(c.Context(), &user.GetManyProfilesMapRequest{Ids: utils.UniqueStringSlice(commentAuthors)})
-
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	var aggComments []datastruct.AggregatedComment
-	for _, c := range cRes.Comments {
-		aggComments = append(aggComments, datastruct.AggregatedComment{
+	aggC := make([]datastruct.AggregatedComment, len(cs.Comments))
+	for _, c := range cs.Comments {
+		aggC = append(aggC, datastruct.AggregatedComment{
 			Id:        c.Id,
 			PartyId:   c.PartyId,
 			Author:    pRes.Profiles[c.AuthorId],
@@ -45,10 +44,9 @@ func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
 	}
 
 	res := datastruct.PagedAggregatedComment{
-		Comments: aggComments,
-		NextPage: cRes.NextPage,
+		Comments: aggC,
+		NextPage: cs.NextPage,
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
-
 }

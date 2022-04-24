@@ -109,7 +109,10 @@ func main() {
 	comment := app.Group("/comment")
 	comment.Post("/party/:id", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.CreateComment)
 	comment.Get("/party/:id", commentHandler.GetCommentByParty)
-	comment.Delete("/:cId", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.DeleteComment)
+	comment.Delete("/:id", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.DeleteComment)
+	comment.Post("/:id", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.CreateReply)
+	comment.Get("/:id/reply", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.GetReplyByComment)
+	comment.Delete("/:id/reply/:rId", middleware.AuthRequired(c.TOKEN_SECRET), commentHandler.DeleteReply)
 
 	var sb strings.Builder
 	sb.WriteString("0.0.0.0:")
