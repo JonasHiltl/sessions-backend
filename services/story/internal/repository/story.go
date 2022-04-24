@@ -118,7 +118,7 @@ func (r *storyRepository) GetByUser(c context.Context, uId string, page []byte, 
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println(err)
 		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 
@@ -146,7 +146,7 @@ func (r *storyRepository) GetByParty(c context.Context, pId string, page []byte,
 	iter := q.Iter()
 	err = iter.Select(&result)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println(err)
 		return []datastruct.Story{}, nil, errors.New("no stories found")
 	}
 

@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -19,8 +18,8 @@ const (
 
 var repliesMetadata = table.Metadata{
 	Name:    REPLIES,
-	Columns: []string{"comment_id", "reply_id", "author_id", "body"},
-	PartKey: []string{"comment_id"},
+	Columns: []string{"id", "comment_id", "author_id", "body"},
+	PartKey: []string{"comment_id", "id"},
 }
 
 type ReplyRepository interface {
@@ -99,7 +98,6 @@ func (r *replyRepository) GetByComment(ctx context.Context, cId string, page []b
 	iter := q.Iter()
 	err := iter.Select(&result)
 	if err != nil {
-		log.Println(err)
 		return []datastruct.Reply{}, nil, errors.New("no replies found")
 	}
 

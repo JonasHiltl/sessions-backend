@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/jonashiltl/sessions-backend/packages/events"
@@ -16,7 +15,6 @@ import (
 func (s partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) (*pg.PublicParty, error) {
 	start, err := time.Parse(time.RFC3339, req.StartDate)
 	if err != nil {
-		log.Println(err)
 		return nil, status.Error(codes.InvalidArgument, "Invalid start date")
 	}
 

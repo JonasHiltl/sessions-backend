@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 	"go.mongodb.org/mongo-driver/bson"
@@ -51,7 +50,6 @@ func (r *profileRepository) GetMany(ctx context.Context, idsStr []string) (res [
 		fmt.Println(id)
 		id, err := primitive.ObjectIDFromHex(id)
 		if err != nil {
-			log.Println(err)
 			return res, errors.New("invalid user id")
 		}
 		ids = append(ids, id)
@@ -65,7 +63,6 @@ func (r *profileRepository) GetMany(ctx context.Context, idsStr []string) (res [
 	}
 
 	err = cur.All(ctx, &res)
-	log.Println(err)
 	if err != nil {
 		return res, err
 	}
