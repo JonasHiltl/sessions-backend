@@ -49,7 +49,7 @@ func (g googleManager) ValidateGoogleJWT(tokenString string) (datastruct.GoogleC
 
 	claims, ok := token.Claims.(*datastruct.GoogleClaims)
 	if !ok {
-		return datastruct.GoogleClaims{}, errors.New("Invalid Google JWT")
+		return datastruct.GoogleClaims{}, errors.New("invalid Google JWT")
 	}
 
 	if claims.Issuer != "accounts.google.com" && claims.Issuer != "https://accounts.google.com" {
