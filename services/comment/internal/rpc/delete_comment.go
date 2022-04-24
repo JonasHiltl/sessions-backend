@@ -8,7 +8,7 @@ import (
 )
 
 func (s commentServer) DeleteComment(ctx context.Context, req *cg.DeleteCommentRequest) (*common.MessageResponse, error) {
-	err := s.cs.Delete(ctx, req.AuthorId, req.CommentId)
+	err := s.cs.Delete(ctx, req.AuthorId, req.PartyId, req.CommentId)
 	if err != nil {
 		return nil, err
 	}

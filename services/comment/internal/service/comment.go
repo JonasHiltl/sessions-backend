@@ -12,7 +12,7 @@ import (
 
 type CommentService interface {
 	Create(ctx context.Context, c dto.Comment) (datastruct.Comment, error)
-	Delete(ctx context.Context, uId, cId string) error
+	Delete(ctx context.Context, uId, pId, cId string) error
 	GetByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.Comment, []byte, error)
 	GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error)
 }
@@ -40,8 +40,8 @@ func (cs commentService) Create(ctx context.Context, c dto.Comment) (datastruct.
 	return cs.repo.Create(ctx, dc)
 }
 
-func (cs commentService) Delete(ctx context.Context, uId, cId string) error {
-	return cs.repo.Delete(ctx, uId, cId)
+func (cs commentService) Delete(ctx context.Context, uId, pId, cId string) error {
+	return cs.repo.Delete(ctx, uId, pId, cId)
 }
 
 func (cs commentService) GetByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.Comment, []byte, error) {

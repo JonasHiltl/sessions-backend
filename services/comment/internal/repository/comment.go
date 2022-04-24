@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -14,19 +13,19 @@ import (
 )
 
 const (
-	COMMENTS_BY_USER  = "comments_by_user"
 	COMMENTS_BY_PARTY = "comments_by_party"
+	COMMENTS_BY_USER  = "comments_by_user"
 )
 
 var commentsMetadata = table.Metadata{
-	Name:    COMMENTS_BY_USER,
+	Name:    COMMENTS_BY_PARTY,
 	Columns: []string{"id", "party_id", "author_id", "body"},
 	PartKey: []string{"party_id", "id"},
 }
 
 type CommentRepository interface {
 	Create(ctx context.Context, p datastruct.Comment) (datastruct.Comment, error)
-	Delete(ctx context.Context, uId, cId string) error
+	Delete(ctx context.Context, uId, pId, cId string) error
 	GetByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.Comment, []byte, error)
 	GetByPartyUser(ctx context.Context, pId, uId string) ([]datastruct.Comment, error)
 }
@@ -43,7 +42,7 @@ func (r *commentRepository) Create(ctx context.Context, c datastruct.Comment) (d
 	}
 
 	stmt, names := qb.
-		Insert(COMMENTS_BY_USER).
+		Insert(COMMENTS_BY_PARTY).
 		Columns(commentsMetadata.Columns...).
 		ToCql()
 
@@ -60,16 +59,17 @@ func (r *commentRepository) Create(ctx context.Context, c datastruct.Comment) (d
 
 // https://github.com/scylladb/scylla/issues/10171
 // TODO: currently deletion by index is not supported if supported create GSI on comment_id and delete by it
-func (r *commentRepository) Delete(ctx context.Context, uId, cId string) error {
+func (r *commentRepository) Delete(ctx context.Context, uId, pId, cId string) error {
 	stmt, names := qb.
-		Delete(COMMENTS_BY_USER).
+		Delete(COMMENTS_BY_PARTY).
 		Where(qb.Eq("id")).
+		Where(qb.Eq("party_id")).
 		If(qb.Eq("author_id")).
 		ToCql()
 
 	err := r.sess.
 		Query(stmt, names).
-		BindMap((qb.M{"id": cId, "author_id": uId})).
+		BindMap((qb.M{"id": cId, "party_id": pId, "author_id": uId})).
 		ExecRelease()
 	if err != nil {
 		if strings.Contains(err.Error(), "ConditionalCheckFailedException") {
@@ -102,7 +102,6 @@ func (r *commentRepository) GetByParty(ctx context.Context, pId string, page []b
 	iter := q.Iter()
 	err := iter.Select(&result)
 	if err != nil {
-		log.Println(err)
 		return []datastruct.Comment{}, nil, errors.New("no comments found")
 	}
 
@@ -118,8 +117,6 @@ func (r *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string)
 		OrderBy("created_at", qb.ASC).
 		ToCql()
 
-	log.Println(stmt)
-
 	err := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"party_id": pId, "author_id": uId})).
@@ -127,7 +124,6 @@ func (r *commentRepository) GetByPartyUser(ctx context.Context, pId, uId string)
 		Iter().
 		Select(&result)
 	if err != nil {
-		log.Println(err)
 		return []datastruct.Comment{}, errors.New("no comments found")
 	}
 
