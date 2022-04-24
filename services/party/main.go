@@ -33,7 +33,7 @@ func main() {
 
 	dao := repository.NewDAO(&sess)
 
-	partyService := service.NewPartyServie(dao.NewPartyRepository(), nc)
+	partyService := service.NewPartyServie(dao.NewPartyRepository())
 
 	p := rpc.NewPartyServer(partyService, stream)
 	rpc.Start(p, c.PORT)

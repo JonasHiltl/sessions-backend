@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *commentGatewayHandler) DeleteComment(c *fiber.Ctx) error {
+func (h commentGatewayHandler) DeleteComment(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
 	cId := c.Params("cId")

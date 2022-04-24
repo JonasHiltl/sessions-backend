@@ -38,7 +38,7 @@ type storyRepository struct {
 	sess *gocqlx.Session
 }
 
-func (sq *storyRepository) Create(c context.Context, s datastruct.Story) (datastruct.Story, error) {
+func (r *storyRepository) Create(c context.Context, s datastruct.Story) (datastruct.Story, error) {
 	v := validator.New()
 	err := v.Struct(s)
 	if err != nil {
@@ -53,7 +53,7 @@ func (sq *storyRepository) Create(c context.Context, s datastruct.Story) (datast
 
 	// TODO: insert story id with party id intt story_by_party table
 
-	err = sq.sess.
+	err = r.sess.
 		Query(stmt, names).
 		BindStruct(s).
 		ExecRelease()
@@ -64,14 +64,14 @@ func (sq *storyRepository) Create(c context.Context, s datastruct.Story) (datast
 	return s, err
 }
 
-func (sq *storyRepository) Delete(c context.Context, uId, sId string) error {
+func (r *storyRepository) Delete(c context.Context, uId, sId string) error {
 	stmt, names := qb.
 		Delete(TABLE_NAME).
 		Where(qb.Eq("id")).
 		If(qb.Eq("user_id")).
 		ToCql()
 
-	err := sq.sess.
+	err := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"id": sId, "user_id": uId})).
 		ExecRelease()
@@ -81,9 +81,9 @@ func (sq *storyRepository) Delete(c context.Context, uId, sId string) error {
 	return nil
 }
 
-func (sq *storyRepository) Get(c context.Context, sId string) (datastruct.Story, error) {
+func (r *storyRepository) Get(c context.Context, sId string) (datastruct.Story, error) {
 	var result datastruct.Story
-	err := sq.sess.
+	err := r.sess.
 		Query(storyTable.Get()).
 		BindMap((qb.M{"id": sId})).
 		GetRelease(&result)
@@ -97,13 +97,13 @@ func (sq *storyRepository) Get(c context.Context, sId string) (datastruct.Story,
 	return result, nil
 }
 
-func (sq *storyRepository) GetByUser(c context.Context, uId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
+func (r *storyRepository) GetByUser(c context.Context, uId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_USER).
 		Where(qb.Eq("user_id")).
 		ToCql()
 
-	q := sq.sess.
+	q := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"user_id": uId}))
 	defer q.Release()
@@ -125,13 +125,13 @@ func (sq *storyRepository) GetByUser(c context.Context, uId string, page []byte,
 	return result, iter.PageState(), nil
 }
 
-func (sq *storyRepository) GetByParty(c context.Context, pId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
+func (r *storyRepository) GetByParty(c context.Context, pId string, page []byte, limit uint32) (result []datastruct.Story, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(STORY_BY_PARTY).
 		Where(qb.Eq("party_id")).
 		ToCql()
 
-	q := sq.sess.
+	q := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"party_id": pId}))
 	defer q.Release()

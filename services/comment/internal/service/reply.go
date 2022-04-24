@@ -24,7 +24,7 @@ func NewReplyService(repo repository.ReplyRepository) ReplyService {
 	return &replyService{repo: repo}
 }
 
-func (s *replyService) Create(ctx context.Context, r dto.Reply) (datastruct.Reply, error) {
+func (s replyService) Create(ctx context.Context, r dto.Reply) (datastruct.Reply, error) {
 	uuid, err := uuid.NewV1()
 	if err != nil {
 		return datastruct.Reply{}, errors.New("failed generate Reply id")
@@ -39,9 +39,9 @@ func (s *replyService) Create(ctx context.Context, r dto.Reply) (datastruct.Repl
 	return s.repo.Create(ctx, dc)
 }
 
-func (s *replyService) Delete(ctx context.Context, uId, cId, rId string) error {
+func (s replyService) Delete(ctx context.Context, uId, cId, rId string) error {
 	return s.repo.Delete(ctx, uId, cId, rId)
 }
-func (s *replyService) GetByComment(ctx context.Context, cId string, page []byte, limit uint32) ([]datastruct.Reply, []byte, error) {
+func (s replyService) GetByComment(ctx context.Context, cId string, page []byte, limit uint32) ([]datastruct.Reply, []byte, error) {
 	return s.repo.GetByComment(ctx, cId, page, limit)
 }

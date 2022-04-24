@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (h *storyGatewayHandler) GetStoryByParty(c *fiber.Ctx) error {
+func (h storyGatewayHandler) GetStoryByParty(c *fiber.Ctx) error {
 	pId := c.Params("id")
 	nextPage := c.Query("nextPage")
 

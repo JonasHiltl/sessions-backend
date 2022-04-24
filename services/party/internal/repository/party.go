@@ -39,7 +39,7 @@ type partyRepository struct {
 	sess *gocqlx.Session
 }
 
-func (pq *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error) {
+func (r *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error) {
 	v := validator.New()
 	err := v.Struct(p)
 	if err != nil {
@@ -52,7 +52,7 @@ func (pq *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl t
 		TTL(ttl).
 		ToCql()
 
-	err = pq.sess.
+	err = r.sess.
 		Query(stmt, names).
 		BindStruct(p).
 		ExecRelease()
@@ -63,8 +63,8 @@ func (pq *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl t
 	return p, nil
 }
 
-func (pq *partyRepository) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
-	err = pq.sess.
+func (r *partyRepository) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
+	err = r.sess.
 		Query(partyTable.Get()).
 		BindMap((qb.M{"id": pId})).
 		GetRelease(&res)
@@ -75,7 +75,7 @@ func (pq *partyRepository) Get(ctx context.Context, pId string) (res datastruct.
 	return res, nil
 }
 
-func (pq *partyRepository) Update(ctx context.Context, p datastruct.Party) error {
+func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error {
 	b := qb.
 		Update(TABLE_NAME).
 		Where(qb.Eq("id"))
@@ -115,7 +115,7 @@ func (pq *partyRepository) Update(ctx context.Context, p datastruct.Party) error
 	b.If(qb.Eq("user_id"))
 	stmt, names := b.ToCql()
 
-	err := pq.sess.Query(stmt, names).
+	err := r.sess.Query(stmt, names).
 		BindMap((qb.M{
 			"user_id":        p.UserId,
 			"id":             p.Id,
@@ -136,14 +136,14 @@ func (pq *partyRepository) Update(ctx context.Context, p datastruct.Party) error
 	return nil
 }
 
-func (pq *partyRepository) Delete(ctx context.Context, uId, pId string) error {
+func (r *partyRepository) Delete(ctx context.Context, uId, pId string) error {
 	stmt, names := qb.
 		Delete(TABLE_NAME).
 		Where(qb.Eq("id")).
 		If(qb.Eq("user_id")).
 		ToCql()
 
-	err := pq.sess.
+	err := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"id": pId, "user_id": uId})).
 		ExecRelease()
@@ -156,13 +156,13 @@ func (pq *partyRepository) Delete(ctx context.Context, uId, pId string) error {
 	return nil
 }
 
-func (pq *partyRepository) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
+func (r *partyRepository) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(PARTY_BY_USER).
 		Where(qb.Eq("user_id")).
 		ToCql()
 
-	q := pq.sess.
+	q := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"user_id": uId}))
 	defer q.Release()
@@ -183,7 +183,7 @@ func (pq *partyRepository) GetByUser(ctx context.Context, uId string, page []byt
 	return result, iter.PageState(), nil
 }
 
-func (pq *partyRepository) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
+func (r *partyRepository) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
 		Select(TABLE_NAME).
 		Where(qb.Eq("is_public")).
@@ -191,7 +191,7 @@ func (pq *partyRepository) GeoSearch(ctx context.Context, nHashes []string, page
 		OrderBy("created_at", qb.DESC).
 		ToCql()
 
-	q := pq.sess.
+	q := r.sess.
 		Query(stmt, names).
 		BindMap((qb.M{"is_public": false, "geohash": nHashes}))
 

@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/story/internal/dto"
 )
 
-func (s *storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest) (*sg.PublicStory, error) {
+func (s storyServer) CreateStory(c context.Context, req *sg.CreateStoryRequest) (*sg.PublicStory, error) {
 	d := dto.Story{
 		PartyId:       req.PartyId,
 		UserId:        req.RequesterId,

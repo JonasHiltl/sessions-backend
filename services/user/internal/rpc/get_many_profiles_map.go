@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (s *userServer) GetManyProfilesMap(ctx context.Context, req *ug.GetManyProfilesMapRequest) (*ug.GetManyProfilesMapResponse, error) {
+func (s userServer) GetManyProfilesMap(ctx context.Context, req *ug.GetManyProfilesMapRequest) (*ug.GetManyProfilesMapResponse, error) {
 	ps, err := s.ps.GetMany(ctx, req.Ids)
 	if err != nil {
 		return nil, utils.HandleError(err)

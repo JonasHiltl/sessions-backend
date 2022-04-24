@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (a *commentServer) GetCommentByPartyUser(ctx echo.Context) error {
+func (a commentServer) GetCommentByPartyUser(ctx echo.Context) error {
 	pId := ctx.Param("pId")
 	uId := ctx.Param("uId")
 

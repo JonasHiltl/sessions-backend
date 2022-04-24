@@ -10,7 +10,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *relationGatewayHandler) FriendRequest(c *fiber.Ctx) error {
+func (h relationGatewayHandler) FriendRequest(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
 	fId := c.Params("id")

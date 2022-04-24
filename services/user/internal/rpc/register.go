@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug.RegisterResponse, error) {
+func (s userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug.RegisterResponse, error) {
 	hash, err := s.password.HashPassword(req.Password)
 	if err != nil {
 		return nil, utils.HandleError(err)

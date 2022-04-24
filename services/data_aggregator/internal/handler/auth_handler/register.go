@@ -14,7 +14,7 @@ type RegisterRequest struct {
 	Lastname  string `json:"lastname,omitempty"`
 }
 
-func (h *authGatewayHandler) Register(c *fiber.Ctx) error {
+func (h authGatewayHandler) Register(c *fiber.Ctx) error {
 	req := new(ug.RegisterRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

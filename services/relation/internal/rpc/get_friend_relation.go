@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (s *relationServer) GetFriendRelation(ctx context.Context, req *rg.GetFriendRelationRequest) (*rg.FriendRelation, error) {
+func (s relationServer) GetFriendRelation(ctx context.Context, req *rg.GetFriendRelationRequest) (*rg.FriendRelation, error) {
 	fr, err := s.frs.GetFriendRelation(ctx, req.UserId, req.FriendId)
 	if err != nil {
 		return nil, utils.HandleError(err)

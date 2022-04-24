@@ -8,6 +8,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) ResendVerificationEmail(ctx context.Context, req *cg.Empty) (*cg.MessageResponse, error) {
+func (s userServer) ResendVerificationEmail(ctx context.Context, req *cg.Empty) (*cg.MessageResponse, error) {
 	return nil, status.Error(codes.Unavailable, "not yet implemented")
 }

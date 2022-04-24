@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (s *relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendRequest) (*cg.MessageResponse, error) {
+func (s relationServer) AcceptFriend(ctx context.Context, req *rg.AcceptFriendRequest) (*cg.MessageResponse, error) {
 	err := s.frs.AcceptFriendRelation(ctx, req.UserId, req.FriendId)
 	if err != nil {
 		return nil, utils.HandleError(err)

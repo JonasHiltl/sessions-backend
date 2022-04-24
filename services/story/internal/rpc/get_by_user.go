@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *storyServer) GetByUser(c context.Context, req *sg.GetByUserRequest) (*sg.PagedStories, error) {
+func (s storyServer) GetByUser(c context.Context, req *sg.GetByUserRequest) (*sg.PagedStories, error) {
 	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")

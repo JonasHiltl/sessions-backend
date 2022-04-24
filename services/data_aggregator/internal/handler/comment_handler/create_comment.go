@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *commentGatewayHandler) CreateComment(ctx *fiber.Ctx) error {
+func (h commentGatewayHandler) CreateComment(ctx *fiber.Ctx) error {
 	req := new(cg.CreateCommentRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return err

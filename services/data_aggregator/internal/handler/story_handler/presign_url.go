@@ -6,7 +6,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (h *storyGatewayHandler) PresignURL(c *fiber.Ctx) error {
+func (h storyGatewayHandler) PresignURL(c *fiber.Ctx) error {
 	key := c.Params("key")
 
 	res, err := h.sc.PresignURL(c.Context(), &story.PresignURLRequest{Key: key})

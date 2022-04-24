@@ -11,7 +11,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/relation/internal/datastruct"
 )
 
-func (s *relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*cg.MessageResponse, error) {
+func (s relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*cg.MessageResponse, error) {
 	fr := datastruct.FriendRelation{
 		UserId:    req.UserId,
 		FriendId:  req.FriendId,

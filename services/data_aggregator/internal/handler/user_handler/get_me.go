@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *userGatewayHandler) GetMe(c *fiber.Ctx) error {
+func (h userGatewayHandler) GetMe(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
 	res, err := h.uc.GetMe(c.Context(), &ug.GetMeRequest{Id: user.Sub})

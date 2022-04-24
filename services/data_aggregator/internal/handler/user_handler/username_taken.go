@@ -10,7 +10,7 @@ type UsernameTakenResponse struct {
 	Taken bool `json:"taken"`
 }
 
-func (h *userGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
+func (h userGatewayHandler) UsernameTaken(c *fiber.Ctx) error {
 	uName := c.Params("username")
 
 	res, err := h.uc.UsernameTaken(c.Context(), &ug.UsernameTakenRequest{Username: uName})

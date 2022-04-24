@@ -16,7 +16,7 @@ type GeoSearchBody struct {
 	Precision uint    `json:"precision"`
 }
 
-func (s *partyServer) GeoSearch(c context.Context, req *pg.GeoSearchRequest) (*pg.PagedParties, error) {
+func (s partyServer) GeoSearch(c context.Context, req *pg.GeoSearchRequest) (*pg.PagedParties, error) {
 	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")

@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.PublicParty, error) {
+func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) (*pg.PublicParty, error) {
 	start, err := time.Parse(time.RFC3339, req.StartDate)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid start date")

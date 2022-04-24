@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *storyGatewayHandler) DeleteStory(c *fiber.Ctx) error {
+func (h storyGatewayHandler) DeleteStory(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
 	sId := c.Params("id")

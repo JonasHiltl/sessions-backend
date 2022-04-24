@@ -10,7 +10,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/mmcloughlin/geohash"
-	"github.com/nats-io/nats.go"
 )
 
 const GEOHASH_PRECISION uint = 9
@@ -26,14 +25,13 @@ type PartyService interface {
 
 type partyService struct {
 	repo repository.PartyRepository
-	nc   *nats.EncodedConn
 }
 
-func NewPartyServie(repo repository.PartyRepository, nc *nats.EncodedConn) PartyService {
-	return &partyService{repo: repo, nc: nc}
+func NewPartyServie(repo repository.PartyRepository) PartyService {
+	return &partyService{repo: repo}
 }
 
-func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
+func (ps partyService) Create(ctx context.Context, p dto.Party) (datastruct.Party, error) {
 	uuid, err := uuid.NewV1()
 	if err != nil {
 		return datastruct.Party{}, errors.New("failed generate Party id")
@@ -58,7 +56,7 @@ func (ps *partyService) Create(ctx context.Context, p dto.Party) (datastruct.Par
 	return newParty, err
 }
 
-func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Party, error) {
+func (ps partyService) Update(ctx context.Context, p dto.Party) (datastruct.Party, error) {
 	var gHash string
 	if p.Lat != 0 && p.Long != 0 {
 		gHash = geohash.EncodeWithPrecision(float64(p.Lat), float64(p.Long), GEOHASH_PRECISION)
@@ -117,19 +115,19 @@ func (ps *partyService) Update(ctx context.Context, p dto.Party) (datastruct.Par
 	return newP, err
 }
 
-func (ps *partyService) Delete(ctx context.Context, UserId, pId string) error {
+func (ps partyService) Delete(ctx context.Context, UserId, pId string) error {
 	return ps.repo.Delete(ctx, UserId, pId)
 }
 
-func (ps *partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {
+func (ps partyService) Get(ctx context.Context, pId string) (datastruct.Party, error) {
 	return ps.repo.Get(ctx, pId)
 }
 
-func (ps *partyService) GetByUser(ctx context.Context, UserId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error) {
+func (ps partyService) GetByUser(ctx context.Context, UserId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error) {
 	return ps.repo.GetByUser(ctx, UserId, page, limit)
 }
 
-func (ps *partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {
+func (ps partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {
 	if precision == 0 {
 		precision = GEOHASH_PRECISION
 	}

@@ -10,7 +10,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
+func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
 	pId := c.Params("id")
 	nextPage := c.Query("nextPage")
 

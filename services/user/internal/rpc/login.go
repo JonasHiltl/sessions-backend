@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) Login(ctx context.Context, req *ug.LoginRequest) (*ug.LoginResponse, error) {
+func (s userServer) Login(ctx context.Context, req *ug.LoginRequest) (*ug.LoginResponse, error) {
 	u, err := s.us.GetByEmailOrUsername(ctx, req.UsernameOrEmail)
 	if err != nil {
 		if err.Error() == "no user found" {

@@ -29,7 +29,7 @@ func NewStoryServie(repo repository.StoryRepository) StoryService {
 	return &storyService{repo: repo}
 }
 
-func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct.Story, error) {
+func (sService storyService) Create(c context.Context, s dto.Story) (datastruct.Story, error) {
 	uuid, err := uuid.NewV1()
 	if err != nil {
 		return datastruct.Story{}, errors.New("failed to gen Story id")
@@ -48,18 +48,18 @@ func (sService *storyService) Create(c context.Context, s dto.Story) (datastruct
 	return sService.repo.Create(c, ds)
 }
 
-func (sService *storyService) Get(c context.Context, sId string) (datastruct.Story, error) {
+func (sService storyService) Get(c context.Context, sId string) (datastruct.Story, error) {
 	return sService.repo.Get(c, sId)
 }
 
-func (sService *storyService) GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
+func (sService storyService) GetByUser(c context.Context, uId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
 	return sService.repo.GetByUser(c, uId, page, limit)
 }
 
-func (sService *storyService) GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
+func (sService storyService) GetByParty(c context.Context, pId string, page []byte, limit uint32) ([]datastruct.Story, []byte, error) {
 	return sService.repo.GetByParty(c, pId, page, limit)
 }
 
-func (sService *storyService) Delete(c context.Context, uId, sId string) error {
+func (sService storyService) Delete(c context.Context, uId, sId string) error {
 	return sService.repo.Delete(c, uId, sId)
 }

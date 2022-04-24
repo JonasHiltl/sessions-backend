@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *storyGatewayHandler) GetStory(c *fiber.Ctx) error {
+func (h storyGatewayHandler) GetStory(c *fiber.Ctx) error {
 	sId := c.Params("id")
 
 	s, err := h.sc.GetStory(c.Context(), &sg.GetStoryRequest{StoryId: sId})

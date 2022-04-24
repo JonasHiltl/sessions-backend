@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *partyGatewayHandler) GetParty(c *fiber.Ctx) error {
+func (h partyGatewayHandler) GetParty(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	p, err := h.pc.GetParty(c.Context(), &party.GetPartyRequest{PartyId: id})

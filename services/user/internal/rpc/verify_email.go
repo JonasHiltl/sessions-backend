@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) VerifyEmail(ctx context.Context, req *ug.VerifyEmailRequest) (*cg.MessageResponse, error) {
+func (s userServer) VerifyEmail(ctx context.Context, req *ug.VerifyEmailRequest) (*cg.MessageResponse, error) {
 	_, err := mail.ParseAddress(req.Email)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Email")

@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
 )
 
-func (s *userServer) GoogleLogin(ctx context.Context, req *ug.GoogleLoginRequest) (*ug.LoginResponse, error) {
+func (s userServer) GoogleLogin(ctx context.Context, req *ug.GoogleLoginRequest) (*ug.LoginResponse, error) {
 	claims, err := s.google.ValidateGoogleJWT(req.Token)
 	if err != nil {
 		return nil, utils.HandleError(err)

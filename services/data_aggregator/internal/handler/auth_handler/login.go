@@ -6,7 +6,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (h *authGatewayHandler) Login(c *fiber.Ctx) error {
+func (h authGatewayHandler) Login(c *fiber.Ctx) error {
 	req := new(ug.LoginRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

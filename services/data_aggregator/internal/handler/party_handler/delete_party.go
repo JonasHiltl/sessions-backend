@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *partyGatewayHandler) DeleteParty(c *fiber.Ctx) error {
+func (h partyGatewayHandler) DeleteParty(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
 	pId := c.Params("id")

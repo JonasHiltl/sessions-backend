@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *userGatewayHandler) GetProfile(c *fiber.Ctx) error {
+func (h userGatewayHandler) GetProfile(c *fiber.Ctx) error {
 	id := c.Params("id")
 	user := middleware.ParseUser(c)
 

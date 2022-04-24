@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *commentServer) GetCommentByParty(ctx context.Context, req *cg.GetByPartyRequest) (*cg.PagedComments, error) {
+func (s commentServer) GetCommentByParty(ctx context.Context, req *cg.GetByPartyRequest) (*cg.PagedComments, error) {
 	p, err := base64.URLEncoding.DecodeString(req.NextPage)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid Next Page Param")

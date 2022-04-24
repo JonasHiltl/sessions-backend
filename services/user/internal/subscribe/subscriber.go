@@ -26,7 +26,7 @@ func NewSubscriber(stream stream.Stream, ps service.ProfileService) Subscriber {
 	return &subscriber{stream: stream, ps: ps}
 }
 
-func (s *subscriber) Start() {
+func (s subscriber) Start() {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
@@ -38,7 +38,7 @@ func (s *subscriber) Start() {
 	wg.Wait()
 }
 
-func (s *subscriber) IncrementFriendCount(e *events.FriendAccepted) {
+func (s subscriber) IncrementFriendCount(e *events.FriendAccepted) {
 	ctx := context.Background()
 
 	log.Printf("%v", e)
@@ -46,7 +46,7 @@ func (s *subscriber) IncrementFriendCount(e *events.FriendAccepted) {
 	s.ps.IncrementFriendCount(ctx, e.UserId)
 }
 
-func (s *subscriber) DecrementFriendCount(e *events.FriendRemoved) {
+func (s subscriber) DecrementFriendCount(e *events.FriendRemoved) {
 	ctx := context.Background()
 
 	log.Printf("%v", e)

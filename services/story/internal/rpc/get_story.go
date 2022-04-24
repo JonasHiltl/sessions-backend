@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *storyServer) GetStory(c context.Context, req *sg.GetStoryRequest) (*sg.PublicStory, error) {
+func (s storyServer) GetStory(c context.Context, req *sg.GetStoryRequest) (*sg.PublicStory, error) {
 	if req.StoryId == "" {
 		return nil, status.Error(codes.InvalidArgument, "invalid Story id")
 	}

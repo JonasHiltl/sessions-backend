@@ -7,7 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
 )
 
-func (h *userGatewayHandler) UpdateUser(c *fiber.Ctx) error {
+func (h userGatewayHandler) UpdateUser(c *fiber.Ctx) error {
 	req := new(ug.UpdateUserRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

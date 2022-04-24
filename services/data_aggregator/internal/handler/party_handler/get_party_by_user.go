@@ -10,7 +10,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
+func (h partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	uId := c.Params("id")
 	nextPage := c.Query("nextPage")
 

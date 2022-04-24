@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) (*ug.User, error) {
+func (s userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) (*ug.User, error) {
 	id, err := primitive.ObjectIDFromHex(req.Id)
 	if err != nil {
 		return nil, errors.New("invalid id")

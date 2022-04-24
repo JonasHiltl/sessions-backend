@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
+func (h partyGatewayHandler) CreateParty(c *fiber.Ctx) error {
 	req := new(pg.CreatePartyRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

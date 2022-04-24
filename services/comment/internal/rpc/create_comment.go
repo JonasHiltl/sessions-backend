@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/comment/internal/dto"
 )
 
-func (s *commentServer) CreateComment(ctx context.Context, req *cg.CreateCommentRequest) (*cg.Comment, error) {
+func (s commentServer) CreateComment(ctx context.Context, req *cg.CreateCommentRequest) (*cg.Comment, error) {
 	dc := dto.Comment{
 		PartyId:  req.PartyId,
 		AuthorId: req.AuthorId,

@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) GetProfile(ctx context.Context, req *ug.GetProfileRequest) (*ug.Profile, error) {
+func (s userServer) GetProfile(ctx context.Context, req *ug.GetProfileRequest) (*ug.Profile, error) {
 	if req.Id == "" {
 		return nil, status.Error(codes.InvalidArgument, "Invalid User id")
 	}

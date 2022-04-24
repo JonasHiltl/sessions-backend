@@ -6,7 +6,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (h *authGatewayHandler) GoogleLogin(c *fiber.Ctx) error {
+func (h authGatewayHandler) GoogleLogin(c *fiber.Ctx) error {
 	req := new(ug.GoogleLoginRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

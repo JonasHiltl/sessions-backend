@@ -8,7 +8,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
 )
 
-func (h *storyGatewayHandler) CreateStory(c *fiber.Ctx) error {
+func (h storyGatewayHandler) CreateStory(c *fiber.Ctx) error {
 	req := new(sg.CreateStoryRequest)
 	if err := c.BodyParser(req); err != nil {
 		return err

@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *userServer) DeleteUser(ctx context.Context, req *ug.DeleteUserRequest) (*cg.MessageResponse, error) {
+func (s userServer) DeleteUser(ctx context.Context, req *ug.DeleteUserRequest) (*cg.MessageResponse, error) {
 	if req.Id == "" {
 		return nil, status.Error(codes.InvalidArgument, "empty user id")
 	}
