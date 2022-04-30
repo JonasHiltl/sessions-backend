@@ -6,13 +6,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 RUN go install github.com/cosmtrek/air@latest
 
-COPY ./services/data_aggregator ./services/data_aggregator
+COPY ./services/aggregator ./services/aggregator
 COPY ./packages ./packages
 
 EXPOSE 8081
 
-WORKDIR /app/services/data_aggregator
+WORKDIR /app/services/aggregator
 
-RUN go build -o data-aggregator
+RUN go build -o aggregator
 
-ENTRYPOINT ./data-aggregator
+ENTRYPOINT ./aggregator

@@ -119,18 +119,18 @@ docker_build(
 )
 
 docker_build(
-    'jonashiltl/data-aggregator', 
+    'jonashiltl/aggregator', 
     '.', 
-    dockerfile='services/data_aggregator/Dockerfile', 
+    dockerfile='services/aggregator/Dockerfile', 
     only=[
-        './services/data_aggregator', 
+        './services/aggregator', 
         './packages', 
         './go.mod', 
         './go.sum', 
     ],
     live_update=[
-        sync('./services/data_aggregator/internal', '/app/services/data_aggregator/internal'),
-        sync('./services/data_aggregator/main.go', '/app/services/data_aggregator/main.go'),
+        sync('./services/aggregator/internal', '/app/services/aggregator/internal'),
+        sync('./services/aggregator/main.go', '/app/services/aggregator/main.go'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -155,7 +155,7 @@ k8s_yaml([
     'k8s/deployments/user.yaml',
     'k8s/deployments/story.yaml',
     'k8s/deployments/relation.yaml',
-    'k8s/deployments/data-aggregator.yaml',
+    'k8s/deployments/aggregator.yaml',
 ])
 k8s_yaml([
     'k8s/services/comment.yaml',
@@ -164,7 +164,7 @@ k8s_yaml([
     'k8s/services/story.yaml',
     'k8s/services/user.yaml',
     'k8s/services/vespa.yaml',
-    'k8s/services/data-aggregator.yaml',
+    'k8s/services/aggregator.yaml',
     'k8s/services/relation.yaml',
 #    'k8s/services/scylla.yaml',
 #    'k8s/services/mongo.yaml',

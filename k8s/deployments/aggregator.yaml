@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data-aggregator
+  name: aggregator
 spec:
   selector:
     matchLabels:
-      app: data-aggregator
+      app: aggregator
   template:
     metadata:
       labels:
-        app: data-aggregator
+        app: aggregator
     spec:
       containers:
-        - name: data-aggregator
-          image: jonashiltl/data-aggregator
+        - name: aggregator
+          image: jonashiltl/aggregator
           resources:
             limits:
               memory: "250Mi"

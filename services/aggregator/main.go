@@ -13,13 +13,13 @@ import (
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
-	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/config"
-	authhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/auth_handler"
-	commenthandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/comment_handler"
-	partyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/party_handler"
-	relationhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/relation_handler"
-	storyhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/story_handler"
-	userhandler "github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/handler/user_handler"
+	"github.com/jonashiltl/sessions-backend/services/aggregator/internal/config"
+	authhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/auth_handler"
+	commenthandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/comment_handler"
+	partyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/party_handler"
+	relationhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/relation_handler"
+	storyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/story_handler"
+	userhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/user_handler"
 )
 
 func main() {

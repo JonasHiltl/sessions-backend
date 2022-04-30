@@ -5,7 +5,7 @@ import (
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
-	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
+	"github.com/jonashiltl/sessions-backend/services/aggregator/internal/datastruct"
 )
 
 func (h storyGatewayHandler) CreateStory(c *fiber.Ctx) error {

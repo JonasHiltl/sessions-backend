@@ -7,7 +7,7 @@ import (
 	cg "github.com/jonashiltl/sessions-backend/packages/grpc/comment"
 	"github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
-	"github.com/jonashiltl/sessions-backend/services/data_aggregator/internal/datastruct"
+	"github.com/jonashiltl/sessions-backend/services/aggregator/internal/datastruct"
 )
 
 func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
