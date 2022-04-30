@@ -21,19 +21,19 @@ type Party struct {
 	StartDate     time.Time `json:"start_date"     db:"start_date"     validate:"required"`
 }
 
-func (p Party) ToPublicParty() *pg.PublicParty {
+func (p Party) ToParty() *pg.Party {
 	// get party creation date from uuid
 	uuidv1, err := uuid.FromString(p.Id)
 	if err != nil {
-		return &pg.PublicParty{}
+		return &pg.Party{}
 	}
 	timestamp, err := uuid.TimestampFromV1(uuidv1)
 	if err != nil {
-		return &pg.PublicParty{}
+		return &pg.Party{}
 	}
 	t, err := timestamp.Time()
 	if err != nil {
-		return &pg.PublicParty{}
+		return &pg.Party{}
 	}
 
 	var lat float32
@@ -43,7 +43,7 @@ func (p Party) ToPublicParty() *pg.PublicParty {
 		long = p.Position[1]
 	}
 
-	return &pg.PublicParty{
+	return &pg.Party{
 		Id:            p.Id,
 		UserId:        p.UserId,
 		Title:         p.Title,

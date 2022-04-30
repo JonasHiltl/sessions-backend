@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s partyServer) GetParty(c context.Context, req *pg.GetPartyRequest) (*pg.PublicParty, error) {
+func (s partyServer) GetParty(c context.Context, req *pg.GetPartyRequest) (*pg.Party, error) {
 	if req.PartyId == "" {
 		return nil, status.Error(codes.InvalidArgument, "invalid Party id")
 	}
@@ -19,5 +19,5 @@ func (s partyServer) GetParty(c context.Context, req *pg.GetPartyRequest) (*pg.P
 		return nil, utils.HandleError(err)
 	}
 
-	return p.ToPublicParty(), nil
+	return p.ToParty(), nil
 }

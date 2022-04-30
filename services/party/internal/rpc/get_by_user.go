@@ -23,9 +23,9 @@ func (s partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*pg
 
 	nextPage := base64.URLEncoding.EncodeToString(p)
 
-	var pp []*pg.PublicParty
+	var pp []*pg.Party
 	for _, p := range ps {
-		pp = append(pp, p.ToPublicParty())
+		pp = append(pp, p.ToParty())
 	}
 
 	return &pg.PagedParties{Parties: pp, NextPage: nextPage}, nil

@@ -20,7 +20,6 @@ type PartyService interface {
 	Delete(ctx context.Context, UserId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
 	GetByUser(ctx context.Context, UserId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error)
-	GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error)
 }
 
 type partyService struct {
@@ -125,13 +124,4 @@ func (ps partyService) Get(ctx context.Context, pId string) (datastruct.Party, e
 
 func (ps partyService) GetByUser(ctx context.Context, UserId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error) {
 	return ps.repo.GetByUser(ctx, UserId, page, limit)
-}
-
-func (ps partyService) GeoSearch(ctx context.Context, lat float64, long float64, precision uint, page []byte) ([]datastruct.Party, []byte, error) {
-	if precision == 0 {
-		precision = GEOHASH_PRECISION
-	}
-
-	h := geohash.Neighbors(geohash.EncodeWithPrecision(lat, long, precision))
-	return ps.repo.GeoSearch(ctx, h, page)
 }

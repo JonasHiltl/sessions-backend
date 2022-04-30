@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"errors"
-	"log"
 	"strings"
 	"time"
 
@@ -32,7 +31,6 @@ type PartyRepository interface {
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
 	GetByUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error)
-	GeoSearch(ctx context.Context, nHashes []string, page []byte) ([]datastruct.Party, []byte, error)
 }
 
 type partyRepository struct {
@@ -181,32 +179,4 @@ func (r *partyRepository) GetByUser(ctx context.Context, uId string, page []byte
 	}
 
 	return result, iter.PageState(), nil
-}
-
-func (r *partyRepository) GeoSearch(ctx context.Context, nHashes []string, page []byte) (result []datastruct.Party, nextPage []byte, err error) {
-	stmt, names := qb.
-		Select(TABLE_NAME).
-		Where(qb.Eq("is_public")).
-		Where(qb.In("geohash")).
-		OrderBy("created_at", qb.DESC).
-		ToCql()
-
-	q := r.sess.
-		Query(stmt, names).
-		BindMap((qb.M{"is_public": false, "geohash": nHashes}))
-
-	if len(page) > 0 {
-		q.PageState(page)
-	}
-
-	q.PageSize(10)
-	iter := q.Iter()
-
-	err = iter.Select(&result)
-	if err != nil {
-		log.Println(err)
-		return []datastruct.Party{}, nil, errors.New("no parties found")
-	}
-
-	return result, iter.PageState(), err
 }

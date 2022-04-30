@@ -7,5 +7,5 @@ import (
 )
 
 func (s *server) PartyCreated(p *events.PartyCreated) {
-	log.Printf("%v", p.Party)
+	log.Printf("%v", p)
 }

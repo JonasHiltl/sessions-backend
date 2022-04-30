@@ -6,9 +6,9 @@ option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 import "packages/grpc/common/common.proto";
 
 service PartyService {
-    rpc CreateParty (CreatePartyRequest) returns (PublicParty) {};
-    rpc GetParty (GetPartyRequest) returns (PublicParty) {};
-    rpc UpdateParty (UpdatePartyRequest) returns (PublicParty) {};
+    rpc CreateParty (CreatePartyRequest) returns (Party) {};
+    rpc GetParty (GetPartyRequest) returns (Party) {};
+    rpc UpdateParty (UpdatePartyRequest) returns (Party) {};
     rpc DeleteParty (DeletePartyRequest) returns (common.MessageResponse) {};
     rpc GetByUser (GetByUserRequest) returns (PagedParties) {};
     rpc GeoSearch (GeoSearchRequest) returns (PagedParties) {};
@@ -63,11 +63,11 @@ message GetByUserRequest {
 }
 
 message PagedParties {
-    repeated PublicParty parties = 1;
+    repeated Party parties = 1;
     string next_page = 2;
 }
 
-message PublicParty {
+message Party {
     string id = 1;
     string user_id = 2;
     string title = 3;

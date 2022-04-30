@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PartyServiceClient interface {
-	CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
-	GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
-	UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error)
+	CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*Party, error)
+	GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*Party, error)
+	UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*Party, error)
 	DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
 	GetByUser(ctx context.Context, in *GetByUserRequest, opts ...grpc.CallOption) (*PagedParties, error)
 	GeoSearch(ctx context.Context, in *GeoSearchRequest, opts ...grpc.CallOption) (*PagedParties, error)
@@ -39,8 +39,8 @@ func NewPartyServiceClient(cc grpc.ClientConnInterface) PartyServiceClient {
 	return &partyServiceClient{cc}
 }
 
-func (c *partyServiceClient) CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error) {
-	out := new(PublicParty)
+func (c *partyServiceClient) CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*Party, error) {
+	out := new(Party)
 	err := c.cc.Invoke(ctx, "/party.PartyService/CreateParty", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -48,8 +48,8 @@ func (c *partyServiceClient) CreateParty(ctx context.Context, in *CreatePartyReq
 	return out, nil
 }
 
-func (c *partyServiceClient) GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*PublicParty, error) {
-	out := new(PublicParty)
+func (c *partyServiceClient) GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*Party, error) {
+	out := new(Party)
 	err := c.cc.Invoke(ctx, "/party.PartyService/GetParty", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -57,8 +57,8 @@ func (c *partyServiceClient) GetParty(ctx context.Context, in *GetPartyRequest, 
 	return out, nil
 }
 
-func (c *partyServiceClient) UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*PublicParty, error) {
-	out := new(PublicParty)
+func (c *partyServiceClient) UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*Party, error) {
+	out := new(Party)
 	err := c.cc.Invoke(ctx, "/party.PartyService/UpdateParty", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -97,9 +97,9 @@ func (c *partyServiceClient) GeoSearch(ctx context.Context, in *GeoSearchRequest
 // All implementations must embed UnimplementedPartyServiceServer
 // for forward compatibility
 type PartyServiceServer interface {
-	CreateParty(context.Context, *CreatePartyRequest) (*PublicParty, error)
-	GetParty(context.Context, *GetPartyRequest) (*PublicParty, error)
-	UpdateParty(context.Context, *UpdatePartyRequest) (*PublicParty, error)
+	CreateParty(context.Context, *CreatePartyRequest) (*Party, error)
+	GetParty(context.Context, *GetPartyRequest) (*Party, error)
+	UpdateParty(context.Context, *UpdatePartyRequest) (*Party, error)
 	DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error)
 	GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error)
 	GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error)
@@ -110,13 +110,13 @@ type PartyServiceServer interface {
 type UnimplementedPartyServiceServer struct {
 }
 
-func (UnimplementedPartyServiceServer) CreateParty(context.Context, *CreatePartyRequest) (*PublicParty, error) {
+func (UnimplementedPartyServiceServer) CreateParty(context.Context, *CreatePartyRequest) (*Party, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateParty not implemented")
 }
-func (UnimplementedPartyServiceServer) GetParty(context.Context, *GetPartyRequest) (*PublicParty, error) {
+func (UnimplementedPartyServiceServer) GetParty(context.Context, *GetPartyRequest) (*Party, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetParty not implemented")
 }
-func (UnimplementedPartyServiceServer) UpdateParty(context.Context, *UpdatePartyRequest) (*PublicParty, error) {
+func (UnimplementedPartyServiceServer) UpdateParty(context.Context, *UpdatePartyRequest) (*Party, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParty not implemented")
 }
 func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error) {
