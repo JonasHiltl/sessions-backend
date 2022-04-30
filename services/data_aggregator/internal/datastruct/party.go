@@ -22,6 +22,6 @@ type AggregatedParty struct {
 }
 
 type PagedAggregatedParty struct {
-	Parties  []AggregatedParty `json:"stories,omitempty"`
+	Parties  []AggregatedParty `json:"parties"`
 	NextPage string            `json:"nextPage"`
 }

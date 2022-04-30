@@ -1,7 +1,6 @@
 package commenthandler
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,12 +27,7 @@ func (h commentGatewayHandler) GetReplyByComment(c *fiber.Ctx) error {
 		replyAuthors = append(replyAuthors, r.AuthorId)
 	}
 
-	ps, err := h.uc.GetManyProfilesMap(c.Context(), &ug.GetManyProfilesMapRequest{Ids: utils.UniqueStringSlice(replyAuthors)})
-	if err != nil {
-		return utils.ToHTTPError(err)
-	}
-
-	log.Printf("%v+", ps.Profiles)
+	ps, _ := h.uc.GetManyProfilesMap(c.Context(), &ug.GetManyProfilesMapRequest{Ids: utils.UniqueStringSlice(replyAuthors)})
 
 	aggR := make([]datastruct.AggregatedReply, len(rs.Replies))
 	for i, r := range rs.Replies {

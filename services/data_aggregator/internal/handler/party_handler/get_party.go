@@ -17,15 +17,9 @@ func (h partyGatewayHandler) GetParty(c *fiber.Ctx) error {
 		return utils.ToHTTPError(err)
 	}
 
-	profileRes, err := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: p.UserId})
-	if err != nil {
-		return utils.ToHTTPError(err)
-	}
+	profileRes, _ := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: p.UserId})
 
-	storyRes, err := h.sc.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
-	if err != nil {
-		return utils.ToHTTPError(err)
-	}
+	storyRes, _ := h.sc.GetByParty(c.Context(), &sg.GetByPartyRequest{PartyId: p.Id})
 
 	res := datastruct.AggregatedParty{
 		Id:            p.Id,

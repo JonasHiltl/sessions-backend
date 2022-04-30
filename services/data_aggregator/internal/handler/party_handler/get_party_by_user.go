@@ -23,10 +23,7 @@ func (h partyGatewayHandler) GetPartyByUser(c *fiber.Ctx) error {
 	}
 
 	// get the profile of the party creator
-	profilesRes, err := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: uId})
-	if err != nil {
-		return utils.ToHTTPError(err)
-	}
+	profilesRes, _ := h.uc.GetProfile(c.Context(), &ug.GetProfileRequest{Id: uId})
 
 	aggP := make([]datastruct.AggregatedParty, len(partyRes.Parties))
 	for i, p := range partyRes.Parties {
