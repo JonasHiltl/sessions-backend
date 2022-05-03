@@ -26,12 +26,13 @@ message PartyCreated {
     bool is_public = 4;
     float lat = 5;
     float long = 6;
-    string street_address = 7;
-    string postal_code = 8;
-    string state = 9;
-    string country = 10;
-    string start_date = 11;
-    string created_at = 12;
+    string geohash = 7;
+    string street_address = 8;
+    string postal_code = 9;
+    string state = 10;
+    string country = 11;
+    string start_date = 12;
+    string created_at = 13;
 }
 
 message PartyUpdated {

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scylla-sync
+spec:
+  selector:
+    matchLabels:
+      app: scylla-sync
+  template:
+    metadata:
+      labels:
+        app: scylla-sync
+    spec:
+      containers:
+      - name: scylla-sync
+        image: jonashiltl/scylla-sync
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        command:
+            - air
+

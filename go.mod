@@ -19,6 +19,7 @@ require (
 	github.com/gofiber/jwt/v3 v3.2.10
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.4.1
+	github.com/scylladb/scylla-cdc-go v1.0.0
 	github.com/spf13/viper v1.11.0
 	github.com/xhit/go-simple-mail/v2 v2.11.0
 	go.mongodb.org/mongo-driver v1.9.0
