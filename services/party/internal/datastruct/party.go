@@ -13,7 +13,8 @@ type Party struct {
 	Title         string    `json:"title"          db:"title"          validate:"required"`
 	IsPublic      bool      `json:"is_public"      db:"is_public"`
 	GHash         string    `json:"geohash"        db:"geohash"        validate:"required"`
-	Position      []float32 `json:"position"       db:"position"       validate:"required"` // [lat, long]
+	Lat           float32   `json:"lat"            db:"lat"            validate:"required"`
+	Long          float32   `json:"long"           db:"long"           validate:"required"`
 	StreetAddress string    `json:"street_address" db:"street_address" validate:"required"`
 	PostalCode    string    `json:"postal_code"    db:"postal_code"    validate:"required"`
 	State         string    `json:"state"          db:"state"          validate:"required"`
@@ -36,20 +37,13 @@ func (p Party) ToParty() *pg.Party {
 		return &pg.Party{}
 	}
 
-	var lat float32
-	var long float32
-	if len(p.Position) == 2 {
-		lat = p.Position[0]
-		long = p.Position[1]
-	}
-
 	return &pg.Party{
 		Id:            p.Id,
 		UserId:        p.UserId,
 		Title:         p.Title,
 		IsPublic:      p.IsPublic,
-		Lat:           lat,
-		Long:          long,
+		Lat:           p.Lat,
+		Long:          p.Long,
 		StreetAddress: p.StreetAddress,
 		PostalCode:    p.PostalCode,
 		State:         p.State,

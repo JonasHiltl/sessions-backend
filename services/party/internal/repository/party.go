@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"log"
 	"strings"
 	"time"
 
@@ -50,6 +51,8 @@ func (r *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl ti
 		TTL(ttl).
 		ToCql()
 
+	log.Println(stmt)
+
 	err = r.sess.
 		Query(stmt, names).
 		BindStruct(p).
@@ -86,8 +89,12 @@ func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error 
 		b.Set("geohash")
 	}
 
-	if p.Position[0] != 0 && p.Position[1] != 0 {
-		b.Set("position")
+	if p.Lat != 0 {
+		b.Set("lat")
+	}
+
+	if p.Long != 0 {
+		b.Set("long")
 	}
 
 	if !p.StartDate.IsZero() {
@@ -119,7 +126,8 @@ func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error 
 			"id":             p.Id,
 			"title":          p.Title,
 			"geohash":        p.GHash,
-			"position":       p.Position,
+			"lat":            p.Lat,
+			"long":           p.Long,
 			"start_date":     p.StartDate,
 			"street_address": p.StreetAddress,
 			"postal_code":    p.PostalCode,
