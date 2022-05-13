@@ -30,14 +30,20 @@ func NewConsumer(stream stream.Stream, reporter *scyllacdc.PeriodicProgressRepor
 }
 
 func (c *consumer) Consume(ctx context.Context, change scyllacdc.Change) error {
-	//if tableName == "sessions.parties" {
 	for _, cr := range change.Delta {
-		err := c.PartyCreated(cr)
-		if err != nil {
-			return err
+		switch cr.GetOperation() {
+		case scyllacdc.Insert:
+			err := c.PartyCreated(cr)
+			if err != nil {
+				return err
+			}
+		case scyllacdc.Update:
+			log.Println("Party updated")
+		default:
+			log.Println("Unsuported operation")
+			log.Printf("%v", cr)
 		}
 	}
-	//}
 
 	c.reporter.Update(change.Time)
 	return nil
