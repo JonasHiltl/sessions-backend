@@ -10,19 +10,19 @@ import (
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (s userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) (*ug.User, error) {
-	id, err := primitive.ObjectIDFromHex(req.Id)
+	id, err := ksuid.Parse(req.Id)
 	if err != nil {
 		return nil, errors.New("invalid id")
 	}
 
 	du := datastruct.User{
-		Id:        id,
+		Id:        id.String(),
 		Username:  strings.ToLower(req.Username),
 		Firstname: req.Firstname,
 		Lastname:  req.Lastname,
@@ -53,14 +53,14 @@ func (s userServer) UpdateUser(ctx context.Context, req *ug.UpdateUserRequest) (
 		du.Email = req.Email
 	}
 
-	u, err := s.us.Update(ctx, du)
+	err = s.us.Update(ctx, du)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
 
 	s.stream.PublishEvent(&events.ProfileUpdated{
-		Profile: u.ToGRPCProfile(),
+		Profile: du.ToGRPCProfile(),
 	})
 
-	return u.ToGRPCUser(), nil
+	return du.ToGRPCUser(), nil
 }

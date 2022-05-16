@@ -9,7 +9,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 )
 
-func (s relationServer) RemoveFriend(ctx context.Context, req *rg.RemoveFriendRequest) (*cg.MessageResponse, error) {
+func (s relationServer) RemoveFriend(ctx context.Context, req *rg.RemoveFriendRequest) (*cg.SuccessIndicator, error) {
 	err := s.frs.RemoveFriendRelation(ctx, req.UserId, req.FriendId)
 	if err != nil {
 		return nil, utils.HandleError(err)
@@ -20,5 +20,5 @@ func (s relationServer) RemoveFriend(ctx context.Context, req *rg.RemoveFriendRe
 		FriendId: req.FriendId,
 	})
 
-	return &cg.MessageResponse{Message: "Friend removed"}, nil
+	return &cg.SuccessIndicator{Sucess: true}, nil
 }

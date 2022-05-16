@@ -9,11 +9,20 @@ service PartyService {
     rpc CreateParty (CreatePartyRequest) returns (Party) {};
     rpc GetParty (GetPartyRequest) returns (Party) {};
     rpc UpdateParty (UpdatePartyRequest) returns (Party) {};
-    rpc DeleteParty (DeletePartyRequest) returns (common.MessageResponse) {};
+    rpc DeleteParty (DeletePartyRequest) returns (common.SuccessIndicator) {};
     rpc GetByUser (GetByUserRequest) returns (PagedParties) {};
     rpc GeoSearch (GeoSearchRequest) returns (PagedParties) {};
+
+    rpc GetManyParties (GetManyPartiesRequest) returns (GetManyPartiesResponse) {}
+    rpc GetManyPartiesMap (GetManyPartiesRequest) returns (GetManyPartiesMapResponse) {}
+
+    rpc FavorParty (FavorPartyRequest) returns (FavoriteParty) {};
+    rpc DefavorParty (FavorPartyRequest) returns (common.SuccessIndicator) {};
+    rpc GetFavoritePartiesByUser (GetFavoritePartiesByUserRequest) returns (PagedFavoriteParties) {};
+    rpc GetFovorisingUsersByParty (GetFovorisingUsersByPartyRequest) returns (PagedFavoriteParties) {}
 }
 
+// Requests
 message CreatePartyRequest {
     string requester_id = 1;
     string title = 2;
@@ -25,6 +34,11 @@ message CreatePartyRequest {
     string state = 8;
     string country = 9;
     string start_date = 10;
+    string end_date = 11;
+}
+
+message GetPartyRequest {
+    string party_id = 1;
 }
 
 message UpdatePartyRequest {
@@ -38,11 +52,18 @@ message UpdatePartyRequest {
     string state = 8;
     string country = 9;
     string start_date = 10;
+    string end_date = 11;
 }
 
 message DeletePartyRequest {
     string requester_id = 1;
     string party_id = 2;
+}
+
+message GetByUserRequest {
+    string user_id = 1;
+    string next_page = 2;
+    uint32 limit = 3;
 }
 
 message GeoSearchRequest {
@@ -52,21 +73,28 @@ message GeoSearchRequest {
     string next_page = 4;
 }
 
-message GetPartyRequest {
-    string party_id = 1;
+message GetManyPartiesRequest {
+    repeated string ids = 1;
 }
 
-message GetByUserRequest {
+message FavorPartyRequest {
+    string user_id = 1;
+    string party_id = 2;
+}
+
+message GetFavoritePartiesByUserRequest {
     string user_id = 1;
     string next_page = 2;
     uint32 limit = 3;
 }
 
-message PagedParties {
-    repeated Party parties = 1;
+message GetFovorisingUsersByPartyRequest {
+    string party_id = 1;
     string next_page = 2;
+    uint32 limit = 3;
 }
 
+// Response
 message Party {
     string id = 1;
     string user_id = 2;
@@ -79,5 +107,30 @@ message Party {
     string state = 9;
     string country = 10;
     string start_date = 11;
-    string created_at = 12;
+    string end_date = 12;
+    string created_at = 13;
+}
+
+message PagedParties {
+    repeated Party parties = 1;
+    string next_page = 2;
+}
+
+message GetManyPartiesResponse {
+    repeated Party parties = 1;
+}
+
+message GetManyPartiesMapResponse {
+    map<string, Party> parties = 1;
+}
+
+message FavoriteParty {
+    string user_id = 1;
+    string party_id = 2;
+    string favorited_at = 3;
+}
+
+message PagedFavoriteParties {
+    repeated FavoriteParty favorite_parties = 1;
+    string next_page = 2;
 }

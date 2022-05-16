@@ -11,15 +11,15 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/relation/internal/datastruct"
 )
 
-func (s relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*cg.MessageResponse, error) {
+func (s relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequestRequest) (*cg.SuccessIndicator, error) {
 	fr := datastruct.FriendRelation{
-		UserId:    req.UserId,
-		FriendId:  req.FriendId,
-		Accepted:  false,
-		CreatedAt: time.Now(),
+		UserId:      req.UserId,
+		FriendId:    req.FriendId,
+		Accepted:    false,
+		RequestedAt: time.Now(),
 	}
 
-	err := s.frs.CreateFriendRelation(ctx, fr)
+	err := s.frs.CreateFriendRequest(ctx, fr)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
@@ -29,5 +29,5 @@ func (s relationServer) FriendRequest(ctx context.Context, req *rg.FriendRequest
 		FriendId: req.FriendId,
 	})
 
-	return &cg.MessageResponse{Message: "Friend request sent"}, nil
+	return &cg.SuccessIndicator{Sucess: true}, nil
 }

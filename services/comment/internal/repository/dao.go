@@ -3,7 +3,7 @@ package repository
 import (
 	"strings"
 
-	"github.com/jonashiltl/sessions-backend/packages/scylla"
+	"github.com/jonashiltl/sessions-backend/packages/cqlx"
 	"github.com/scylladb/gocqlx/v2"
 )
 
@@ -16,20 +16,20 @@ type dao struct {
 	sess *gocqlx.Session
 }
 
-func NewDB(keyspace, hosts string) (gocqlx.Session, error) {
+func NewDB(keyspace, hosts string) (*gocqlx.Session, error) {
 	h := strings.Split(hosts, ",")
 
-	manager := scylla.NewManager(keyspace, h)
+	manager := cqlx.NewManager(keyspace, h)
 
 	if err := manager.CreateKeyspace(keyspace); err != nil {
-		return gocqlx.Session{}, err
+		return nil, err
 	}
 
 	session, err := manager.Connect()
 	if err != nil {
-		return gocqlx.Session{}, err
+		return nil, err
 	}
-	return session, nil
+	return &session, nil
 }
 
 func NewDAO(sess *gocqlx.Session) Dao {

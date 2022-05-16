@@ -15,10 +15,10 @@ func (h relationGatewayHandler) RemoveFriend(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid Friend Id")
 	}
 
-	msg, err := h.relationClient.RemoveFriend(c.Context(), &rg.RemoveFriendRequest{UserId: user.Sub, FriendId: uId})
+	ok, err := h.relationClient.RemoveFriend(c.Context(), &rg.RemoveFriendRequest{UserId: user.Sub, FriendId: uId})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(msg)
+	return c.Status(fiber.StatusOK).JSON(ok)
 }

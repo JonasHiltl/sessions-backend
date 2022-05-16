@@ -19,6 +19,11 @@ type PartyGatewayHandler interface {
 	DeleteParty(c *fiber.Ctx) error
 	GetParty(c *fiber.Ctx) error
 	GetPartyByUser(c *fiber.Ctx) error
+
+	FavorParty(c *fiber.Ctx) error
+	DefavorParty(c *fiber.Ctx) error
+	GetFavoritePartiesByUser(c *fiber.Ctx) error
+	GetFavorisingUsersByParty(c *fiber.Ctx) error
 }
 
 func NewPartyGatewayHandler(pc pg.PartyServiceClient, uc ug.UserServiceClient, sc sg.StoryServiceClient) PartyGatewayHandler {

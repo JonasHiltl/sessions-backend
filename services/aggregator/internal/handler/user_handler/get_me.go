@@ -11,7 +11,7 @@ import (
 func (h userGatewayHandler) GetMe(c *fiber.Ctx) error {
 	user := middleware.ParseUser(c)
 
-	res, err := h.uc.GetMe(c.Context(), &ug.GetMeRequest{Id: user.Sub})
+	res, err := h.uc.GetUser(c.Context(), &ug.GetUserRequest{Id: user.Sub})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}

@@ -1,10 +1,8 @@
 package main
 
 import (
-	"context"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/config"
@@ -29,16 +27,13 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	mongo, err := repository.NewDB(c.MONGO_URL)
+	sess, err := repository.NewDB(c.CQL_KEYSPACE, c.CQL_HOSTS)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer mongo.Client().Disconnect(ctx)
+	defer sess.Close()
 
-	dao := repository.NewDAO(mongo)
+	dao := repository.NewDAO(sess)
 
 	upload := service.NewUploadService(c.SPACES_ENDPOINT, c.SPACES_TOKEN)
 	token := service.NewTokenManager(c.TOKEN_SECRET)

@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RelationServiceClient interface {
-	FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
-	AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
-	RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
+	AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
+	RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
 	GetFriendRelation(ctx context.Context, in *GetFriendRelationRequest, opts ...grpc.CallOption) (*FriendRelation, error)
 	GetFriendsOfUser(ctx context.Context, in *GetFriendsOfUserRequest, opts ...grpc.CallOption) (*PagedFriendRelations, error)
 }
@@ -38,8 +38,8 @@ func NewRelationServiceClient(cc grpc.ClientConnInterface) RelationServiceClient
 	return &relationServiceClient{cc}
 }
 
-func (c *relationServiceClient) FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *relationServiceClient) FriendRequest(ctx context.Context, in *FriendRequestRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/relation.RelationService/FriendRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,8 +47,8 @@ func (c *relationServiceClient) FriendRequest(ctx context.Context, in *FriendReq
 	return out, nil
 }
 
-func (c *relationServiceClient) AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *relationServiceClient) AcceptFriend(ctx context.Context, in *AcceptFriendRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/relation.RelationService/AcceptFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *relationServiceClient) AcceptFriend(ctx context.Context, in *AcceptFrie
 	return out, nil
 }
 
-func (c *relationServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *relationServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/relation.RelationService/RemoveFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -87,9 +87,9 @@ func (c *relationServiceClient) GetFriendsOfUser(ctx context.Context, in *GetFri
 // All implementations must embed UnimplementedRelationServiceServer
 // for forward compatibility
 type RelationServiceServer interface {
-	FriendRequest(context.Context, *FriendRequestRequest) (*common.MessageResponse, error)
-	AcceptFriend(context.Context, *AcceptFriendRequest) (*common.MessageResponse, error)
-	RemoveFriend(context.Context, *RemoveFriendRequest) (*common.MessageResponse, error)
+	FriendRequest(context.Context, *FriendRequestRequest) (*common.SuccessIndicator, error)
+	AcceptFriend(context.Context, *AcceptFriendRequest) (*common.SuccessIndicator, error)
+	RemoveFriend(context.Context, *RemoveFriendRequest) (*common.SuccessIndicator, error)
 	GetFriendRelation(context.Context, *GetFriendRelationRequest) (*FriendRelation, error)
 	GetFriendsOfUser(context.Context, *GetFriendsOfUserRequest) (*PagedFriendRelations, error)
 	mustEmbedUnimplementedRelationServiceServer()
@@ -99,13 +99,13 @@ type RelationServiceServer interface {
 type UnimplementedRelationServiceServer struct {
 }
 
-func (UnimplementedRelationServiceServer) FriendRequest(context.Context, *FriendRequestRequest) (*common.MessageResponse, error) {
+func (UnimplementedRelationServiceServer) FriendRequest(context.Context, *FriendRequestRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FriendRequest not implemented")
 }
-func (UnimplementedRelationServiceServer) AcceptFriend(context.Context, *AcceptFriendRequest) (*common.MessageResponse, error) {
+func (UnimplementedRelationServiceServer) AcceptFriend(context.Context, *AcceptFriendRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptFriend not implemented")
 }
-func (UnimplementedRelationServiceServer) RemoveFriend(context.Context, *RemoveFriendRequest) (*common.MessageResponse, error) {
+func (UnimplementedRelationServiceServer) RemoveFriend(context.Context, *RemoveFriendRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveFriend not implemented")
 }
 func (UnimplementedRelationServiceServer) GetFriendRelation(context.Context, *GetFriendRelationRequest) (*FriendRelation, error) {

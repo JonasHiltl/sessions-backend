@@ -1,6 +1,8 @@
 package profilehandler
 
 import (
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	rg "github.com/jonashiltl/sessions-backend/packages/grpc/relation"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
@@ -22,6 +24,9 @@ func (h userGatewayHandler) GetProfile(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Profile not found")
 	}
 
+	log.Println(id)
+	log.Println(user.Sub)
+
 	var relation *rg.FriendRelation
 	// if somebody wants the Profile of somebody else we also return the friendship status between them two
 	if id != user.Sub {
@@ -37,13 +42,17 @@ func (h userGatewayHandler) GetProfile(c *fiber.Ctx) error {
 		FriendCount: profile.FriendCount,
 	}
 
+	log.Println(relation)
+
 	if relation != nil {
 		st := datastruct.FriendshipStatus{}
 
 		if relation.Accepted {
 			st.IsFriend = true
+			st.AcceptedAt = relation.AcceptedAt
 		} else {
 			st.OutgoingRequest = true
+			st.RequestedAt = relation.RequestedAt
 		}
 
 		res.FriendshipStatus = st

@@ -7,7 +7,6 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/service"
 	"github.com/nats-io/nats.go"
 )
 
@@ -25,16 +24,14 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)
+	sess, err := repository.NewDB(c.CQL_KEYSPACE, c.CQL_HOSTS)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer sess.Close()
 
-	dao := repository.NewDAO(&sess)
+	dao := repository.NewDAO(sess)
 
-	partyService := service.NewPartyServie(dao.NewPartyRepository())
-
-	p := rpc.NewPartyServer(partyService, stream)
+	p := rpc.NewPartyServer(dao.NewPartyRepository(), stream)
 	rpc.Start(p, c.PORT)
 }

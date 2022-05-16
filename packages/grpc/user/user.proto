@@ -10,31 +10,37 @@ service UserService {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc GoogleLogin (GoogleLoginRequest) returns (LoginResponse) {}
     rpc AppleLogin (AppleLoginRequest) returns (LoginResponse) {}
-    rpc VerifyEmail (VerifyEmailRequest) returns (common.MessageResponse) {}
-    rpc ResendVerificationEmail (common.Empty) returns (common.MessageResponse) {}
+    rpc VerifyEmail (VerifyEmailRequest) returns (common.SuccessIndicator) {}
+    rpc ResendVerificationEmail (common.Empty) returns (common.SuccessIndicator) {}
 
-    rpc DeleteUser (DeleteUserRequest) returns (common.MessageResponse) {};
+    rpc DeleteUser (DeleteUserRequest) returns (common.SuccessIndicator) {};
     rpc UpdateUser (UpdateUserRequest) returns (User) {};
-    rpc GetMe (GetMeRequest) returns (User) {};
+    rpc GetUser (GetUserRequest) returns (User) {};
 
     rpc GetProfile (GetProfileRequest) returns (Profile) {};
     rpc GetManyProfiles (GetManyProfilesRequest) returns (GetManyProfilesResponse) {};
-    rpc GetManyProfilesMap (GetManyProfilesMapRequest) returns (GetManyProfilesMapResponse) {};
+    rpc GetManyProfilesMap (GetManyProfilesRequest) returns (GetManyProfilesMapResponse) {};
     rpc UsernameTaken (UsernameTakenRequest) returns (UsernameTakenResponse) {};
 }
 
-message UpdateUserRequest {
+// Requests
+message User {
     string id = 1;
     string email = 2;
     string username = 3;
     string firstname = 4;
     string lastname = 5;
     string avatar = 6;
-    string password = 7;
+    uint32 friendCount = 7;
 }
 
-message DeleteUserRequest {
-    string id = 2;
+message Profile {
+    string id = 1;
+    string username = 2;
+    string firstname = 3;
+    string lastname = 4;
+    string avatar = 5;
+    uint32 friendCount = 7;
 }
 
 message RegisterRequest {
@@ -45,19 +51,9 @@ message RegisterRequest {
     string password = 5;
 }
 
-message RegisterResponse {
-    string token = 1;
-    User user = 2;
-}
-
 message LoginRequest {
     string usernameOrEmail = 1;
     string password = 2;
-}
-
-message LoginResponse {
-    string token = 1;
-    User user = 2;
 }
 
 message GoogleLoginRequest {
@@ -73,31 +69,22 @@ message VerifyEmailRequest {
     string code = 2;
 }
 
-message User {
+message DeleteUserRequest {
+    string id = 1;
+}
+
+message UpdateUserRequest {
     string id = 1;
     string email = 2;
     string username = 3;
     string firstname = 4;
     string lastname = 5;
     string avatar = 6;
-    int64 friend_count = 7;
+    string password = 7;
 }
 
-message Profile {
+message GetUserRequest {
     string id = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
-    int64 friend_count = 6;
-}
-
-message CreateProfileRequest {
-    string id = 1;
-    string username = 2;
-    string firstname = 3;
-    string lastname = 4;
-    string avatar = 5;
 }
 
 message GetProfileRequest {
@@ -108,8 +95,24 @@ message GetManyProfilesRequest {
     repeated string ids = 1;
 }
 
-message GetManyProfilesMapRequest {
-    repeated string ids = 1;
+message UsernameTakenRequest {
+    string username = 1;
+}
+
+// Response
+
+message UsernameTakenResponse {
+    bool taken = 1;
+}
+
+message RegisterResponse {
+    string token = 1;
+    User user = 2;
+}
+
+message LoginResponse {
+    string token = 1;
+    User user = 2;
 }
 
 message GetManyProfilesResponse {
@@ -118,15 +121,4 @@ message GetManyProfilesResponse {
 
 message GetManyProfilesMapResponse {
     map<string, Profile> profiles = 1;
-}
-
-message GetMeRequest {
-    string id = 1;
-}
-
-message UsernameTakenRequest {
-    string username = 1;
-}
-message UsernameTakenResponse {
-    bool taken = 1;
 }

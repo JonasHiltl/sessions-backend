@@ -24,13 +24,14 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)
+	aero, err := repository.NewDB(c.CQL_KEYSPACE, c.CQL_HOSTS)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer sess.Close()
+	defer aero.Close()
 
-	dao := repository.NewDAO(&sess)
+	dao := repository.NewDAO(aero)
 
 	r := rpc.NewRelationServer(dao.NewFriendRelationRepository(), stream)
 	rpc.Start(r, c.PORT)

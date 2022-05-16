@@ -6,7 +6,8 @@ import (
 
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/dto"
+	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
+	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -17,8 +18,18 @@ func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) 
 		return nil, status.Error(codes.InvalidArgument, "Invalid start date")
 	}
 
-	d := dto.Party{
-		Id:            req.PartyId,
+	end, err := time.Parse(time.RFC3339, req.EndDate)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid end date")
+	}
+
+	id, err := ksuid.Parse(req.PartyId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid Party id")
+	}
+
+	p := datastruct.Party{
+		Id:            id.String(),
 		UserId:        req.RequesterId,
 		Title:         req.Title,
 		Lat:           req.Lat,
@@ -28,12 +39,13 @@ func (s partyServer) UpdateParty(c context.Context, req *pg.UpdatePartyRequest) 
 		State:         req.State,
 		Country:       req.Country,
 		StartDate:     start,
+		EndDate:       end,
 	}
 
-	p, err := s.ps.Update(c, d)
+	err = s.ps.Update(c, p)
 	if err != nil {
 		return nil, utils.HandleError(err)
 	}
 
-	return p.ToParty(), nil
+	return p.ToGRPCParty(), nil
 }

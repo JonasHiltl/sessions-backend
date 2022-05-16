@@ -91,7 +91,11 @@ func main() {
 	party.Delete("/:id", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.DeleteParty)
 	party.Get("/:id", partyHandler.GetParty)
 	party.Get("/user/:id", partyHandler.GetPartyByUser)
-	profile.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.UpdateParty)
+	party.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.UpdateParty)
+
+	party.Put("/favorite/:id", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.FavorParty)
+	party.Get("/favorite/user/:id", partyHandler.GetFavoritePartiesByUser)
+	party.Get("/:id/favorite/user", partyHandler.GetFavorisingUsersByParty)
 
 	story := app.Group("/story")
 	story.Post("/", storyHandler.CreateStory)

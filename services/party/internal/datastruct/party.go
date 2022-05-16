@@ -3,8 +3,8 @@ package datastruct
 import (
 	"time"
 
-	"github.com/gofrs/uuid"
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
+	"github.com/segmentio/ksuid"
 )
 
 type Party struct {
@@ -12,7 +12,6 @@ type Party struct {
 	UserId        string    `json:"user_id"        db:"user_id"        validate:"required"`
 	Title         string    `json:"title"          db:"title"          validate:"required"`
 	IsPublic      bool      `json:"is_public"      db:"is_public"`
-	GHash         string    `json:"geohash"        db:"geohash"        validate:"required"`
 	Lat           float32   `json:"lat"            db:"lat"            validate:"required"`
 	Long          float32   `json:"long"           db:"long"           validate:"required"`
 	StreetAddress string    `json:"street_address" db:"street_address" validate:"required"`
@@ -20,19 +19,17 @@ type Party struct {
 	State         string    `json:"state"          db:"state"          validate:"required"`
 	Country       string    `json:"country"        db:"country"        validate:"required"`
 	StartDate     time.Time `json:"start_date"     db:"start_date"     validate:"required"`
+	EndDate       time.Time `json:"end_date"       db:"end_date"       validate:"required"`
 }
 
-func (p Party) ToParty() *pg.Party {
-	// get party creation date from uuid
-	uuidv1, err := uuid.FromString(p.Id)
-	if err != nil {
-		return &pg.Party{}
-	}
-	timestamp, err := uuid.TimestampFromV1(uuidv1)
-	if err != nil {
-		return &pg.Party{}
-	}
-	t, err := timestamp.Time()
+type FavoriteParty struct {
+	UserId      string    `json:"user_id"      db:"user_id"      validate:"required"`
+	PartyId     string    `json:"party_id"     db:"party_id"     validate:"required"`
+	FavoritedAt time.Time `json:"favorited_at" db:"favorited_at" validate:"required"`
+}
+
+func (p Party) ToGRPCParty() *pg.Party {
+	id, err := ksuid.Parse(p.Id)
 	if err != nil {
 		return &pg.Party{}
 	}
@@ -49,6 +46,15 @@ func (p Party) ToParty() *pg.Party {
 		State:         p.State,
 		Country:       p.Country,
 		StartDate:     p.StartDate.UTC().Format(time.RFC3339),
-		CreatedAt:     t.UTC().Format(time.RFC3339),
+		EndDate:       p.EndDate.UTC().Format(time.RFC3339),
+		CreatedAt:     id.Time().UTC().Format(time.RFC3339),
+	}
+}
+
+func (f FavoriteParty) ToGRPCFavoriteParty() *pg.FavoriteParty {
+	return &pg.FavoriteParty{
+		UserId:      f.UserId,
+		PartyId:     f.PartyId,
+		FavoritedAt: f.FavoritedAt.UTC().Format(time.RFC3339),
 	}
 }

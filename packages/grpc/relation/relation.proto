@@ -6,9 +6,9 @@ option go_package = "github.com/jonashiltl/sessions-backend/packages/grpc/relati
 import "packages/grpc/common/common.proto";
 
 service RelationService {
-    rpc FriendRequest (FriendRequestRequest) returns (common.MessageResponse) {};
-    rpc AcceptFriend (AcceptFriendRequest) returns (common.MessageResponse) {};
-    rpc RemoveFriend (RemoveFriendRequest) returns (common.MessageResponse) {};
+    rpc FriendRequest (FriendRequestRequest) returns (common.SuccessIndicator) {};
+    rpc AcceptFriend (AcceptFriendRequest) returns (common.SuccessIndicator) {};
+    rpc RemoveFriend (RemoveFriendRequest) returns (common.SuccessIndicator) {};
     rpc GetFriendRelation (GetFriendRelationRequest) returns (FriendRelation) {};
     rpc GetFriendsOfUser (GetFriendsOfUserRequest) returns (PagedFriendRelations) {};
 }
@@ -17,7 +17,7 @@ message FriendRelation {
     string user_id = 1;
     string friend_id = 2;
     bool accepted = 3;
-    string created_at = 4;
+    string requested_at = 4;
     string accepted_at = 5;
 }
 

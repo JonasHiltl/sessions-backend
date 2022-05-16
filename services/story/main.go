@@ -15,7 +15,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	sess, err := repository.NewDB(c.SCYLLA_KEYSPACE, c.SCYLLA_HOSTS)
+	sess, err := repository.NewDB(c.CQL_KEYSPACE, c.CQL_HOSTS)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -27,16 +27,26 @@ func (h commentGatewayHandler) GetCommentByParty(c *fiber.Ctx) error {
 		commentAuthors = append(commentAuthors, c.AuthorId)
 	}
 
-	pRes, _ := h.uc.GetManyProfilesMap(c.Context(), &user.GetManyProfilesMapRequest{Ids: utils.UniqueStringSlice(commentAuthors)})
+	pRes, _ := h.uc.GetManyProfilesMap(c.Context(), &user.GetManyProfilesRequest{Ids: utils.UniqueStringSlice(commentAuthors)})
 
 	aggC := make([]datastruct.AggregatedComment, len(cs.Comments))
 	for i, c := range cs.Comments {
-		aggC[i] = datastruct.AggregatedComment{
-			Id:        c.Id,
-			PartyId:   c.PartyId,
-			Author:    pRes.Profiles[c.AuthorId],
-			Body:      c.Body,
-			CreatedAt: c.CreatedAt,
+		if author, ok := pRes.Profiles[c.AuthorId]; ok {
+			aggC[i] = datastruct.AggregatedComment{
+				Id:        c.Id,
+				PartyId:   c.PartyId,
+				Author:    author,
+				Body:      c.Body,
+				CreatedAt: c.CreatedAt,
+			}
+		} else {
+			aggC[i] = datastruct.AggregatedComment{
+				Id:        c.Id,
+				PartyId:   c.PartyId,
+				Author:    &user.Profile{},
+				Body:      c.Body,
+				CreatedAt: c.CreatedAt,
+			}
 		}
 	}
 

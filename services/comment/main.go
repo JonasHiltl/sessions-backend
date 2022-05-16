@@ -30,7 +30,7 @@ func main() {
 	}
 	defer sess.Close()
 
-	dao := repository.NewDAO(&sess)
+	dao := repository.NewDAO(sess)
 
 	cs := service.NewCommentService(dao.NewCommentRepository())
 	rs := service.NewReplyService(dao.NewReplyRepository())

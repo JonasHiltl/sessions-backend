@@ -26,9 +26,15 @@ type PartyServiceClient interface {
 	CreateParty(ctx context.Context, in *CreatePartyRequest, opts ...grpc.CallOption) (*Party, error)
 	GetParty(ctx context.Context, in *GetPartyRequest, opts ...grpc.CallOption) (*Party, error)
 	UpdateParty(ctx context.Context, in *UpdatePartyRequest, opts ...grpc.CallOption) (*Party, error)
-	DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
 	GetByUser(ctx context.Context, in *GetByUserRequest, opts ...grpc.CallOption) (*PagedParties, error)
 	GeoSearch(ctx context.Context, in *GeoSearchRequest, opts ...grpc.CallOption) (*PagedParties, error)
+	GetManyParties(ctx context.Context, in *GetManyPartiesRequest, opts ...grpc.CallOption) (*GetManyPartiesResponse, error)
+	GetManyPartiesMap(ctx context.Context, in *GetManyPartiesRequest, opts ...grpc.CallOption) (*GetManyPartiesMapResponse, error)
+	FavorParty(ctx context.Context, in *FavorPartyRequest, opts ...grpc.CallOption) (*FavoriteParty, error)
+	DefavorParty(ctx context.Context, in *FavorPartyRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
+	GetFavoritePartiesByUser(ctx context.Context, in *GetFavoritePartiesByUserRequest, opts ...grpc.CallOption) (*PagedFavoriteParties, error)
+	GetFovorisingUsersByParty(ctx context.Context, in *GetFovorisingUsersByPartyRequest, opts ...grpc.CallOption) (*PagedFavoriteParties, error)
 }
 
 type partyServiceClient struct {
@@ -66,8 +72,8 @@ func (c *partyServiceClient) UpdateParty(ctx context.Context, in *UpdatePartyReq
 	return out, nil
 }
 
-func (c *partyServiceClient) DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *partyServiceClient) DeleteParty(ctx context.Context, in *DeletePartyRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/party.PartyService/DeleteParty", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -93,6 +99,60 @@ func (c *partyServiceClient) GeoSearch(ctx context.Context, in *GeoSearchRequest
 	return out, nil
 }
 
+func (c *partyServiceClient) GetManyParties(ctx context.Context, in *GetManyPartiesRequest, opts ...grpc.CallOption) (*GetManyPartiesResponse, error) {
+	out := new(GetManyPartiesResponse)
+	err := c.cc.Invoke(ctx, "/party.PartyService/GetManyParties", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *partyServiceClient) GetManyPartiesMap(ctx context.Context, in *GetManyPartiesRequest, opts ...grpc.CallOption) (*GetManyPartiesMapResponse, error) {
+	out := new(GetManyPartiesMapResponse)
+	err := c.cc.Invoke(ctx, "/party.PartyService/GetManyPartiesMap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *partyServiceClient) FavorParty(ctx context.Context, in *FavorPartyRequest, opts ...grpc.CallOption) (*FavoriteParty, error) {
+	out := new(FavoriteParty)
+	err := c.cc.Invoke(ctx, "/party.PartyService/FavorParty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *partyServiceClient) DefavorParty(ctx context.Context, in *FavorPartyRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
+	err := c.cc.Invoke(ctx, "/party.PartyService/DefavorParty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *partyServiceClient) GetFavoritePartiesByUser(ctx context.Context, in *GetFavoritePartiesByUserRequest, opts ...grpc.CallOption) (*PagedFavoriteParties, error) {
+	out := new(PagedFavoriteParties)
+	err := c.cc.Invoke(ctx, "/party.PartyService/GetFavoritePartiesByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *partyServiceClient) GetFovorisingUsersByParty(ctx context.Context, in *GetFovorisingUsersByPartyRequest, opts ...grpc.CallOption) (*PagedFavoriteParties, error) {
+	out := new(PagedFavoriteParties)
+	err := c.cc.Invoke(ctx, "/party.PartyService/GetFovorisingUsersByParty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PartyServiceServer is the server API for PartyService service.
 // All implementations must embed UnimplementedPartyServiceServer
 // for forward compatibility
@@ -100,9 +160,15 @@ type PartyServiceServer interface {
 	CreateParty(context.Context, *CreatePartyRequest) (*Party, error)
 	GetParty(context.Context, *GetPartyRequest) (*Party, error)
 	UpdateParty(context.Context, *UpdatePartyRequest) (*Party, error)
-	DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error)
+	DeleteParty(context.Context, *DeletePartyRequest) (*common.SuccessIndicator, error)
 	GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error)
 	GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error)
+	GetManyParties(context.Context, *GetManyPartiesRequest) (*GetManyPartiesResponse, error)
+	GetManyPartiesMap(context.Context, *GetManyPartiesRequest) (*GetManyPartiesMapResponse, error)
+	FavorParty(context.Context, *FavorPartyRequest) (*FavoriteParty, error)
+	DefavorParty(context.Context, *FavorPartyRequest) (*common.SuccessIndicator, error)
+	GetFavoritePartiesByUser(context.Context, *GetFavoritePartiesByUserRequest) (*PagedFavoriteParties, error)
+	GetFovorisingUsersByParty(context.Context, *GetFovorisingUsersByPartyRequest) (*PagedFavoriteParties, error)
 	mustEmbedUnimplementedPartyServiceServer()
 }
 
@@ -119,7 +185,7 @@ func (UnimplementedPartyServiceServer) GetParty(context.Context, *GetPartyReques
 func (UnimplementedPartyServiceServer) UpdateParty(context.Context, *UpdatePartyRequest) (*Party, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParty not implemented")
 }
-func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *DeletePartyRequest) (*common.MessageResponse, error) {
+func (UnimplementedPartyServiceServer) DeleteParty(context.Context, *DeletePartyRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteParty not implemented")
 }
 func (UnimplementedPartyServiceServer) GetByUser(context.Context, *GetByUserRequest) (*PagedParties, error) {
@@ -127,6 +193,24 @@ func (UnimplementedPartyServiceServer) GetByUser(context.Context, *GetByUserRequ
 }
 func (UnimplementedPartyServiceServer) GeoSearch(context.Context, *GeoSearchRequest) (*PagedParties, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GeoSearch not implemented")
+}
+func (UnimplementedPartyServiceServer) GetManyParties(context.Context, *GetManyPartiesRequest) (*GetManyPartiesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetManyParties not implemented")
+}
+func (UnimplementedPartyServiceServer) GetManyPartiesMap(context.Context, *GetManyPartiesRequest) (*GetManyPartiesMapResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetManyPartiesMap not implemented")
+}
+func (UnimplementedPartyServiceServer) FavorParty(context.Context, *FavorPartyRequest) (*FavoriteParty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FavorParty not implemented")
+}
+func (UnimplementedPartyServiceServer) DefavorParty(context.Context, *FavorPartyRequest) (*common.SuccessIndicator, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DefavorParty not implemented")
+}
+func (UnimplementedPartyServiceServer) GetFavoritePartiesByUser(context.Context, *GetFavoritePartiesByUserRequest) (*PagedFavoriteParties, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFavoritePartiesByUser not implemented")
+}
+func (UnimplementedPartyServiceServer) GetFovorisingUsersByParty(context.Context, *GetFovorisingUsersByPartyRequest) (*PagedFavoriteParties, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFovorisingUsersByParty not implemented")
 }
 func (UnimplementedPartyServiceServer) mustEmbedUnimplementedPartyServiceServer() {}
 
@@ -249,6 +333,114 @@ func _PartyService_GeoSearch_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PartyService_GetManyParties_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetManyPartiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).GetManyParties(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/GetManyParties",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).GetManyParties(ctx, req.(*GetManyPartiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PartyService_GetManyPartiesMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetManyPartiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).GetManyPartiesMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/GetManyPartiesMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).GetManyPartiesMap(ctx, req.(*GetManyPartiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PartyService_FavorParty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavorPartyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).FavorParty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/FavorParty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).FavorParty(ctx, req.(*FavorPartyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PartyService_DefavorParty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FavorPartyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).DefavorParty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/DefavorParty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).DefavorParty(ctx, req.(*FavorPartyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PartyService_GetFavoritePartiesByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFavoritePartiesByUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).GetFavoritePartiesByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/GetFavoritePartiesByUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).GetFavoritePartiesByUser(ctx, req.(*GetFavoritePartiesByUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PartyService_GetFovorisingUsersByParty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFovorisingUsersByPartyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PartyServiceServer).GetFovorisingUsersByParty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/party.PartyService/GetFovorisingUsersByParty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PartyServiceServer).GetFovorisingUsersByParty(ctx, req.(*GetFovorisingUsersByPartyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PartyService_ServiceDesc is the grpc.ServiceDesc for PartyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -279,6 +471,30 @@ var PartyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GeoSearch",
 			Handler:    _PartyService_GeoSearch_Handler,
+		},
+		{
+			MethodName: "GetManyParties",
+			Handler:    _PartyService_GetManyParties_Handler,
+		},
+		{
+			MethodName: "GetManyPartiesMap",
+			Handler:    _PartyService_GetManyPartiesMap_Handler,
+		},
+		{
+			MethodName: "FavorParty",
+			Handler:    _PartyService_FavorParty_Handler,
+		},
+		{
+			MethodName: "DefavorParty",
+			Handler:    _PartyService_DefavorParty_Handler,
+		},
+		{
+			MethodName: "GetFavoritePartiesByUser",
+			Handler:    _PartyService_GetFavoritePartiesByUser_Handler,
+		},
+		{
+			MethodName: "GetFovorisingUsersByParty",
+			Handler:    _PartyService_GetFovorisingUsersByParty_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

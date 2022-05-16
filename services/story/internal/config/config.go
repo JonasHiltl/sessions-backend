@@ -4,8 +4,8 @@ import "github.com/spf13/viper"
 
 type Config struct {
 	PORT            string `mapstructure:"PORT"`
-	SCYLLA_KEYSPACE string `mapstructure:"SCYLLA_KEYSPACE"`
-	SCYLLA_HOSTS    string `mapstructure:"SCYLLA_HOSTS"`
+	CQL_KEYSPACE    string `mapstructure:"CQL_KEYSPACE"`
+	CQL_HOSTS       string `mapstructure:"CQL_HOSTS"`
 	SPACES_ENDPOINT string `mapstructure:"SPACES_ENDPOINT"`
 	SPACES_KEY      string `mapstructure:"SPACES_TOKEN"`
 	SPACES_SECRET   string `mapstructure:"SPACES_SECRET"`

@@ -1,12 +1,10 @@
 package repository
 
 import (
-	"context"
-	"time"
+	"strings"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
+	"github.com/jonashiltl/sessions-backend/packages/cqlx"
+	"github.com/scylladb/gocqlx/v2"
 )
 
 type Dao interface {
@@ -15,50 +13,37 @@ type Dao interface {
 }
 
 type dao struct {
-	db *mongo.Database
+	sess *gocqlx.Session
 }
 
 const (
 	USER_COLLECTION = "user"
 )
 
-func NewDB(url string) (*mongo.Database, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+func NewDB(keyspace, hosts string) (*gocqlx.Session, error) {
+	h := strings.Split(hosts, ",")
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
-	if err != nil {
+	manager := cqlx.NewManager(keyspace, h)
+
+	if err := manager.CreateKeyspace(keyspace); err != nil {
 		return nil, err
 	}
 
-	db := client.Database("sessions")
-
-	models := []mongo.IndexModel{
-		{
-			Keys:    bsonx.Doc{{Key: "email", Value: bsonx.Int32(1)}},
-			Options: options.Index().SetUnique(true),
-		},
-		{
-			Keys:    bsonx.Doc{{Key: "username", Value: bsonx.Int32(1)}},
-			Options: options.Index().SetUnique(true)},
-	}
-
-	_, err = db.Collection(USER_COLLECTION).Indexes().CreateMany(ctx, models)
+	session, err := manager.Connect()
 	if err != nil {
 		return nil, err
 	}
-
-	return db, nil
+	return &session, nil
 }
 
-func NewDAO(db *mongo.Database) Dao {
-	return &dao{db: db}
+func NewDAO(sess *gocqlx.Session) Dao {
+	return &dao{sess: sess}
 }
 
 func (d *dao) NewUserRepository() UserRepository {
-	return &userRepository{col: d.db.Collection(USER_COLLECTION)}
+	return &userRepository{sess: d.sess}
 }
 
 func (d *dao) NewProfileRepository() ProfileRepository {
-	return &profileRepository{col: d.db.Collection(USER_COLLECTION)}
+	return &profileRepository{sess: d.sess}
 }

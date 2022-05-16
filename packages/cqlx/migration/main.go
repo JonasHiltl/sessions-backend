@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jonashiltl/sessions-backend/packages/scylla"
-	"github.com/jonashiltl/sessions-backend/packages/scylla/migration/cql"
+	"github.com/jonashiltl/sessions-backend/packages/cqlx"
+	"github.com/jonashiltl/sessions-backend/packages/cqlx/migration/cql"
 	"github.com/scylladb/gocqlx/v2/migrate"
 )
 
@@ -24,7 +24,7 @@ func main() {
 	}
 	h := strings.Split(hosts, ",")
 
-	manager := scylla.NewManager(keyspace, h)
+	manager := cqlx.NewManager(keyspace, h)
 
 	if err := manager.CreateKeyspace(keyspace); err != nil {
 		log.Fatalln(err)

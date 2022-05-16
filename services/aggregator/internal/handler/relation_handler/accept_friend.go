@@ -16,10 +16,9 @@ func (h relationGatewayHandler) AcceptFriend(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid Friend Id")
 	}
 
-	msg, err := h.relationClient.AcceptFriend(c.Context(), &relation.AcceptFriendRequest{UserId: uId, FriendId: user.Sub})
+	ok, err := h.relationClient.AcceptFriend(c.Context(), &relation.AcceptFriendRequest{UserId: uId, FriendId: user.Sub})
 	if err != nil {
 		return utils.ToHTTPError(err)
 	}
-
-	return c.Status(fiber.StatusOK).JSON(msg)
+	return c.Status(fiber.StatusOK).JSON(ok)
 }

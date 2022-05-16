@@ -13,7 +13,7 @@ func (s userServer) GetManyProfiles(ctx context.Context, req *ug.GetManyProfiles
 		return nil, utils.HandleError(err)
 	}
 
-	var profiles []*ug.Profile
+	profiles := make([]*ug.Profile, len(p))
 	for _, p := range p {
 		profiles = append(profiles, p.ToGRPCProfile())
 	}

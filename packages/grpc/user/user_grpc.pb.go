@@ -27,14 +27,14 @@ type UserServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	GoogleLogin(ctx context.Context, in *GoogleLoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	AppleLogin(ctx context.Context, in *AppleLoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
-	ResendVerificationEmail(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*common.MessageResponse, error)
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*common.MessageResponse, error)
+	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
+	ResendVerificationEmail(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*User, error)
-	GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*User, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	GetManyProfiles(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesResponse, error)
-	GetManyProfilesMap(ctx context.Context, in *GetManyProfilesMapRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error)
+	GetManyProfilesMap(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error)
 	UsernameTaken(ctx context.Context, in *UsernameTakenRequest, opts ...grpc.CallOption) (*UsernameTakenResponse, error)
 }
 
@@ -82,8 +82,8 @@ func (c *userServiceClient) AppleLogin(ctx context.Context, in *AppleLoginReques
 	return out, nil
 }
 
-func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/user.UserService/VerifyEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -91,8 +91,8 @@ func (c *userServiceClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequ
 	return out, nil
 }
 
-func (c *userServiceClient) ResendVerificationEmail(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *userServiceClient) ResendVerificationEmail(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/user.UserService/ResendVerificationEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -100,8 +100,8 @@ func (c *userServiceClient) ResendVerificationEmail(ctx context.Context, in *com
 	return out, nil
 }
 
-func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*common.MessageResponse, error) {
-	out := new(common.MessageResponse)
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*common.SuccessIndicator, error) {
+	out := new(common.SuccessIndicator)
 	err := c.cc.Invoke(ctx, "/user.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -118,9 +118,9 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetMe(ctx context.Context, in *GetMeRequest, opts ...grpc.CallOption) (*User, error) {
+func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
 	out := new(User)
-	err := c.cc.Invoke(ctx, "/user.UserService/GetMe", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (c *userServiceClient) GetManyProfiles(ctx context.Context, in *GetManyProf
 	return out, nil
 }
 
-func (c *userServiceClient) GetManyProfilesMap(ctx context.Context, in *GetManyProfilesMapRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error) {
+func (c *userServiceClient) GetManyProfilesMap(ctx context.Context, in *GetManyProfilesRequest, opts ...grpc.CallOption) (*GetManyProfilesMapResponse, error) {
 	out := new(GetManyProfilesMapResponse)
 	err := c.cc.Invoke(ctx, "/user.UserService/GetManyProfilesMap", in, out, opts...)
 	if err != nil {
@@ -171,14 +171,14 @@ type UserServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	GoogleLogin(context.Context, *GoogleLoginRequest) (*LoginResponse, error)
 	AppleLogin(context.Context, *AppleLoginRequest) (*LoginResponse, error)
-	VerifyEmail(context.Context, *VerifyEmailRequest) (*common.MessageResponse, error)
-	ResendVerificationEmail(context.Context, *common.Empty) (*common.MessageResponse, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*common.MessageResponse, error)
+	VerifyEmail(context.Context, *VerifyEmailRequest) (*common.SuccessIndicator, error)
+	ResendVerificationEmail(context.Context, *common.Empty) (*common.SuccessIndicator, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*common.SuccessIndicator, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*User, error)
-	GetMe(context.Context, *GetMeRequest) (*User, error)
+	GetUser(context.Context, *GetUserRequest) (*User, error)
 	GetProfile(context.Context, *GetProfileRequest) (*Profile, error)
 	GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error)
-	GetManyProfilesMap(context.Context, *GetManyProfilesMapRequest) (*GetManyProfilesMapResponse, error)
+	GetManyProfilesMap(context.Context, *GetManyProfilesRequest) (*GetManyProfilesMapResponse, error)
 	UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -199,20 +199,20 @@ func (UnimplementedUserServiceServer) GoogleLogin(context.Context, *GoogleLoginR
 func (UnimplementedUserServiceServer) AppleLogin(context.Context, *AppleLoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AppleLogin not implemented")
 }
-func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*common.MessageResponse, error) {
+func (UnimplementedUserServiceServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
 }
-func (UnimplementedUserServiceServer) ResendVerificationEmail(context.Context, *common.Empty) (*common.MessageResponse, error) {
+func (UnimplementedUserServiceServer) ResendVerificationEmail(context.Context, *common.Empty) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResendVerificationEmail not implemented")
 }
-func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*common.MessageResponse, error) {
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*common.SuccessIndicator, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetMe(context.Context, *GetMeRequest) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMe not implemented")
+func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetProfile(context.Context, *GetProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
@@ -220,7 +220,7 @@ func (UnimplementedUserServiceServer) GetProfile(context.Context, *GetProfileReq
 func (UnimplementedUserServiceServer) GetManyProfiles(context.Context, *GetManyProfilesRequest) (*GetManyProfilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetManyProfiles not implemented")
 }
-func (UnimplementedUserServiceServer) GetManyProfilesMap(context.Context, *GetManyProfilesMapRequest) (*GetManyProfilesMapResponse, error) {
+func (UnimplementedUserServiceServer) GetManyProfilesMap(context.Context, *GetManyProfilesRequest) (*GetManyProfilesMapResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetManyProfilesMap not implemented")
 }
 func (UnimplementedUserServiceServer) UsernameTaken(context.Context, *UsernameTakenRequest) (*UsernameTakenResponse, error) {
@@ -383,20 +383,20 @@ func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetMe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMeRequest)
+func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetMe(ctx, in)
+		return srv.(UserServiceServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.UserService/GetMe",
+		FullMethod: "/user.UserService/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetMe(ctx, req.(*GetMeRequest))
+		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -438,7 +438,7 @@ func _UserService_GetManyProfiles_Handler(srv interface{}, ctx context.Context, 
 }
 
 func _UserService_GetManyProfilesMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetManyProfilesMapRequest)
+	in := new(GetManyProfilesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -450,7 +450,7 @@ func _UserService_GetManyProfilesMap_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/user.UserService/GetManyProfilesMap",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetManyProfilesMap(ctx, req.(*GetManyProfilesMapRequest))
+		return srv.(UserServiceServer).GetManyProfilesMap(ctx, req.(*GetManyProfilesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -513,8 +513,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_UpdateUser_Handler,
 		},
 		{
-			MethodName: "GetMe",
-			Handler:    _UserService_GetMe_Handler,
+			MethodName: "GetUser",
+			Handler:    _UserService_GetUser_Handler,
 		},
 		{
 			MethodName: "GetProfile",

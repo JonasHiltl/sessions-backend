@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jonashiltl/sessions-backend/services/party/internal/datastruct"
@@ -15,30 +14,43 @@ import (
 )
 
 const (
-	TABLE_NAME    string = "parties"
-	PARTY_BY_USER string = "parties_by_user"
+	TABLE_NAME       string = "parties"
+	FAVORITE_PARTIES string = "favorite_parties"
 )
 
 var partyMetadata = table.Metadata{
 	Name:    TABLE_NAME,
-	Columns: []string{"id", "user_id", "title", "is_public", "geohash", "lat", "long", "street_address", "postal_code", "state", "country", "start_date"},
-	PartKey: []string{"id"},
+	Columns: []string{"id", "user_id", "title", "is_public", "lat", "long", "street_address", "postal_code", "state", "country", "start_date", "end_date"},
+	PartKey: []string{"user_id"},
+	SortKey: []string{"is_public", "start_date"},
 }
 var partyTable = table.New(partyMetadata)
 
+var favoritePartyMetadata = table.Metadata{
+	Name:    FAVORITE_PARTIES,
+	Columns: []string{"user_id", "party_id", "favorited_at"},
+	PartKey: []string{"user_id"},
+	SortKey: []string{"party_id", "favorited_at"},
+}
+
 type PartyRepository interface {
-	Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error)
+	Create(ctx context.Context, p datastruct.Party) (datastruct.Party, error)
 	Update(ctx context.Context, p datastruct.Party) error
 	Delete(ctx context.Context, uId, pId string) error
 	Get(ctx context.Context, pId string) (datastruct.Party, error)
+	GetMany(ctx context.Context, ids []string) ([]datastruct.Party, error)
 	GetByUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.Party, []byte, error)
+	FavorParty(ctx context.Context, fp datastruct.FavoriteParty) (datastruct.FavoriteParty, error)
+	DefavorParty(ctx context.Context, uId, pId string) error
+	GetFavoritePartiesByUser(ctx context.Context, uId string, page []byte, limit uint32) ([]datastruct.FavoriteParty, []byte, error)
+	GetFavorisingUsersByParty(ctx context.Context, pId string, page []byte, limit uint32) ([]datastruct.FavoriteParty, []byte, error)
 }
 
 type partyRepository struct {
 	sess *gocqlx.Session
 }
 
-func (r *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl time.Duration) (datastruct.Party, error) {
+func (r *partyRepository) Create(ctx context.Context, p datastruct.Party) (datastruct.Party, error) {
 	v := validator.New()
 	err := v.Struct(p)
 	if err != nil {
@@ -48,7 +60,6 @@ func (r *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl ti
 	stmt, names := qb.
 		Insert(TABLE_NAME).
 		Columns(partyMetadata.Columns...).
-		TTL(ttl).
 		ToCql()
 
 	log.Println(stmt)
@@ -65,8 +76,14 @@ func (r *partyRepository) Create(ctx context.Context, p datastruct.Party, ttl ti
 }
 
 func (r *partyRepository) Get(ctx context.Context, pId string) (res datastruct.Party, err error) {
+	stmt, names := qb.
+		Select(TABLE_NAME).
+		Columns(partyMetadata.Columns...).
+		Where(qb.Eq("id")).
+		ToCql()
+
 	err = r.sess.
-		Query(partyTable.Get()).
+		Query(stmt, names).
 		BindMap((qb.M{"id": pId})).
 		GetRelease(&res)
 	if err != nil {
@@ -85,10 +102,6 @@ func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error 
 		b.Set("title")
 	}
 
-	if p.GHash != "" {
-		b.Set("geohash")
-	}
-
 	if p.Lat != 0 {
 		b.Set("lat")
 	}
@@ -99,6 +112,10 @@ func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error 
 
 	if !p.StartDate.IsZero() {
 		b.Set("start_date")
+	}
+
+	if !p.EndDate.IsZero() {
+		b.Set("end_date")
 	}
 
 	if p.StreetAddress != "" {
@@ -122,17 +139,17 @@ func (r *partyRepository) Update(ctx context.Context, p datastruct.Party) error 
 
 	err := r.sess.Query(stmt, names).
 		BindMap((qb.M{
-			"user_id":        p.UserId,
 			"id":             p.Id,
+			"user_id":        p.UserId,
 			"title":          p.Title,
-			"geohash":        p.GHash,
 			"lat":            p.Lat,
 			"long":           p.Long,
-			"start_date":     p.StartDate,
 			"street_address": p.StreetAddress,
 			"postal_code":    p.PostalCode,
 			"state":          p.State,
 			"country":        p.Country,
+			"start_date":     p.StartDate,
+			"end_date":       p.EndDate,
 		})).
 		ExecRelease()
 	if err != nil {
@@ -162,9 +179,28 @@ func (r *partyRepository) Delete(ctx context.Context, uId, pId string) error {
 	return nil
 }
 
+func (r *partyRepository) GetMany(ctx context.Context, ids []string) (res []datastruct.Party, err error) {
+	stmt, names := qb.
+		Select(TABLE_NAME).
+		Where(qb.In("id")).
+		ToCql()
+
+	err = r.sess.Query(stmt, names).
+		BindMap((qb.M{
+			"id": ids,
+		})).
+		GetRelease(&res)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
+
+}
+
 func (r *partyRepository) GetByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.Party, nextPage []byte, err error) {
 	stmt, names := qb.
-		Select(PARTY_BY_USER).
+		Select(TABLE_NAME).
 		Where(qb.Eq("user_id")).
 		ToCql()
 
@@ -187,4 +223,99 @@ func (r *partyRepository) GetByUser(ctx context.Context, uId string, page []byte
 	}
 
 	return result, iter.PageState(), nil
+}
+
+func (r *partyRepository) FavorParty(ctx context.Context, fp datastruct.FavoriteParty) (datastruct.FavoriteParty, error) {
+	v := validator.New()
+	err := v.Struct(fp)
+	if err != nil {
+		return datastruct.FavoriteParty{}, err
+	}
+
+	stmt, names := qb.
+		Insert(FAVORITE_PARTIES).
+		Columns(favoritePartyMetadata.Columns...).
+		ToCql()
+
+	err = r.sess.
+		Query(stmt, names).
+		BindStruct(fp).
+		ExecRelease()
+	if err != nil {
+		return datastruct.FavoriteParty{}, err
+	}
+
+	return fp, nil
+}
+
+func (r *partyRepository) DefavorParty(ctx context.Context, uId, pId string) error {
+	stmt, names := qb.
+		Delete(FAVORITE_PARTIES).
+		Where(qb.Eq("user_id")).
+		Where(qb.Eq("party_id")).
+		ToCql()
+
+	err := r.sess.
+		Query(stmt, names).
+		BindMap((qb.M{"party_id": pId, "user_id": uId})).
+		ExecRelease()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *partyRepository) GetFavoritePartiesByUser(ctx context.Context, uId string, page []byte, limit uint32) (result []datastruct.FavoriteParty, nextPage []byte, err error) {
+	stmt, names := qb.
+		Select(FAVORITE_PARTIES).
+		Where(qb.Eq("user_id")).
+		ToCql()
+
+	q := r.sess.
+		Query(stmt, names).
+		BindMap((qb.M{"user_id": uId}))
+	defer q.Release()
+
+	q.PageState(page)
+	if limit == 0 {
+		q.PageSize(10)
+	} else {
+		q.PageSize(int(limit))
+	}
+
+	iter := q.Iter()
+	err = iter.Select(&result)
+	if err != nil {
+		return []datastruct.FavoriteParty{}, nil, errors.New("no favorite parties found")
+	}
+
+	return result, iter.PageState(), nil
+}
+
+func (r *partyRepository) GetFavorisingUsersByParty(ctx context.Context, pId string, page []byte, limit uint32) (result []datastruct.FavoriteParty, nextPage []byte, err error) {
+	stmt, names := qb.
+		Select(FAVORITE_PARTIES).
+		Where(qb.Eq("party_id")).
+		ToCql()
+
+	q := r.sess.
+		Query(stmt, names).
+		BindMap((qb.M{"party_id": pId}))
+	defer q.Release()
+
+	q.PageState(page)
+	if limit == 0 {
+		q.PageSize(10)
+	} else {
+		q.PageSize(int(limit))
+	}
+
+	iter := q.Iter()
+	err = iter.Select(&result)
+	if err != nil {
+		return []datastruct.FavoriteParty{}, nil, errors.New("no favorite parties found")
+	}
+
+	return result, iter.PageState(), nil
+
 }

@@ -1,7 +1,6 @@
 package subscribe
 
 import (
-	"context"
 	"log"
 	"sync"
 
@@ -39,17 +38,13 @@ func (s subscriber) Start() {
 }
 
 func (s subscriber) IncrementFriendCount(e *events.FriendAccepted) {
-	ctx := context.Background()
 
 	log.Printf("%v", e)
 
-	s.ps.IncrementFriendCount(ctx, e.UserId)
 }
 
 func (s subscriber) DecrementFriendCount(e *events.FriendRemoved) {
-	ctx := context.Background()
 
 	log.Printf("%v", e)
 
-	s.ps.DecrementFriendCount(ctx, e.UserId)
 }

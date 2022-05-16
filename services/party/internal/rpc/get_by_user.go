@@ -25,7 +25,7 @@ func (s partyServer) GetByUser(c context.Context, req *pg.GetByUserRequest) (*pg
 
 	var pp []*pg.Party
 	for _, p := range ps {
-		pp = append(pp, p.ToParty())
+		pp = append(pp, p.ToGRPCParty())
 	}
 
 	return &pg.PagedParties{Parties: pp, NextPage: nextPage}, nil

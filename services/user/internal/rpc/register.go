@@ -10,7 +10,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/packages/types"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
 	"github.com/jonashiltl/sessions-backend/services/user/internal/datastruct"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/segmentio/ksuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -27,13 +27,14 @@ func (s userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug.
 	}
 
 	du := datastruct.User{
-		Id:           primitive.NewObjectID(),
-		Email:        req.Email,
-		Username:     strings.ToLower(req.Username),
-		Firstname:    req.Firstname,
-		Lastname:     req.Lastname,
-		PasswordHash: hash,
-		Role:         types.UserRole.String(),
+		Id:            ksuid.New().String(),
+		Email:         req.Email,
+		EmailVerified: false,
+		Username:      strings.ToLower(req.Username),
+		Firstname:     req.Firstname,
+		Lastname:      req.Lastname,
+		PasswordHash:  hash,
+		Role:          types.UserRole.String(),
 	}
 
 	u, err := s.us.Create(ctx, du)
@@ -47,7 +48,7 @@ func (s userServer) Register(ctx context.Context, req *ug.RegisterRequest) (*ug.
 	}
 
 	s.stream.PublishEvent(&events.Registered{
-		Id:        u.Id.Hex(),
+		Id:        u.Id,
 		Email:     u.Email,
 		Username:  u.Username,
 		Firstname: u.Firstname,

@@ -20,5 +20,4 @@ func (s userServer) GetProfile(ctx context.Context, req *ug.GetProfileRequest) (
 	}
 
 	return p.ToGRPCProfile(), nil
-
 }

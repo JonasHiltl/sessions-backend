@@ -1,8 +1,10 @@
 package datastruct
 
 type FriendshipStatus struct {
-	IsFriend        bool `json:"is_friend"`
-	OutgoingRequest bool `json:"outgoing_request"`
+	IsFriend        bool   `json:"is_friend"`
+	OutgoingRequest bool   `json:"outgoing_request"`
+	RequestedAt     string `json:"requested_at,omitempty"`
+	AcceptedAt      string `json:"accepted_at,omitempty"`
 }
 
 type AggregatedProfile struct {
@@ -11,6 +13,6 @@ type AggregatedProfile struct {
 	Firstname        string           `json:"firstname,omitempty"`
 	Lastname         string           `json:"lastname,omitempty"`
 	Avatar           string           `json:"avatar,omitempty"`
-	FriendCount      int64            `json:"friend_count,omitempty"`
+	FriendCount      uint32           `json:"friend_count,omitempty"`
 	FriendshipStatus FriendshipStatus `json:"friendship_status,omitempty"`
 }

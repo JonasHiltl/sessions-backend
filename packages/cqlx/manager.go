@@ -1,4 +1,4 @@
-package scylla
+package cqlx
 
 import (
 	"log"
@@ -22,7 +22,7 @@ func NewManager(keyspace string, hosts []string) *Manager {
 func (m *Manager) Connect() (gocqlx.Session, error) {
 	sess, err := m.connect(m.keyspace, m.hosts)
 	if err == nil {
-		log.Printf("Connected to Scylla keyspace %v and hosts %v \n", m.keyspace, m.hosts)
+		log.Printf("Connected to keyspace %v and hosts %v \n", m.keyspace, m.hosts)
 	}
 	return sess, err
 }
