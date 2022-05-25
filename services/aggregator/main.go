@@ -13,13 +13,13 @@ import (
 	sg "github.com/jonashiltl/sessions-backend/packages/grpc/story"
 	ug "github.com/jonashiltl/sessions-backend/packages/grpc/user"
 	"github.com/jonashiltl/sessions-backend/packages/utils/middleware"
-	"github.com/jonashiltl/sessions-backend/services/aggregator/internal/config"
-	authhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/auth_handler"
-	commenthandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/comment_handler"
-	partyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/party_handler"
-	relationhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/relation_handler"
-	storyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/story_handler"
-	userhandler "github.com/jonashiltl/sessions-backend/services/aggregator/internal/handler/user_handler"
+	"github.com/jonashiltl/sessions-backend/services/aggregator/config"
+	authhandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/auth_handler"
+	commenthandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/comment_handler"
+	partyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/party_handler"
+	relationhandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/relation_handler"
+	storyhandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/story_handler"
+	userhandler "github.com/jonashiltl/sessions-backend/services/aggregator/handler/user_handler"
 )
 
 func main() {
@@ -50,10 +50,10 @@ func main() {
 	}
 
 	authHandler := authhandler.NewAuthGatewayHandler(uc)
-	profileHandler := userhandler.NewUserGatewayHandler(uc, rc)
+	userHandler := userhandler.NewUserGatewayHandler(uc, rc)
 	partyHandler := partyhandler.NewPartyGatewayHandler(pc, uc, sc)
 	storyHandler := storyhandler.NewStoryGatewayHandler(sc, uc)
-	relationHandler := relationhandler.NewRelationGatewayHandler(rc)
+	relationHandler := relationhandler.NewRelationGatewayHandler(rc, pc, uc)
 	commentHandler := commenthandler.NewCommentGatewayHandler(cc, uc)
 
 	app := fiber.New(fiber.Config{
@@ -79,12 +79,12 @@ func main() {
 	auth.Post("/google-login", authHandler.GoogleLogin)
 
 	profile := app.Group("/profile")
-	profile.Get("/me", middleware.AuthRequired(c.TOKEN_SECRET), profileHandler.GetMe)
-	profile.Get("/:id", middleware.AuthOptional(c.TOKEN_SECRET), profileHandler.GetProfile)
-	profile.Get("/username-taken/:username", profileHandler.UsernameTaken)
+	profile.Get("/:id", middleware.AuthOptional(c.TOKEN_SECRET), userHandler.GetProfile)
+	profile.Get("/username-taken/:username", userHandler.UsernameTaken)
 
 	user := app.Group("/user")
-	user.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), profileHandler.UpdateUser)
+	user.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), userHandler.UpdateUser)
+	user.Get("/me", middleware.AuthRequired(c.TOKEN_SECRET), userHandler.GetMe)
 
 	party := app.Group("/party")
 	party.Post("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.CreateParty)
@@ -93,9 +93,9 @@ func main() {
 	party.Get("/user/:id", partyHandler.GetPartyByUser)
 	party.Patch("/", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.UpdateParty)
 
-	party.Put("/favorite/:id", middleware.AuthRequired(c.TOKEN_SECRET), partyHandler.FavorParty)
-	party.Get("/favorite/user/:id", partyHandler.GetFavoritePartiesByUser)
-	party.Get("/:id/favorite/user", partyHandler.GetFavorisingUsersByParty)
+	party.Put("/favorite/:id", middleware.AuthRequired(c.TOKEN_SECRET), relationHandler.FavorParty)
+	party.Get("/favorite/user/:id", relationHandler.GetFavoritePartiesByUser)
+	party.Get("/:id/favorite/user", relationHandler.GetFavorisingUsersByParty)
 
 	story := app.Group("/story")
 	story.Post("/", storyHandler.CreateStory)

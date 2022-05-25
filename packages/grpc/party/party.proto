@@ -16,10 +16,6 @@ service PartyService {
     rpc GetManyParties (GetManyPartiesRequest) returns (GetManyPartiesResponse) {}
     rpc GetManyPartiesMap (GetManyPartiesRequest) returns (GetManyPartiesMapResponse) {}
 
-    rpc FavorParty (FavorPartyRequest) returns (FavoriteParty) {};
-    rpc DefavorParty (FavorPartyRequest) returns (common.SuccessIndicator) {};
-    rpc GetFavoritePartiesByUser (GetFavoritePartiesByUserRequest) returns (PagedFavoriteParties) {};
-    rpc GetFovorisingUsersByParty (GetFovorisingUsersByPartyRequest) returns (PagedFavoriteParties) {}
 }
 
 // Requests
@@ -77,23 +73,6 @@ message GetManyPartiesRequest {
     repeated string ids = 1;
 }
 
-message FavorPartyRequest {
-    string user_id = 1;
-    string party_id = 2;
-}
-
-message GetFavoritePartiesByUserRequest {
-    string user_id = 1;
-    string next_page = 2;
-    uint32 limit = 3;
-}
-
-message GetFovorisingUsersByPartyRequest {
-    string party_id = 1;
-    string next_page = 2;
-    uint32 limit = 3;
-}
-
 // Response
 message Party {
     string id = 1;
@@ -122,15 +101,4 @@ message GetManyPartiesResponse {
 
 message GetManyPartiesMapResponse {
     map<string, Party> parties = 1;
-}
-
-message FavoriteParty {
-    string user_id = 1;
-    string party_id = 2;
-    string favorited_at = 3;
-}
-
-message PagedFavoriteParties {
-    repeated FavoriteParty favorite_parties = 1;
-    string next_page = 2;
 }

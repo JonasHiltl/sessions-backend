@@ -5,11 +5,11 @@ import (
 	"sync"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/repository"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/rpc"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/service"
-	"github.com/jonashiltl/sessions-backend/services/user/internal/subscribe"
+	"github.com/jonashiltl/sessions-backend/services/user/config"
+	"github.com/jonashiltl/sessions-backend/services/user/repository"
+	"github.com/jonashiltl/sessions-backend/services/user/rpc"
+	"github.com/jonashiltl/sessions-backend/services/user/service"
+	"github.com/jonashiltl/sessions-backend/services/user/subscribe"
 	"github.com/nats-io/nats.go"
 )
 

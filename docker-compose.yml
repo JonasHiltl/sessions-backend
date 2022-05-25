@@ -3,36 +3,34 @@ version: "3.1"
 # bash into container docker exec -it user sh
 
 services:
-  #typesense:
-  #  container_name: typesense
-  #  entrypoint: sh -c "/opt/typesense-server --data-dir /data --api-key=local-typesense-api-key --enable-cors"
-  #  restart: on-failure
-  #  ports:
-  #    - "8108:8108"
-  #  volumes:
-  #    - ./data/typesense:/data
-
-  #scylla:
-  #  container_name: scylla
-  #  image: scylladb/scylla:4.6.dev-0.20210801.3089558f8
-  #  command: --smp 2 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
-  #  ports:
-  #    - "9042:9042"
-  #  volumes:
-  #    - ./_data/scylla:/var/lib/scylla/data
-
-  yugabyte:
-    container_name: yugabyte
-    image: yugabytedb/yugabyte:latest
-    command: bin/yugabyted start --base_dir=/home/yugabyte/yb_data --daemon=false
+  scylla:
+    container_name: scylla
+    image: scylladb/scylla:5.0.rc5
     ports:
-      - "7000:7000"
-      - "9000:9000"
-      - "5433:5433"
       - "9042:9042"
     volumes:
-      - ./_data/yugabyte:/home/yugabyte/yb_data
+      - ./_data/scylla:/var/lib/scylla/data
 
+  #yugabyte:
+  #  container_name: yugabyte
+  #  image: yugabytedb/yugabyte:latest
+  #  command: bin/yugabyted start --base_dir=/home/yugabyte/yb_data --daemon=false
+  #  ports:
+  #    - "7000:7000"
+  #    - "9000:9000"
+  #    - "5433:5433"
+  #    - "9042:9042"
+  #  volumes:
+  #    - ./_data/yugabyte:/home/yugabyte/yb_data
+
+
+  party-postgres:
+    container_name: party-postgres
+    image: postgis/postgis
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
 
   mailhog:
     container_name: mailhog
@@ -41,13 +39,13 @@ services:
         - "1025:1025"
         - "8025:8025"
 
-  mongodb:
-    container_name: mongo
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-    ports:
-      - 27017:27017
-    volumes:
-      - ./_data/mongo:/data/db
+  #mongodb:
+  #  container_name: mongo
+  #  image: mongo:latest
+  #  environment:
+  #    MONGO_INITDB_ROOT_USERNAME: root
+  #    MONGO_INITDB_ROOT_PASSWORD: rootpassword
+  #  ports:
+  #    - 27017:27017
+  #  volumes:
+  #    - ./_data/mongo:/data/db

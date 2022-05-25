@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/jonashiltl/sessions-backend/services/story/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/story/internal/repository"
-	rpc "github.com/jonashiltl/sessions-backend/services/story/internal/rpc"
-	"github.com/jonashiltl/sessions-backend/services/story/internal/service"
+	"github.com/jonashiltl/sessions-backend/services/story/config"
+	"github.com/jonashiltl/sessions-backend/services/story/repository"
+	rpc "github.com/jonashiltl/sessions-backend/services/story/rpc"
+	"github.com/jonashiltl/sessions-backend/services/story/service"
 )
 
 func main() {

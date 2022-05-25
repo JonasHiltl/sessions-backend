@@ -6,9 +6,9 @@ import (
 
 	"github.com/jonashiltl/sessions-backend/packages/events"
 	"github.com/jonashiltl/sessions-backend/packages/stream"
-	"github.com/jonashiltl/sessions-backend/services/notification/internal"
-	"github.com/jonashiltl/sessions-backend/services/notification/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/notification/internal/handler"
+	"github.com/jonashiltl/sessions-backend/services/notification/config"
+	"github.com/jonashiltl/sessions-backend/services/notification/handler"
+	"github.com/jonashiltl/sessions-backend/services/notification/mail"
 	"github.com/nats-io/nats.go"
 )
 
@@ -26,7 +26,7 @@ func main() {
 	defer nc.Close()
 	st := stream.New(nc)
 
-	smtp, err := internal.Connect(c)
+	smtp, err := mail.Connect(c)
 	if err != nil {
 		log.Fatalln(err)
 	}

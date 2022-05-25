@@ -4,10 +4,10 @@ import (
 	"log"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
-	"github.com/jonashiltl/sessions-backend/services/comment/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/comment/internal/repository"
-	"github.com/jonashiltl/sessions-backend/services/comment/internal/rpc"
-	"github.com/jonashiltl/sessions-backend/services/comment/internal/service"
+	"github.com/jonashiltl/sessions-backend/services/comment/config"
+	"github.com/jonashiltl/sessions-backend/services/comment/repository"
+	"github.com/jonashiltl/sessions-backend/services/comment/rpc"
+	"github.com/jonashiltl/sessions-backend/services/comment/service"
 	"github.com/nats-io/nats.go"
 )
 

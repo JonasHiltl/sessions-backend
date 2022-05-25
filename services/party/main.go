@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/repository"
-	"github.com/jonashiltl/sessions-backend/services/party/internal/rpc"
+	"github.com/jonashiltl/sessions-backend/services/party/config"
+	"github.com/jonashiltl/sessions-backend/services/party/repository"
+	"github.com/jonashiltl/sessions-backend/services/party/rpc"
 	"github.com/nats-io/nats.go"
 )
 

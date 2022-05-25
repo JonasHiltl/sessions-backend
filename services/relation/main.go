@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"github.com/jonashiltl/sessions-backend/packages/stream"
-	"github.com/jonashiltl/sessions-backend/services/relation/internal/config"
-	"github.com/jonashiltl/sessions-backend/services/relation/internal/repository"
-	"github.com/jonashiltl/sessions-backend/services/relation/internal/rpc"
+	"github.com/jonashiltl/sessions-backend/services/relation/config"
+	"github.com/jonashiltl/sessions-backend/services/relation/repository"
+	"github.com/jonashiltl/sessions-backend/services/relation/rpc"
 	"github.com/nats-io/nats.go"
 )
 
@@ -33,6 +33,6 @@ func main() {
 
 	dao := repository.NewDAO(aero)
 
-	r := rpc.NewRelationServer(dao.NewFriendRelationRepository(), stream)
+	r := rpc.NewRelationServer(dao.NewFriendRelationRepository(), dao.NewFavoritePartyRepository(), stream)
 	rpc.Start(r, c.PORT)
 }
