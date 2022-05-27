@@ -27,8 +27,7 @@ docker_build(
     ],
     live_update=[
         # Sync files from host to container
-        sync('./services/user/internal', '/app/services/user/internal'),
-        sync('./services/user/main.go', '/app/services/user/main.go'),
+        sync('./services/user', '/app/services/user'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -44,8 +43,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/party/internal', '/app/services/party/internal'),
-        sync('./services/party/main.go', '/app/services/party/main.go'),
+        sync('./services/party', '/app/services/party'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -61,8 +59,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/relation/internal', '/app/services/relation/internal'),
-        sync('./services/relation/main.go', '/app/services/relation/main.go'),
+        sync('./services/relation', '/app/services/relation'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -78,8 +75,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/story/internal', '/app/services/story/internal'),
-        sync('./services/story/main.go', '/app/services/story/main.go'),
+        sync('./services/story', '/app/services/story'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -95,8 +91,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/comment/internal', '/app/services/comment/internal'),
-        sync('./services/comment/main.go', '/app/services/comment/main.go'),
+        sync('./services/comment', '/app/services/comment'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -112,8 +107,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/notification/internal', '/app/services/notification/internal'),
-        sync('./services/notification/main.go', '/app/services/notification/main.go'),
+        sync('./services/notification', '/app/services/notification'),
         sync('./packages', '/app/packages'),
     ]
 )
@@ -129,8 +123,7 @@ docker_build(
         './go.sum', 
     ],
     live_update=[
-        sync('./services/aggregator/internal', '/app/services/aggregator/internal'),
-        sync('./services/aggregator/main.go', '/app/services/aggregator/main.go'),
+        sync('./services/aggregator', '/app/services/aggregator'),
         sync('./packages', '/app/packages'),
     ]
 )

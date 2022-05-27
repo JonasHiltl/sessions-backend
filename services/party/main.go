@@ -24,13 +24,13 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	sess, err := repository.NewDB(c.CQL_KEYSPACE, c.CQL_HOSTS)
+	pool, err := repository.NewDB(c.DB_USER, c.DB_PW, c.DB_NAME, c.DB_HOST, c.DB_PORT)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer sess.Close()
+	defer pool.Close()
 
-	dao := repository.NewDAO(sess)
+	dao := repository.NewDAO(pool)
 
 	p := rpc.NewPartyServer(dao.NewPartyRepository(), stream)
 	rpc.Start(p, c.PORT)
