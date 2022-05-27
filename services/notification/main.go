@@ -36,10 +36,10 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(3)
 
-	go st.SubscribeByEvent("notification.email.friend.requested", events.FriendRequested{}, s.FriendRequested)
-	go st.SubscribeByEvent("notification.email.verify", events.Registered{}, s.Registered)
+	go st.SubscribeToEvent("notification.email.friend.requested", events.FriendRequested{}, s.FriendRequested)
+	go st.SubscribeToEvent("notification.email.verify", events.Registered{}, s.Registered)
 
-	go st.SubscribeByEvent("notification.push.party.created", events.PartyCreated{}, s.PartyCreated)
+	go st.SubscribeToEvent("notification.push.party.created", events.PartyCreated{}, s.PartyCreated)
 
 	// this will wait until the wg counter is at 0
 	wg.Wait()

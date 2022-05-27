@@ -46,8 +46,9 @@ protos-comment:
 	--go-grpc_out . --go-grpc_opt paths=source_relative  \
 	packages/grpc/comment/*.proto
 
-bindata-party:
+sql-party:
 	cd services/party/repository/migrations; go-bindata -pkg migrations .
+	cd services/party; sqlc generate
 
 # You can also view the base64 in the terminal through this command:
 # cat comment_descriptor.pb | base64

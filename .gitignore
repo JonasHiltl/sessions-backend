@@ -27,3 +27,4 @@ cmd
 _data/
 
 .env
+bindata.go

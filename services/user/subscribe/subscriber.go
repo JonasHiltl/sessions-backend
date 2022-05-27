@@ -29,8 +29,8 @@ func (s subscriber) Start() {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
-	go s.stream.SubscribeByEvent("userservice.increment.friendcount", events.FriendAccepted{}, s.IncrementFriendCount)
-	go s.stream.SubscribeByEvent("userservice.decrement.friendcount", events.FriendRemoved{}, s.DecrementFriendCount)
+	go s.stream.SubscribeToEvent("userservice.increment.friendcount", events.FriendAccepted{}, s.IncrementFriendCount)
+	go s.stream.SubscribeToEvent("userservice.decrement.friendcount", events.FriendRemoved{}, s.DecrementFriendCount)
 
 	log.Println("Subscribed for events")
 

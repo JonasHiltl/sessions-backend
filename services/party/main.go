@@ -7,6 +7,7 @@ import (
 	"github.com/jonashiltl/sessions-backend/services/party/config"
 	"github.com/jonashiltl/sessions-backend/services/party/repository"
 	"github.com/jonashiltl/sessions-backend/services/party/rpc"
+	"github.com/jonashiltl/sessions-backend/services/party/service"
 	"github.com/nats-io/nats.go"
 )
 
@@ -24,14 +25,16 @@ func main() {
 	defer nc.Close()
 	stream := stream.New(nc)
 
-	pool, err := repository.NewDB(c.DB_USER, c.DB_PW, c.DB_NAME, c.DB_HOST, c.DB_PORT)
+	pool, err := repository.NewPGXPool(c.DB_USER, c.DB_PW, c.DB_NAME, c.DB_HOST, c.DB_PORT)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer pool.Close()
 
-	dao := repository.NewDAO(pool)
+	q := repository.New(pool)
 
-	p := rpc.NewPartyServer(dao.NewPartyRepository(), stream)
+	s := service.NewPartyService(q)
+
+	p := rpc.NewPartyServer(s, stream)
 	rpc.Start(p, c.PORT)
 }

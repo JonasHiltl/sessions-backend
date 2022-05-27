@@ -9,24 +9,14 @@ import (
 
 	migrate "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
+	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v4/stdlib"
-
-	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	"github.com/jonashiltl/sessions-backend/services/party/repository/migrations"
-	"github.com/scylladb/gocqlx/v2"
 )
 
-type Dao interface {
-	NewPartyRepository() PartyRepository
-}
-
-type dao struct {
-	sess *gocqlx.Session
-}
-
-func NewDB(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Pool, error) {
+func NewPGXPool(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Pool, error) {
 	urlStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", dbUser, dbPW, dbHost, fmt.Sprint(dbPort), dbName)
 	pgURL, err := url.Parse(urlStr)
 	if err != nil {
@@ -58,14 +48,6 @@ func NewDB(dbUser, dbPW, dbName, dbHost string, dbPort uint16) (*pgxpool.Pool, e
 	}
 
 	return pool, nil
-}
-
-func NewDAO(conn *pgxpool.Pool) Dao {
-	return &dao{sess: nil}
-}
-
-func (d *dao) NewPartyRepository() PartyRepository {
-	return &partyRepository{sess: d.sess}
 }
 
 const version = 1

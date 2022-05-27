@@ -2,19 +2,20 @@ package dto
 
 import (
 	"time"
+
+	"github.com/twpayne/go-geom"
 )
 
 type Party struct {
+	ID            string
 	UserId        string
-	Id            string
 	Title         string
 	IsPublic      bool
-	Lat           float32
-	Long          float32
+	Location      geom.Point
 	StreetAddress string
 	PostalCode    string
 	State         string
 	Country       string
 	StartDate     time.Time
-	Ttl           time.Time
+	EndDate       time.Time
 }

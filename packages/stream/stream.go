@@ -17,7 +17,7 @@ type stream struct {
 
 type Stream interface {
 	PublishEvent(event any) error
-	SubscribeByEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error)
+	SubscribeToEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error)
 }
 
 func New(nats *nats.EncodedConn) Stream {
@@ -44,7 +44,7 @@ func (s stream) PublishEvent(event any) error {
 	return s.nats.Publish(sub, event)
 }
 
-func (s stream) SubscribeByEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error) {
+func (s stream) SubscribeToEvent(queue string, event any, handler nats.Handler) (*nats.Subscription, error) {
 	sub := eventToSubject(event)
 
 	return s.nats.QueueSubscribe(sub, queue, handler)

@@ -23,7 +23,6 @@ var partyMetadata = table.Metadata{
 	PartKey: []string{"user_id"},
 	SortKey: []string{"is_public", "start_date"},
 }
-var partyTable = table.New(partyMetadata)
 
 type PartyRepository interface {
 	Create(ctx context.Context, p datastruct.Party) (datastruct.Party, error)

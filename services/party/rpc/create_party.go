@@ -6,8 +6,8 @@ import (
 
 	pg "github.com/jonashiltl/sessions-backend/packages/grpc/party"
 	"github.com/jonashiltl/sessions-backend/packages/utils"
-	"github.com/jonashiltl/sessions-backend/services/party/datastruct"
-	"github.com/segmentio/ksuid"
+	"github.com/jonashiltl/sessions-backend/services/party/dto"
+	"github.com/twpayne/go-geom"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -23,12 +23,10 @@ func (s partyServer) CreateParty(c context.Context, req *pg.CreatePartyRequest) 
 		return nil, status.Error(codes.InvalidArgument, "Invalid end date")
 	}
 
-	d := datastruct.Party{
-		Id:            ksuid.New().String(),
+	d := dto.Party{
 		Title:         req.Title,
 		UserId:        req.RequesterId,
-		Lat:           req.Lat,
-		Long:          req.Long,
+		Location:      *geom.NewPointFlat(geom.XY, []float64{float64(req.Lat), float64(req.Long)}),
 		IsPublic:      req.IsPublic,
 		StreetAddress: req.StreetAddress,
 		PostalCode:    req.PostalCode,

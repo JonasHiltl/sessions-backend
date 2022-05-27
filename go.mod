@@ -21,9 +21,11 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/lib/pq v1.10.2
 	github.com/scylladb/scylla-cdc-go v1.0.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/spf13/viper v1.11.0
+	github.com/twpayne/go-geom v1.4.1
 	github.com/xhit/go-simple-mail/v2 v2.11.0
 	google.golang.org/grpc v1.45.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
@@ -54,7 +56,6 @@ require (
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/lib/pq v1.10.2 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
